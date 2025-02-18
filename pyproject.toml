@@ -1,0 +1,30 @@
+[project]
+name = "lichess-bot-leaderboard"
+version = "0.1.0"
+description = "A leaderboard for lichess bots"
+
+requires-python = ">=3.11"
+
+[tool.ruff]
+# Using a src/tests layout.
+src = ["src"]
+# Nice and compact.
+indent-width = 2
+# The GitHub editor is 127 chars wide.
+line-length = 127
+
+[tool.ruff.format]
+# Enable reformatting of code snippets in docstrings.
+docstring-code-format = true
+# Explicitly declare double quotes as preferred.
+quote-style = "double"
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+# If a class or a top-level function directly following imports, there will be two blank lines.
+# If global variables directly following imports, by default there will only be one blank line.
+# PEP 8 leaves it up to our discression to decide what is best here.
+lines-after-imports = 2
