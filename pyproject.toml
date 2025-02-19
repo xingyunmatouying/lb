@@ -26,5 +26,5 @@ extend-select = ["I"]
 combine-as-imports = true
 # If a class or a top-level function directly following imports, there will be two blank lines.
 # If global variables directly following imports, by default there will only be one blank line.
-# PEP 8 leaves it up to our discression to decide what is best here.
+# PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
