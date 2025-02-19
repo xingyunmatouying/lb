@@ -32,3 +32,15 @@ combine-as-imports = true
 # If global variables directly following imports, by default there will only be one blank line.
 # PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
+
+[tool.pyright]
+pythonVersion = "3.11"
+typeCheckingMode = "strict"
+include = [
+  "src",
+  "tests",
+]
+exclude = [
+  "**/__pycache__",
+  ".venv",
+]
