@@ -7,7 +7,11 @@ requires-python = ">=3.11"
 
 [tool.ruff]
 # Using a src/tests layout.
-src = ["src"]
+src = [
+  "src",
+  "tests",
+]
+
 # Nice and compact.
 indent-width = 2
 # The GitHub editor is 127 chars wide.
