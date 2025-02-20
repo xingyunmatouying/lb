@@ -1,3 +1,1 @@
-"""
-`generate` contains logic related to generating the lichess bot leaderboard.
-"""
+"""`generate` contains logic related to generating the lichess bot leaderboard."""

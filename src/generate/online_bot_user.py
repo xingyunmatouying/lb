@@ -4,7 +4,8 @@ import json
 
 @dataclasses.dataclass(frozen=True)
 class Perf:
-  """Performance refers to a players ratings for a particular time control or variant.
+  """
+  Performance refers to a players ratings for a particular time control or variant.
 
   Example game modes include: bullet, blitz, classical, chess960, ...
 
@@ -22,7 +23,8 @@ class Perf:
 
 @dataclasses.dataclass(frozen=True)
 class OnlineBotUser:
-  """A bot user and their list of performances.
+  """
+  A bot user and their list of performances.
 
   This only contains a small subset of what is available via the lichess API.
   """
