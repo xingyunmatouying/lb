@@ -5,6 +5,8 @@ description = "A leaderboard for lichess bots"
 
 requires-python = ">=3.11"
 
+
+# ruff
 [tool.ruff]
 # Using a src/tests layout.
 src = [
@@ -41,6 +43,8 @@ extend-select = [
 ]
 ignore = [
   "D1", # Missing docstring in ...
+  "D203", # incorrect-blank-line-before-class
+  "D212", # multi-line-summary-first-line
 ]
 
 [tool.ruff.lint.isort]
@@ -50,6 +54,8 @@ combine-as-imports = true
 # PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
 
+
+# pyright
 [tool.pyright]
 pythonVersion = "3.11"
 typeCheckingMode = "strict"
@@ -61,3 +67,29 @@ exclude = [
   "**/__pycache__",
   ".venv",
 ]
+
+
+# coverage
+[tool.coverage.run]
+branch = true
+command_line = "-m unittest discover -v -s tests -p test_*.py"
+dynamic_context = "test_function"
+source = [
+  "src",
+]
+omit = [
+  "**/__pycache__",
+  ".venv",
+]
+
+[tool.coverage.report]
+# Don't fail due to missing coverage
+fail_under = 0
+show_missing = true
+
+[tool.coverage.html]
+directory = "htmlcov"
+show_contexts = true
+
+[tool.coverage.xml]
+output = "coverage.xml"
