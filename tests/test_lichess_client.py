@@ -1,6 +1,4 @@
-"""
-Tests for lichess_client.py
-"""
+"""Tests for lichess_client.py."""
 
 import unittest
 
