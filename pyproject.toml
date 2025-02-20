@@ -40,6 +40,9 @@ extend-select = [
   "SIM", # flake8-simplify
   "UP", # pyupgrade
 ]
+ignore = [
+  "D1", # Missing docstring in ...
+]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
