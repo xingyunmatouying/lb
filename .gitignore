@@ -3,3 +3,8 @@
 
 # Virtual environment
 .venv/
+
+# Artifacts from coverage
+.coverage
+coverage.xml
+htmlcov/
