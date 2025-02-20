@@ -2,5 +2,6 @@
     "recommendations": [
         "charliermarsh.ruff",
         "ms-python.vscode-pylance",
+        "tamasfe.even-better-toml",
     ]
 }
