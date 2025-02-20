@@ -5,6 +5,8 @@ description = "A leaderboard for lichess bots"
 
 requires-python = ">=3.11"
 
+
+# ruff
 [tool.ruff]
 # Using a src/tests layout.
 src = [
@@ -50,6 +52,8 @@ combine-as-imports = true
 # PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
 
+
+# pyright
 [tool.pyright]
 pythonVersion = "3.11"
 typeCheckingMode = "strict"

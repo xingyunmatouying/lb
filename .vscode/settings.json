@@ -15,7 +15,7 @@
     "evenBetterToml.formatter.columnWidth": 127,
     "evenBetterToml.formatter.indentString": "  ",
     "evenBetterToml.formatter.alignComments": false,
-    "evenBetterToml.formatter.allowedBlankLines": 1,
+    "evenBetterToml.formatter.allowedBlankLines": 2,
     "evenBetterToml.formatter.arrayAutoCollapse": false,
     "evenBetterToml.formatter.arrayTrailingComma": true,
     "evenBetterToml.formatter.arrayAutoExpand": true,
