@@ -7,7 +7,11 @@ requires-python = ">=3.11"
 
 [tool.ruff]
 # Using a src/tests layout.
-src = ["src"]
+src = [
+  "src",
+  "tests",
+]
+
 # Nice and compact.
 indent-width = 2
 # The GitHub editor is 127 chars wide.
@@ -20,11 +24,23 @@ docstring-code-format = true
 quote-style = "double"
 
 [tool.ruff.lint]
-extend-select = ["I"]
+extend-select = ["ANN", "I"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
 # If a class or a top-level function directly following imports, there will be two blank lines.
 # If global variables directly following imports, by default there will only be one blank line.
-# PEP 8 leaves it up to our discression to decide what is best here.
+# PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
+
+[tool.pyright]
+pythonVersion = "3.11"
+typeCheckingMode = "strict"
+include = [
+  "src",
+  "tests",
+]
+exclude = [
+  "**/__pycache__",
+  ".venv",
+]
