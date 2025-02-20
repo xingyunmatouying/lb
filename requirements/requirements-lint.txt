@@ -1,4 +1,2 @@
-# code coverage
-coverage~=7.6
 # linting and formatting
 ruff~=0.9
