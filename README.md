@@ -50,6 +50,20 @@
     pip install -r requirements\requirements-coverage.txt
     ```
 
+### Check linting and formatting
+
+- Check formatting
+
+    ```shell
+    ruff format --check
+    ```
+
+- Check linting
+
+    ```shell
+    ruff check
+    ```
+
 ### Run tests
 
 - Run tests in the `tests` directory which match the pattern `test_*.py`
