@@ -43,6 +43,8 @@ extend-select = [
 ]
 ignore = [
   "D1", # Missing docstring in ...
+  "D203", # incorrect-blank-line-before-class
+  "D212", # multi-line-summary-first-line
 ]
 
 [tool.ruff.lint.isort]
