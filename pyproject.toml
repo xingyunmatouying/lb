@@ -77,6 +77,10 @@ dynamic_context = "test_function"
 source = [
   "src",
 ]
+# Include all python files in the coverage report
+include = [
+  "src/**/*.py",
+]
 omit = [
   "**/__pycache__",
   ".venv",
