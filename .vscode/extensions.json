@@ -2,6 +2,7 @@
     "recommendations": [
         "charliermarsh.ruff",
         "ms-python.vscode-pylance",
+        "redhat.vscode-yaml",
         "tamasfe.even-better-toml",
     ]
 }
