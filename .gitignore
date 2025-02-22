@@ -4,6 +4,9 @@
 # Virtual environment
 .venv/
 
+# Artifacts from ruff
+.ruff_cache/
+
 # Artifacts from coverage
 .coverage
 coverage.xml
