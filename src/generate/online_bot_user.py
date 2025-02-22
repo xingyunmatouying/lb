@@ -45,5 +45,4 @@ def from_json(json_str: str) -> OnlineBotUser:
     rating = perf_json.get("rating", 0)
     prov = perf_json.get("prov", False)
     perfs.append(Perf(perf_type, games, rating, prov))
-
   return OnlineBotUser(username, perfs)

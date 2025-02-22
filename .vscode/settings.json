@@ -1,8 +1,15 @@
 {
+    // general
+    // Trailing whitespace is trimmed on save for all files
+    "files.trimTrailingWhitespace": true,
+    // Ensure a new line at the end of files is present upon saving
+    "files.insertFinalNewline": true,
+    // mardown
     "[markdown]": {
         "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
         "editor.formatOnSave": true,
     },
+    // python
     "[python]": {
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.codeActionsOnSave": {
@@ -11,6 +18,7 @@
         "editor.formatOnSave": true,
         "editor.tabSize": 2,
     },
+    // toml
     "[toml]": {
         "editor.defaultFormatter": "tamasfe.even-better-toml",
         "editor.formatOnSave": true,
@@ -25,6 +33,7 @@
     "evenBetterToml.formatter.arrayAutoExpand": true,
     "evenBetterToml.formatter.compactArrays": true,
     "evenBetterToml.formatter.trailingNewline": true,
+    // yaml
     "[yaml]": {
         "editor.defaultFormatter": "redhat.vscode-yaml",
         "editor.formatOnSave": true,

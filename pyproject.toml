@@ -31,7 +31,7 @@ extend-select = [
   "B", # flake8-bugbear
   "C4", # flake8-comprehensions
   "D", # pydocstyle
-  "ERA", # eradicate 
+  "ERA", # eradicate
   "I", # isort
   "N", # pep8-naming
   "PL", # Pylint
