@@ -41,7 +41,7 @@
     or only linting and formatting
 
     ```shell
-    pip install -r requirements\requirements-lint.txt
+    pip install -r requirements\requirements-style.txt
     ```
 
     or only code coverage
