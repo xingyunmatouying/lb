@@ -1,4 +1,4 @@
 # All development requirements files go here
 
 -r requirements-coverage.txt
--r requirements-lint.txt
+-r requirements-style.txt

@@ -2,7 +2,6 @@
 name = "lichess-bot-leaderboard"
 version = "0.1.0"
 description = "A leaderboard for lichess bots"
-
 requires-python = ">=3.11"
 
 
@@ -25,13 +24,15 @@ docstring-code-format = true
 quote-style = "double"
 
 [tool.ruff.lint]
-extend-select = [
+select = [
   "ANN", # flake8-annotations
   "ASYNC", # flake8-async
   "B", # flake8-bugbear
   "C4", # flake8-comprehensions
   "D", # pydocstyle
-  "ERA", # eradicate 
+  "E", # pycodestyle error
+  "ERA", # eradicate
+  "F", # Pyflakes
   "I", # isort
   "N", # pep8-naming
   "PL", # Pylint
@@ -40,6 +41,7 @@ extend-select = [
   "S", # flake8-bandit
   "SIM", # flake8-simplify
   "UP", # pyupgrade
+  "W", # pycodestyle warning
 ]
 ignore = [
   "D1", # Missing docstring in ...
@@ -76,6 +78,10 @@ command_line = "-m unittest discover -v -s tests -p test_*.py"
 dynamic_context = "test_function"
 source = [
   "src",
+]
+# Include all python files in the coverage report
+include = [
+  "src/**/*.py",
 ]
 omit = [
   "**/__pycache__",
