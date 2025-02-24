@@ -7,6 +7,7 @@ These dataclasses include functions for parsing their corresponding lichess json
 import dataclasses
 import json
 from enum import Enum
+from typing import Any
 
 
 class PerfType(Enum):
@@ -104,6 +105,14 @@ class Perf:
 
   prov: bool
 
+  @classmethod
+  def from_json(cls, perf_type_key: str, perf_json: Any) -> "Perf":  # noqa: ANN401 - json makes Any unavoidable
+    games = perf_json.get("games", 0)
+    rating = perf_json.get("rating", 0)
+    prov = perf_json.get("prov", False)
+    perf_type = PerfType.from_json(perf_type_key)
+    return Perf(perf_type, games, rating, prov)
+
 
 @dataclasses.dataclass(frozen=True)
 class OnlineBotUser:
@@ -125,11 +134,7 @@ class OnlineBotUser:
     perfs_dict = json_dict.get("perfs", [])
 
     perfs: list[Perf] = []
-    for perf_type_str, perf_json in perfs_dict.items():
-      games = perf_json.get("games", 0)
-      rating = perf_json.get("rating", 0)
-      prov = perf_json.get("prov", False)
-      perf_type = PerfType.from_json(perf_type_str)
-      perfs.append(Perf(perf_type, games, rating, prov))
+    for perf_type_key, perf_json in perfs_dict.items():
+      perfs.append(Perf.from_json(perf_type_key, perf_json))
 
     return OnlineBotUser(username, perfs)
