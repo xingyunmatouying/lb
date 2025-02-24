@@ -67,7 +67,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - { name: 🍏 macos, os: macos-latest, python-version: "3.11" }
           - { name: 🖼️ windows, os: windows-latest, python-version: "3.11" }
           - { name: 🐧 ubuntu, os: ubuntu-latest, python-version: "3.11" }
     steps:
