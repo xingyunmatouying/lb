@@ -1,3 +1,9 @@
+"""
+Bot user and related dataclasses.
+
+These dataclasses include functions for parsing their corresponding lichess json representations.
+"""
+
 import dataclasses
 import json
 from enum import Enum
