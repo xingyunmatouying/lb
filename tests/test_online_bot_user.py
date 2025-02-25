@@ -56,4 +56,4 @@ class TestLichessClient(unittest.TestCase):
       Perf(PerfType.BLITZ, 456, 1500, False),
       Perf(PerfType.RAPID, 789, 1550, True),
     ]
-    self.assertEqual(bot_user.perfs, expected_perfs)
+    self.assertListEqual(bot_user.perfs, expected_perfs)
