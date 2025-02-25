@@ -43,10 +43,10 @@ class PerfType(Enum):
   CHESS960 = 7  # https://lichess.org/variant/chess960
   # https://en.wikipedia.org/wiki/List_of_chess_variants#King_of_the_Hill
   KING_OF_THE_HILL = 8  # https://lichess.org/variant/kingOfTheHill
-  # https://en.wikipedia.org/wiki/Losing_chess
-  ANTICHESS = 9  # https://lichess.org/variant/antichess
   # https://en.wikipedia.org/wiki/Three-check_chess
-  THREE_CHECK = 10  # https://lichess.org/variant/threeCheck
+  THREE_CHECK = 9  # https://lichess.org/variant/threeCheck
+  # https://en.wikipedia.org/wiki/Losing_chess
+  ANTICHESS = 10  # https://lichess.org/variant/antichess
   # https://en.wikipedia.org/wiki/Atomic_chess
   ATOMIC = 11  # https://lichess.org/variant/atomic
   # https://en.wikipedia.org/wiki/Dunsany%27s_chess#Horde_chess
@@ -73,10 +73,10 @@ class PerfType(Enum):
         return PerfType.CHESS960
       case "kingOfTheHill":
         return PerfType.KING_OF_THE_HILL
-      case "antichess":
-        return PerfType.ANTICHESS
       case "threeCheck":
         return PerfType.THREE_CHECK
+      case "antichess":
+        return PerfType.ANTICHESS
       case "atomic":
         return PerfType.ATOMIC
       case "horde":

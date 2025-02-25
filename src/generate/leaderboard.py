@@ -95,6 +95,7 @@ class LeaderboardRow:
       peak_rating = bot_info.rating
       leaderboard_rows.append(LeaderboardRow(bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating))
       # TODO: account for ties
+      # See https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking)
       rank += 1
 
     return leaderboard_rows
