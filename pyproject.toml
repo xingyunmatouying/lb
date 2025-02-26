@@ -43,7 +43,6 @@ select = [
   "PIE", # flake8-pie
   "PL", # Pylint
   "PTH", # flake8-use-pathlib
-  "PYI", # flake8-pyi
   "RUF", # Ruff-specific rules
   "S", # flake8-bandit
   "SIM", # flake8-simplify
