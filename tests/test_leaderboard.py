@@ -11,10 +11,10 @@ TEST_OBU_1 = OnlineBotUser(
   [Perf(PerfType.BULLET, 100, 1450, False), Perf(PerfType.BLITZ, 200, 1500, False), Perf(PerfType.RAPID, 300, 1550, False)],
 )
 
-FIRST_MIDDLE_BOT = LeaderboardBotInfo("First Middle Bot", 1500, 100, "TODO", "TODO")
-BOTTOM_BOT = LeaderboardBotInfo("Bottom Bot", 1200, 300, "TODO", "TODO")
-TOP_BOT = LeaderboardBotInfo("Top Bot", 1800, 400, "TODO", "TODO")
-SECOND_MIDDLE_BOT = LeaderboardBotInfo("Second Middle Bot", 1500, 200, "TODO", "TODO")
+TOP_BOT = LeaderboardBotInfo("Top Bot", 1800, 400, "2021-04-01", "2025-10-12")
+FIRST_MIDDLE_BOT = LeaderboardBotInfo("First Middle Bot", 1500, 100, "2022-04-01", "2025-10-12")
+SECOND_MIDDLE_BOT = LeaderboardBotInfo("Second Middle Bot", 1500, 200, "2023-04-01", "2025-10-12")
+BOTTOM_BOT = LeaderboardBotInfo("Bottom Bot", 1200, 300, "2025-04-01", "2025-10-12")
 
 
 class TestLeaderboard(unittest.TestCase):
@@ -38,7 +38,7 @@ class TestLeaderboard(unittest.TestCase):
     self.assertEqual(leaderboard_rows[2], LeaderboardRow(BOTTOM_BOT, 3, 0, 0, 3, 1200))
 
   def test_create_leaderboard_rows_with_tied_ratings_has_correct_rankings(self) -> None:
-    leaderboard_rows = LeaderboardRow.create_leaderboard_rows([FIRST_MIDDLE_BOT, BOTTOM_BOT, TOP_BOT, SECOND_MIDDLE_BOT])
+    leaderboard_rows = LeaderboardRow.create_leaderboard_rows([SECOND_MIDDLE_BOT, BOTTOM_BOT, TOP_BOT, FIRST_MIDDLE_BOT])
     self.assertEqual(len(leaderboard_rows), 4)
     self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
     self.assertEqual(leaderboard_rows[1], LeaderboardRow(FIRST_MIDDLE_BOT, 2, 0, 0, 2, 1500))
