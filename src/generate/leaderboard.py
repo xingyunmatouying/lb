@@ -29,7 +29,7 @@ class LeaderboardBotInfo:
   last_seen_date: str
 
   @classmethod
-  def create_bot_info_dict(cls, bot_user: OnlineBotUser) -> dict[PerfType, "LeaderboardBotInfo"]:
+  def create_bot_infos_grouped_by_perf_type(cls, bot_user: OnlineBotUser) -> dict[PerfType, "LeaderboardBotInfo"]:
     """Convert an OnlineBotUser into a map from perf_type -> bot_info."""
     username = bot_user.username
     created_date = "TODO"

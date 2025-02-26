@@ -19,11 +19,11 @@ BOTTOM_BOT = LeaderboardBotInfo("Bottom Bot", 1200, 300, "2025-04-01", "2025-10-
 
 class TestLeaderboard(unittest.TestCase):
   def test_create_bot_info_dict_with_three_perfs_creates_correct_dict(self) -> None:
-    bot_info_dict = LeaderboardBotInfo.create_bot_info_dict(TEST_OBU_1)
-    self.assertEqual(len(bot_info_dict), 3)
-    self.assertEqual(bot_info_dict[PerfType.BULLET], LeaderboardBotInfo("Bot1", 1450, 100, "TODO", "TODO"))
-    self.assertEqual(bot_info_dict[PerfType.BLITZ], LeaderboardBotInfo("Bot1", 1500, 200, "TODO", "TODO"))
-    self.assertEqual(bot_info_dict[PerfType.RAPID], LeaderboardBotInfo("Bot1", 1550, 300, "TODO", "TODO"))
+    bot_infos_by_peft_type = LeaderboardBotInfo.create_bot_infos_grouped_by_perf_type(TEST_OBU_1)
+    self.assertEqual(len(bot_infos_by_peft_type), 3)
+    self.assertEqual(bot_infos_by_peft_type[PerfType.BULLET], LeaderboardBotInfo("Bot1", 1450, 100, "TODO", "TODO"))
+    self.assertEqual(bot_infos_by_peft_type[PerfType.BLITZ], LeaderboardBotInfo("Bot1", 1500, 200, "TODO", "TODO"))
+    self.assertEqual(bot_infos_by_peft_type[PerfType.RAPID], LeaderboardBotInfo("Bot1", 1550, 300, "TODO", "TODO"))
 
   def test_create_leaderboard_rows_with_one_bot_info_creates_correct_row(self) -> None:
     leaderboard_rows = LeaderboardRow.create_leaderboard_rows([TOP_BOT])
