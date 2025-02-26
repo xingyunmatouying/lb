@@ -9,3 +9,4 @@ class LichessClient(abc.ABC):
   @abc.abstractmethod
   def get_online_bots(self) -> str:
     """Return a list of online bots represented as ndjson."""
+    ...
