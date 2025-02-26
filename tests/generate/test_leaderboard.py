@@ -18,7 +18,7 @@ BOTTOM_BOT = LeaderboardBotInfo("Bottom Bot", 1200, 300, "2025-04-01", "2025-10-
 
 
 class TestLeaderboard(unittest.TestCase):
-  def test_create_bot_info_dict_with_three_perfs_creates_correct_dict(self) -> None:
+  def test_create_bot_infos_grouped_by_perf_type_with_three_perfs_creates_correct_dict(self) -> None:
     bot_infos_by_peft_type = LeaderboardBotInfo.create_bot_infos_grouped_by_perf_type(TEST_OBU_1)
     self.assertEqual(len(bot_infos_by_peft_type), 3)
     self.assertEqual(bot_infos_by_peft_type[PerfType.BULLET], LeaderboardBotInfo("Bot1", 1450, 100, "TODO", "TODO"))
