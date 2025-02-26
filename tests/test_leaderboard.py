@@ -49,6 +49,6 @@ class TestLeaderboard(unittest.TestCase):
     leaderboard_rows = LeaderboardRow.create_leaderboard_rows([BOTTOM_BOT, TOP_BOT, TOP_BOT, TOP_BOT])
     self.assertEqual(len(leaderboard_rows), 4)
     self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
-    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
-    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
+    self.assertEqual(leaderboard_rows[1], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
+    self.assertEqual(leaderboard_rows[1], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
     self.assertEqual(leaderboard_rows[3], LeaderboardRow(BOTTOM_BOT, 4, 0, 0, 4, 1200))
