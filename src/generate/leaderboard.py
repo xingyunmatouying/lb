@@ -69,6 +69,26 @@ class LeaderboardRow:
   peak_rating: int
 
   @classmethod
+  def from_psv(cls, psv_string: str) -> "LeaderboardRow":
+    """Create a LeaderboardRow based on pipe separated values."""
+    values = psv_string.split("|")
+
+    username = values[0]
+    rating = int(values[1])
+    games = int(values[2])
+    created_date = values[3]
+    last_seen_date = values[4]
+    bot_info = LeaderboardBotInfo(username, rating, games, created_date, last_seen_date)
+
+    rank = int(values[5])
+    rank_delta = int(values[6])
+    rating_delta = int(values[7])
+    peak_rank = int(values[8])
+    peak_rating = int(values[9])
+
+    return LeaderboardRow(bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+
+  @classmethod
   def create_leaderboard_rows(cls, bot_info_list: list[LeaderboardBotInfo]) -> list["LeaderboardRow"]:
     """
     Take a list of bot info and create a list of leaderboard rows.

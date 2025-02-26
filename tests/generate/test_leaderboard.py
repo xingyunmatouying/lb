@@ -25,6 +25,12 @@ class TestLeaderboard(unittest.TestCase):
     self.assertEqual(bot_infos_by_peft_type[PerfType.BLITZ], LeaderboardBotInfo("Bot1", 1500, 200, "TODO", "TODO"))
     self.assertEqual(bot_infos_by_peft_type[PerfType.RAPID], LeaderboardBotInfo("Bot1", 1550, 300, "TODO", "TODO"))
 
+  def test_leaderboard_row_from_psv(self) -> None:
+    leaderboard_row = LeaderboardRow.from_psv("Bot1|1500|100|2024-04-01|2025-04-01|4|1|50|3|1600")
+    expected_bot_info = LeaderboardBotInfo("Bot1", 1500, 100, "2024-04-01", "2025-04-01")
+    expected_leaderboard_row = LeaderboardRow(expected_bot_info, 4, 1, 50, 3, 1600)
+    self.assertEqual(leaderboard_row, expected_leaderboard_row)
+
   def test_create_leaderboard_rows_with_one_bot_info_creates_correct_row(self) -> None:
     leaderboard_rows = LeaderboardRow.create_leaderboard_rows([TOP_BOT])
     self.assertEqual(len(leaderboard_rows), 1)
