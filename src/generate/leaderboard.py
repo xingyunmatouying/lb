@@ -83,19 +83,27 @@ class LeaderboardRow:
     sorted_bot_info_list = sorted(bot_info_list, key=lambda bot_info: (-bot_info.rating, bot_info.created_date))
 
     # The first in the list will be ranked #1
-    rank = 1
+    rank = 0
     # No change for deltas since we have nothing to compare to (yet)
     rank_delta = 0
     rating_delta = 0
 
+    # Used for 1224 ranking (https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking))
+    same_rank_count = 0
+    previous_rating = 0
+
     leaderboard_rows: list[LeaderboardRow] = []
     for bot_info in sorted_bot_info_list:
+      if bot_info.rating == previous_rating:
+        same_rank_count += 1
+      else:
+        rank += same_rank_count
+        rank += 1
+        same_rank_count = 0
       # The peaks become more interesting when comparing with a previous iteration of the leaderboard
       peak_rank = rank
       peak_rating = bot_info.rating
       leaderboard_rows.append(LeaderboardRow(bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating))
-      # TODO: account for ties
-      # See https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking)
-      rank += 1
+      previous_rating = bot_info.rating
 
     return leaderboard_rows

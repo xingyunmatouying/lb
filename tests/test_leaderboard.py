@@ -42,5 +42,13 @@ class TestLeaderboard(unittest.TestCase):
     self.assertEqual(len(leaderboard_rows), 4)
     self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
     self.assertEqual(leaderboard_rows[1], LeaderboardRow(FIRST_MIDDLE_BOT, 2, 0, 0, 2, 1500))
-    self.assertEqual(leaderboard_rows[2], LeaderboardRow(SECOND_MIDDLE_BOT, 3, 0, 0, 3, 1500))
+    self.assertEqual(leaderboard_rows[2], LeaderboardRow(SECOND_MIDDLE_BOT, 2, 0, 0, 2, 1500))
+    self.assertEqual(leaderboard_rows[3], LeaderboardRow(BOTTOM_BOT, 4, 0, 0, 4, 1200))
+
+  def test_create_leaderboard_rows_with_three_way_tie_has_correct_rankings(self) -> None:
+    leaderboard_rows = LeaderboardRow.create_leaderboard_rows([BOTTOM_BOT, TOP_BOT, TOP_BOT, TOP_BOT])
+    self.assertEqual(len(leaderboard_rows), 4)
+    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
+    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
+    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT, 1, 0, 0, 1, 1800))
     self.assertEqual(leaderboard_rows[3], LeaderboardRow(BOTTOM_BOT, 4, 0, 0, 4, 1200))
