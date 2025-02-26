@@ -56,6 +56,7 @@ class PerfType(Enum):
 
   @classmethod
   def from_json(cls, json_str: str) -> "PerfType":
+    """Return the corresponding PerfType based on the json representation."""
     name_to_perf_type = {
       "bullet": PerfType.BULLET,
       "blitz": PerfType.BLITZ,
@@ -93,11 +94,12 @@ class Perf:
   prov: bool
 
   @classmethod
-  def from_json(cls, perf_type_key: str, perf_json: Any) -> "Perf":  # noqa: ANN401 - json makes Any unavoidable
+  def from_json(cls, perf_type_key: str, perf_json: dict[str, Any]) -> "Perf":
+    """Create a Perf based on a json key and value."""
+    perf_type = PerfType.from_json(perf_type_key)
     games = perf_json.get("games", 0)
     rating = perf_json.get("rating", 0)
     prov = perf_json.get("prov", False)
-    perf_type = PerfType.from_json(perf_type_key)
     return Perf(perf_type, games, rating, prov)
 
 

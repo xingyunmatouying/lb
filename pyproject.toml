@@ -50,7 +50,6 @@ select = [
   "W", # pycodestyle warning
 ]
 ignore = [
-  "D1", # Missing docstring in ...
   "D203", # incorrect-blank-line-before-class (conflicts with "D211": blank-line-before-class)
   "D212", # multi-line-summary-first-line (conflicts with "D213": multi-line-summary-second-line)
 ]
@@ -61,6 +60,13 @@ combine-as-imports = true
 # If global variables directly following imports, by default there will only be one blank line.
 # PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
+
+[tool.ruff.per-file-ignores]
+# Ignore all .py files starting with test_.
+"test_*.py" = [
+  "D101", # undocumented-public-class
+  "D102", # undocumented-public-method
+]
 
 
 # pyright
