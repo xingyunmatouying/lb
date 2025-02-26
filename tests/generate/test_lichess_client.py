@@ -8,12 +8,12 @@ from src.generate.lichess_client import LichessClient
 TEST_ONLINE_BOT_USER = "{some json}"
 
 
-class MockLichessClient(LichessClient):
+class FakeLichessClient(LichessClient):
   def get_online_bots(self) -> str:
     return TEST_ONLINE_BOT_USER
 
 
 class TestLichessClient(unittest.TestCase):
-  def test_get_online_bots_with_mock_client_returns_mock_response(self) -> None:
-    lichess_client = MockLichessClient()
+  def test_get_online_bots_returns_string(self) -> None:
+    lichess_client = FakeLichessClient()
     self.assertEqual(lichess_client.get_online_bots(), TEST_ONLINE_BOT_USER)
