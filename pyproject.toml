@@ -53,8 +53,6 @@ ignore = [
   "D1", # Missing docstring in ...
   "D203", # incorrect-blank-line-before-class
   "D212", # multi-line-summary-first-line
-  "PLR0911", # too-many-return-statements (6)
-  "PLR0912", # too-many-branches (12)
 ]
 
 [tool.ruff.lint.isort]

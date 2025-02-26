@@ -56,35 +56,22 @@ class PerfType(Enum):
 
   @classmethod
   def from_json(cls, json_str: str) -> "PerfType":
-    match json_str:
-      case "bullet":
-        return PerfType.BULLET
-      case "blitz":
-        return PerfType.BLITZ
-      case "rapid":
-        return PerfType.RAPID
-      case "classical":
-        return PerfType.CLASSICAL
-      case "correspondence":
-        return PerfType.CORRESPONDENCE
-      case "crazyhouse":
-        return PerfType.CRAZYHOUSE
-      case "chess960":
-        return PerfType.CHESS960
-      case "kingOfTheHill":
-        return PerfType.KING_OF_THE_HILL
-      case "threeCheck":
-        return PerfType.THREE_CHECK
-      case "antichess":
-        return PerfType.ANTICHESS
-      case "atomic":
-        return PerfType.ATOMIC
-      case "horde":
-        return PerfType.HORDE
-      case "racingKings":
-        return PerfType.RACING_KINGS
-      case _:
-        return PerfType.UNKNOWN
+    name_to_perf_type = {
+      "bullet": PerfType.BULLET,
+      "blitz": PerfType.BLITZ,
+      "rapid": PerfType.RAPID,
+      "classical": PerfType.CLASSICAL,
+      "correspondence": PerfType.CORRESPONDENCE,
+      "crazyhouse": PerfType.CRAZYHOUSE,
+      "chess960": PerfType.CHESS960,
+      "kingOfTheHill": PerfType.KING_OF_THE_HILL,
+      "threeCheck": PerfType.THREE_CHECK,
+      "antichess": PerfType.ANTICHESS,
+      "atomic": PerfType.ATOMIC,
+      "horde": PerfType.HORDE,
+      "racingKings": PerfType.RACING_KINGS,
+    }
+    return name_to_perf_type.get(json_str, PerfType.UNKNOWN)
 
 
 @dataclasses.dataclass(frozen=True)
