@@ -74,6 +74,25 @@ class PerfType(Enum):
     }
     return name_to_perf_type.get(json_str, PerfType.UNKNOWN)
 
+  def to_string(self) -> str:
+    """Return the original string (json) representation."""
+    perf_type_to_name = {
+      PerfType.BULLET: "bullet",
+      PerfType.BLITZ: "blitz",
+      PerfType.RAPID: "rapid",
+      PerfType.CLASSICAL: "classical",
+      PerfType.CORRESPONDENCE: "correspondence",
+      PerfType.CRAZYHOUSE: "crazyhouse",
+      PerfType.CHESS960: "chess960",
+      PerfType.KING_OF_THE_HILL: "kingOfTheHill",
+      PerfType.THREE_CHECK: "threeCheck",
+      PerfType.ANTICHESS: "antichess",
+      PerfType.ATOMIC: "atomic",
+      PerfType.HORDE: "horde",
+      PerfType.RACING_KINGS: "racingKings",
+    }
+    return perf_type_to_name.get(self, "unknown")
+
 
 @dataclasses.dataclass(frozen=True)
 class Perf:

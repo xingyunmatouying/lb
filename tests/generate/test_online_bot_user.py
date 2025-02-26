@@ -45,6 +45,10 @@ class TestLichessClient(unittest.TestCase):
     self.assertEqual(PerfType.from_json("racingKings"), PerfType.RACING_KINGS)
     self.assertEqual(PerfType.from_json(""), PerfType.UNKNOWN)
 
+  def test_perf_type_to_string_round_trip(self) -> None:
+    for perf_type in PerfType:
+      self.assertEqual(PerfType.from_json(perf_type.to_string()), perf_type)
+
   def test_online_bot_user_from_json_parses_username(self) -> None:
     bot_user = OnlineBotUser.from_json(TEST_ONLINE_BOT_USER_JSON)
     self.assertEqual(bot_user.username, "Test_Username")
