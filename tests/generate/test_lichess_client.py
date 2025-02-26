@@ -2,13 +2,13 @@
 
 import unittest
 
-from src.generate import lichess_client
+from src.generate.lichess_client import LichessClient
 
 
 TEST_ONLINE_BOT_USER = "{some json}"
 
 
-class MockLichessClient(lichess_client.LichessClient):
+class MockLichessClient(LichessClient):
   def get_online_bots(self) -> str:
     return TEST_ONLINE_BOT_USER
 
