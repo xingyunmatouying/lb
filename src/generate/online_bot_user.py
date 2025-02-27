@@ -7,7 +7,7 @@ These dataclasses include functions for parsing their corresponding lichess json
 import dataclasses
 import json
 from enum import Enum
-from typing import Any
+from typing import Any, Generator
 
 
 class PerfType(Enum):
@@ -53,6 +53,13 @@ class PerfType(Enum):
   HORDE = 12  # https://lichess.org/variant/horde
   # https://en.wikipedia.org/wiki/V._R._Parton#Racing_Kings
   RACING_KINGS = 13  # https://lichess.org/variant/racingKings
+
+  @classmethod
+  def all_except_unknown(cls) -> Generator["PerfType"]:
+    """Yield all PerfType values except unknown."""
+    for perf_type in PerfType:
+      if perf_type != PerfType.UNKNOWN:
+        yield perf_type
 
   @classmethod
   def from_json(cls, json_str: str) -> "PerfType":

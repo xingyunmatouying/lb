@@ -49,6 +49,14 @@ class TestLichessClient(unittest.TestCase):
     for perf_type in PerfType:
       self.assertEqual(PerfType.from_json(perf_type.to_string()), perf_type)
 
+  def test_perf_type_all_except_unknown(self) -> None:
+    all_except_unknown = list(PerfType.all_except_unknown())
+    for perf_type in PerfType:
+      if perf_type == PerfType.UNKNOWN:
+        self.assertNotIn(perf_type, all_except_unknown)
+      else:
+        self.assertIn(perf_type, all_except_unknown)
+
   def test_online_bot_user_from_json_parses_username(self) -> None:
     bot_user = OnlineBotUser.from_json(TEST_ONLINE_BOT_USER_JSON)
     self.assertEqual(bot_user.username, "Test_Username")
