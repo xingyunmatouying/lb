@@ -16,6 +16,6 @@ class FakeFileSystem(FileSystem):
 
 
 class TestFileSystem(unittest.TestCase):
-  def test_load_file_lines_returns_list(self) -> None:
+  def test_load_file_lines(self) -> None:
     file_system = FakeFileSystem()
     self.assertEqual(file_system.load_file_lines(TEST_FILE_NAME), TEST_FILE_LINES)

@@ -14,6 +14,6 @@ class FakeLichessClient(LichessClient):
 
 
 class TestLichessClient(unittest.TestCase):
-  def test_get_online_bots_returns_string(self) -> None:
+  def test_get_online_bots(self) -> None:
     lichess_client = FakeLichessClient()
     self.assertEqual(lichess_client.get_online_bots(), TEST_ONLINE_BOT_USER)

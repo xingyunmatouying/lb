@@ -29,7 +29,7 @@ TEST_ONLINE_BOT_USER_JSON = """
 
 
 class TestLichessClient(unittest.TestCase):
-  def test_perf_type_from_json_parses_all_perf_types(self) -> None:
+  def test_perf_type_from_json(self) -> None:
     self.assertEqual(PerfType.from_json("bullet"), PerfType.BULLET)
     self.assertEqual(PerfType.from_json("blitz"), PerfType.BLITZ)
     self.assertEqual(PerfType.from_json("rapid"), PerfType.RAPID)
@@ -57,15 +57,12 @@ class TestLichessClient(unittest.TestCase):
       else:
         self.assertIn(perf_type, all_except_unknown)
 
-  def test_online_bot_user_from_json_parses_username(self) -> None:
-    bot_user = OnlineBotUser.from_json(TEST_ONLINE_BOT_USER_JSON)
-    self.assertEqual(bot_user.username, "Test_Username")
-
-  def test_online_bot_user_from_json_parses_perfs(self) -> None:
+  def test_online_bot_user_from_json(self) -> None:
     bot_user = OnlineBotUser.from_json(TEST_ONLINE_BOT_USER_JSON)
     expected_perfs = [
       Perf(PerfType.BULLET, 123, 1450, False),
       Perf(PerfType.BLITZ, 456, 1500, False),
       Perf(PerfType.RAPID, 789, 1550, True),
     ]
+    self.assertEqual(bot_user.username, "Test_Username")
     self.assertListEqual(bot_user.perfs, expected_perfs)
