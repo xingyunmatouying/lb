@@ -6,7 +6,7 @@ This module also includes functions for generating the leaderboards from a list 
 
 import dataclasses
 
-from src.generate.online_bot_user import OnlineBotUser, PerfType
+from src.generate.online_bot_user import OnlineBotUser, Perf
 
 
 @dataclasses.dataclass(frozen=True)
@@ -35,17 +35,9 @@ class LeaderboardPerf:
   last_seen_date: str
 
   @classmethod
-  def create_perfs_grouped_by_perf_type(cls, bot_user: OnlineBotUser) -> dict[PerfType, "LeaderboardPerf"]:
-    """Convert an OnlineBotUser into a map from perf_type -> perf."""
-    username = bot_user.username
-    created_date = "TODO"
-    last_seen_date = "TODO"
-
-    perf_dict: dict[PerfType, LeaderboardPerf] = {}
-    for perf in bot_user.perfs:
-      perf_dict[perf.perf_type] = LeaderboardPerf(username, perf.rating, perf.games, created_date, last_seen_date)
-
-    return perf_dict
+  def from_online_bot_user(cls, online_bot_user: OnlineBotUser, perf: Perf) -> "LeaderboardPerf":
+    """Create a leaderboard perf from a bot user and a perf."""
+    return LeaderboardPerf(online_bot_user.username, perf.rating, perf.games, "TODO", "TODO")
 
 
 @dataclasses.dataclass(frozen=True)

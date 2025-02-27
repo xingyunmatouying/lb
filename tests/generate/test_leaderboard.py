@@ -6,10 +6,8 @@ from src.generate.leaderboard import LeaderboardPerf, LeaderboardRow
 from src.generate.online_bot_user import OnlineBotUser, Perf, PerfType
 
 
-TEST_OBU_1 = OnlineBotUser(
-  "Bot1",
-  [Perf(PerfType.BULLET, 100, 1450, False), Perf(PerfType.BLITZ, 200, 1500, False), Perf(PerfType.RAPID, 300, 1550, False)],
-)
+TEST_BULLET_PERF = Perf(PerfType.BULLET, 100, 1450, False)
+TEST_ONLINE_BOT_USER = OnlineBotUser("Bot1", [TEST_BULLET_PERF])
 
 TOP_BOT = LeaderboardPerf("Top Bot", 1800, 400, "2021-04-01", "2025-10-12")
 FIRST_MIDDLE_BOT = LeaderboardPerf("First Middle Bot", 1500, 100, "2022-04-01", "2025-10-12")
@@ -19,11 +17,8 @@ BOTTOM_BOT = LeaderboardPerf("Bottom Bot", 1200, 300, "2025-04-01", "2025-10-12"
 
 class TestLeaderboard(unittest.TestCase):
   def test_create_perfs_grouped_by_perf_type_with_three_perfs_creates_correct_leaderboard_perfs(self) -> None:
-    perf_type_to_perf = LeaderboardPerf.create_perfs_grouped_by_perf_type(TEST_OBU_1)
-    self.assertEqual(len(perf_type_to_perf), 3)
-    self.assertEqual(perf_type_to_perf[PerfType.BULLET], LeaderboardPerf("Bot1", 1450, 100, "TODO", "TODO"))
-    self.assertEqual(perf_type_to_perf[PerfType.BLITZ], LeaderboardPerf("Bot1", 1500, 200, "TODO", "TODO"))
-    self.assertEqual(perf_type_to_perf[PerfType.RAPID], LeaderboardPerf("Bot1", 1550, 300, "TODO", "TODO"))
+    leaderboard_perf = LeaderboardPerf.from_online_bot_user(TEST_ONLINE_BOT_USER, TEST_BULLET_PERF)
+    self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "TODO", "TODO"))
 
   def test_leaderboard_row_from_psv(self) -> None:
     leaderboard_row = LeaderboardRow.from_psv("Bot1|1500|100|2024-04-01|2025-04-01|4|1|50|3|1600")
