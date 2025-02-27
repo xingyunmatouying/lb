@@ -8,5 +8,5 @@ class FileSystem(abc.ABC):
 
   @abc.abstractmethod
   def load_file_lines(self, file_name: str) -> list[str]:
-    """Return all of the lines in a file."""
+    """Load and return all of the lines in a file."""
     ...

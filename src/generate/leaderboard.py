@@ -1,5 +1,4 @@
-"""
-Leaderboard and related dataclasses.
+"""Leaderboard and related dataclasses.
 
 This module also includes functions for generating the leaderboards from a list of OnlineBotUser.
 """
@@ -11,8 +10,7 @@ from src.generate.online_bot_user import OnlineBotUser, Perf
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardPerf:
-  """
-  A bots performance for a known PerfType.
+  """A bots performance for a known PerfType.
 
   The performance type is not stored within this object itself.
 
@@ -42,8 +40,7 @@ class LeaderboardPerf:
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardRow:
-  """
-  A row in the leaderboard: rank, name, rating, etc...
+  """A row in the leaderboard: rank, name, rating, etc...
 
   This class includes a LeaderboardPerf as well as additional details which are easier to calculate after the fact.
   """
@@ -104,8 +101,7 @@ class LeaderboardRow:
 
   @classmethod
   def create_leaderboard_rows(cls, perf_list: list[LeaderboardPerf]) -> list["LeaderboardRow"]:
-    """
-    Take a list of bot info and create a list of leaderboard rows.
+    """Take a list of bot info and create a list of leaderboard rows.
 
     The resulting list is sorted by rating descending. This is a consequence of rank is determined (by sorting).
 

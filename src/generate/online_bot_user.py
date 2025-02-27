@@ -1,5 +1,4 @@
-"""
-Bot user and related dataclasses.
+"""Bot user and related dataclasses.
 
 These dataclasses include functions for parsing their corresponding lichess json representations.
 """
@@ -11,8 +10,7 @@ from typing import Any, Generator
 
 
 class PerfType(Enum):
-  """
-  Represents the time controls and variants (a.k.a. game modes) available on lichess.
+  """Represents the time controls and variants (a.k.a. game modes) available on lichess.
 
   Related lichess documentation:
     - https://lichess.org/faq#time-controls
@@ -103,8 +101,7 @@ class PerfType(Enum):
 
 @dataclasses.dataclass(frozen=True)
 class Perf:
-  """
-  Performance refers to a players ratings for a particular time control or variant.
+  """Performance refers to a players ratings for a particular time control or variant.
 
   Example game modes include: bullet, blitz, classical, chess960, ...
 
@@ -131,8 +128,7 @@ class Perf:
 
 @dataclasses.dataclass(frozen=True)
 class OnlineBotUser:
-  """
-  A bot user and their list of performances.
+  """A bot user and their list of performances.
 
   This only contains a small subset of what is available via the lichess API.
   """
