@@ -10,8 +10,14 @@ from src.generate.online_bot_user import OnlineBotUser, PerfType
 
 
 @dataclasses.dataclass(frozen=True)
-class LeaderboardBotInfo:
-  """A translation of what is returned by the lichess API which is used as part of a row on the leaderboard."""
+class LeaderboardPerf:
+  """
+  A bots performance for a known PerfType.
+
+  The performance type is not stored within this object itself.
+
+  This also contains some additional information about the bot.
+  """
 
   # The bot's username
   username: str
@@ -29,17 +35,17 @@ class LeaderboardBotInfo:
   last_seen_date: str
 
   @classmethod
-  def create_bot_infos_grouped_by_perf_type(cls, bot_user: OnlineBotUser) -> dict[PerfType, "LeaderboardBotInfo"]:
-    """Convert an OnlineBotUser into a map from perf_type -> bot_info."""
+  def create_perfs_grouped_by_perf_type(cls, bot_user: OnlineBotUser) -> dict[PerfType, "LeaderboardPerf"]:
+    """Convert an OnlineBotUser into a map from perf_type -> perf."""
     username = bot_user.username
     created_date = "TODO"
     last_seen_date = "TODO"
 
-    bot_info_dict: dict[PerfType, LeaderboardBotInfo] = {}
+    perf_dict: dict[PerfType, LeaderboardPerf] = {}
     for perf in bot_user.perfs:
-      bot_info_dict[perf.perf_type] = LeaderboardBotInfo(username, perf.rating, perf.games, created_date, last_seen_date)
+      perf_dict[perf.perf_type] = LeaderboardPerf(username, perf.rating, perf.games, created_date, last_seen_date)
 
-    return bot_info_dict
+    return perf_dict
 
 
 @dataclasses.dataclass(frozen=True)
@@ -47,11 +53,11 @@ class LeaderboardRow:
   """
   A row in the leaderboard: rank, name, rating, etc...
 
-  This class includes a LeaderboardBotInfo as well as additional details which are easier to calculate after the fact.
+  This class includes a LeaderboardPerf as well as additional details which are easier to calculate after the fact.
   """
 
   # Information about the bot returned by the lichess API
-  bot_info: LeaderboardBotInfo
+  perf: LeaderboardPerf
 
   # The bot's position within the leaderboard
   rank: int
@@ -78,7 +84,7 @@ class LeaderboardRow:
     games = int(values[2])
     created_date = values[3]
     last_seen_date = values[4]
-    bot_info = LeaderboardBotInfo(username, rating, games, created_date, last_seen_date)
+    perf = LeaderboardPerf(username, rating, games, created_date, last_seen_date)
 
     rank = int(values[5])
     rank_delta = int(values[6])
@@ -86,10 +92,10 @@ class LeaderboardRow:
     peak_rank = int(values[8])
     peak_rating = int(values[9])
 
-    return LeaderboardRow(bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
 
   @classmethod
-  def create_leaderboard_rows(cls, bot_info_list: list[LeaderboardBotInfo]) -> list["LeaderboardRow"]:
+  def create_leaderboard_rows(cls, perf_list: list[LeaderboardPerf]) -> list["LeaderboardRow"]:
     """
     Take a list of bot info and create a list of leaderboard rows.
 
@@ -100,7 +106,7 @@ class LeaderboardRow:
     leaderboard.
     """
     # Primary sort: by rating descending, Secondary sort: creation date ascending
-    sorted_bot_info_list = sorted(bot_info_list, key=lambda bot_info: (-bot_info.rating, bot_info.created_date))
+    sorted_perf_list = sorted(perf_list, key=lambda perf: (-perf.rating, perf.created_date))
 
     # The first in the list will be ranked #1
     rank = 0
@@ -113,8 +119,8 @@ class LeaderboardRow:
     previous_rating = 0
 
     leaderboard_rows: list[LeaderboardRow] = []
-    for bot_info in sorted_bot_info_list:
-      if bot_info.rating == previous_rating:
+    for perf in sorted_perf_list:
+      if perf.rating == previous_rating:
         same_rank_count += 1
       else:
         rank += same_rank_count
@@ -122,8 +128,8 @@ class LeaderboardRow:
         same_rank_count = 0
       # The peaks become more interesting when comparing with a previous iteration of the leaderboard
       peak_rank = rank
-      peak_rating = bot_info.rating
-      leaderboard_rows.append(LeaderboardRow(bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating))
-      previous_rating = bot_info.rating
+      peak_rating = perf.rating
+      leaderboard_rows.append(LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating))
+      previous_rating = perf.rating
 
     return leaderboard_rows
