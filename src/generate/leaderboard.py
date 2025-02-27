@@ -86,6 +86,22 @@ class LeaderboardRow:
 
     return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
 
+  def to_psv(self) -> str:
+    """Convert the bot in to a string of pipe separated values."""
+    values: list[str] = [
+      self.perf.username,
+      str(self.perf.rating),
+      str(self.perf.games),
+      self.perf.created_date,
+      self.perf.last_seen_date,
+      str(self.rank),
+      str(self.rank_delta),
+      str(self.rating_delta),
+      str(self.peak_rank),
+      str(self.peak_rating),
+    ]
+    return "|".join(values)
+
   @classmethod
   def create_leaderboard_rows(cls, perf_list: list[LeaderboardPerf]) -> list["LeaderboardRow"]:
     """

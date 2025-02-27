@@ -26,6 +26,12 @@ class TestLeaderboard(unittest.TestCase):
     expected_leaderboard_row = LeaderboardRow(expected_perf, 4, 1, 50, 3, 1600)
     self.assertEqual(leaderboard_row, expected_leaderboard_row)
 
+  def test_leaderboard_row_to_psv(self) -> None:
+    perf = LeaderboardPerf("Bot1", 1500, 100, "2024-04-01", "2025-04-01")
+    leaderboard_row = LeaderboardRow(perf, 4, 1, 50, 3, 1600)
+    expected_psv = "Bot1|1500|100|2024-04-01|2025-04-01|4|1|50|3|1600"
+    self.assertEqual(leaderboard_row.to_psv(), expected_psv)
+
   def test_create_leaderboard_rows_with_one_perf_creates_correct_row(self) -> None:
     leaderboard_rows = LeaderboardRow.create_leaderboard_rows([TOP_BOT])
     self.assertEqual(len(leaderboard_rows), 1)
