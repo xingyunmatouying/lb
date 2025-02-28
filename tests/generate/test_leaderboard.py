@@ -3,7 +3,7 @@
 import unittest
 
 from src.generate.leaderboard import LeaderboardPerf, LeaderboardRow
-from src.generate.online_bot_user import OnlineBotUser, Perf, PerfType
+from src.generate.lichess_bot_user import OnlineBotUser, Perf, PerfType
 
 
 TEST_BULLET_PERF = Perf(PerfType.BULLET, 100, 1450, False)

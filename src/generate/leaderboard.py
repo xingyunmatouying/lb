@@ -5,7 +5,7 @@ This module also includes functions for generating the leaderboards from a list 
 
 import dataclasses
 
-from src.generate.online_bot_user import OnlineBotUser, Perf
+from src.generate.lichess_bot_user import OnlineBotUser, Perf
 
 
 @dataclasses.dataclass(frozen=True)

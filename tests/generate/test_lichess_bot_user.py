@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.generate.online_bot_user import OnlineBotUser, Perf, PerfType
+from src.generate.lichess_bot_user import OnlineBotUser, Perf, PerfType
 
 
 TEST_ONLINE_BOT_USER_JSON = """
