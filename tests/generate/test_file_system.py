@@ -2,24 +2,17 @@
 
 import unittest
 
-from src.generate.file_system import FileSystem
+from generate.in_memory_file_system import InMemoryFileSystem
 
 
 TEST_FILE_NAME = "test"
 TEST_FILE_LINES = ["1", "2", "3"]
-TEST_FILE_SYSTEM = {TEST_FILE_NAME: TEST_FILE_LINES}
-
-
-class FakeFileSystem(FileSystem):
-  """A fake implementation of FileSystem."""
-
-  def load_file_lines(self, file_name: str) -> list[str]:
-    return TEST_FILE_SYSTEM[file_name]
 
 
 class TestFileSystem(unittest.TestCase):
   """Tests for FileSystem."""
 
-  def test_load_file_lines(self) -> None:
-    file_system = FakeFileSystem()
+  def test_save_and_load(self) -> None:
+    file_system = InMemoryFileSystem()
+    file_system.save_file_lines(TEST_FILE_NAME, TEST_FILE_LINES)
     self.assertEqual(file_system.load_file_lines(TEST_FILE_NAME), TEST_FILE_LINES)
