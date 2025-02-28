@@ -5,8 +5,9 @@ These dataclasses include functions for parsing their corresponding lichess json
 
 import dataclasses
 import json
+from collections.abc import Generator
 from enum import Enum
-from typing import Any, Generator
+from typing import Any
 
 
 class PerfType(Enum):
