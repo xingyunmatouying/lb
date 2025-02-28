@@ -16,6 +16,8 @@ BOTTOM_BOT = LeaderboardPerf("Bottom Bot", 1200, 300, "2025-04-01", "2025-10-12"
 
 
 class TestLeaderboard(unittest.TestCase):
+  """Tests for leaderboard related functionality."""
+
   def test_leaderboard_perf_from_online_bot_user(self) -> None:
     leaderboard_perf = LeaderboardPerf.from_online_bot_user(TEST_ONLINE_BOT_USER, TEST_BULLET_PERF)
     self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "TODO", "TODO"))

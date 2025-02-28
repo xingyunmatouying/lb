@@ -29,6 +29,8 @@ TEST_ONLINE_BOT_USER_JSON = """
 
 
 class TestLichessClient(unittest.TestCase):
+  """Tests for OnlineBotUser."""
+
   def test_perf_type_from_json(self) -> None:
     self.assertEqual(PerfType.from_json("bullet"), PerfType.BULLET)
     self.assertEqual(PerfType.from_json("blitz"), PerfType.BLITZ)

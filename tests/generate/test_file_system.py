@@ -11,11 +11,15 @@ TEST_FILE_SYSTEM = {TEST_FILE_NAME: TEST_FILE_LINES}
 
 
 class FakeFileSystem(FileSystem):
+  """A fake implementation of FileSystem."""
+
   def load_file_lines(self, file_name: str) -> list[str]:
     return TEST_FILE_SYSTEM[file_name]
 
 
 class TestFileSystem(unittest.TestCase):
+  """Tests for FileSystem."""
+
   def test_load_file_lines(self) -> None:
     file_system = FakeFileSystem()
     self.assertEqual(file_system.load_file_lines(TEST_FILE_NAME), TEST_FILE_LINES)
