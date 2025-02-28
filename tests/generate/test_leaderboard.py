@@ -3,11 +3,11 @@
 import unittest
 
 from src.generate.leaderboard import LeaderboardPerf, LeaderboardRow
-from src.generate.lichess_bot_user import OnlineBotUser, Perf, PerfType
+from src.generate.lichess_bot_user import BotUser, Perf, PerfType
 
 
 TEST_BULLET_PERF = Perf(PerfType.BULLET, 100, 1450, False)
-TEST_ONLINE_BOT_USER = OnlineBotUser("Bot1", [TEST_BULLET_PERF])
+TEST_BOT_USER = BotUser("Bot1", [TEST_BULLET_PERF])
 
 TOP_BOT = LeaderboardPerf("Top Bot", 1800, 400, "2021-04-01", "2025-10-12")
 FIRST_MIDDLE_BOT = LeaderboardPerf("First Middle Bot", 1500, 100, "2022-04-01", "2025-10-12")
@@ -18,8 +18,8 @@ BOTTOM_BOT = LeaderboardPerf("Bottom Bot", 1200, 300, "2025-04-01", "2025-10-12"
 class TestLeaderboard(unittest.TestCase):
   """Tests for leaderboard related functionality."""
 
-  def test_leaderboard_perf_from_online_bot_user(self) -> None:
-    leaderboard_perf = LeaderboardPerf.from_online_bot_user(TEST_ONLINE_BOT_USER, TEST_BULLET_PERF)
+  def test_leaderboard_perf_from_bot_user(self) -> None:
+    leaderboard_perf = LeaderboardPerf.from_bot_user(TEST_BOT_USER, TEST_BULLET_PERF)
     self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "TODO", "TODO"))
 
   def test_leaderboard_row_from_psv(self) -> None:

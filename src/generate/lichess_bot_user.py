@@ -128,7 +128,7 @@ class Perf:
 
 
 @dataclasses.dataclass(frozen=True)
-class OnlineBotUser:
+class BotUser:
   """A bot user and their list of performances.
 
   This only contains a small subset of what is available via the lichess API.
@@ -139,8 +139,8 @@ class OnlineBotUser:
   perfs: list[Perf]
 
   @classmethod
-  def from_json(cls, json_str: str) -> "OnlineBotUser":
-    """Parse a line of ndjson and converts it to an OnlineBotUser."""
+  def from_json(cls, json_str: str) -> "BotUser":
+    """Parse a line of ndjson and converts it to an BotUser."""
     json_dict = json.loads(json_str)
     username = json_dict.get("username", "")
     perfs_dict = json_dict.get("perfs", [])
@@ -149,4 +149,4 @@ class OnlineBotUser:
     for perf_type_key, perf_json in perfs_dict.items():
       perfs.append(Perf.from_json(perf_type_key, perf_json))
 
-    return OnlineBotUser(username, perfs)
+    return BotUser(username, perfs)
