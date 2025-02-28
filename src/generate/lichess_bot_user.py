@@ -55,7 +55,7 @@ class PerfType(Enum):
 
   @classmethod
   def all_except_unknown(cls) -> Generator["PerfType"]:
-    """Yield all PerfType values except unknown."""
+    """Yield all PerfType values except UNKNOWN."""
     for perf_type in PerfType:
       if perf_type != PerfType.UNKNOWN:
         yield perf_type
