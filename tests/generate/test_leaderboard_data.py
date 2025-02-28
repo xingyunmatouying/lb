@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.generate.leaderboard import LeaderboardPerf, LeaderboardRow
+from src.generate.leaderboard_data import LeaderboardPerf, LeaderboardRow
 from src.generate.lichess_bot_user import BotUser, Perf, PerfType
 
 
