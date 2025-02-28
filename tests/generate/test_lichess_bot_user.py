@@ -28,10 +28,10 @@ TEST_BOT_USER_JSON = """
 """
 
 
-class TestLichessClient(unittest.TestCase):
-  """Tests for BotUser."""
+class TestPerfType(unittest.TestCase):
+  """Tests for PerfType."""
 
-  def test_perf_type_from_json(self) -> None:
+  def test_from_json(self) -> None:
     self.assertEqual(PerfType.from_json("bullet"), PerfType.BULLET)
     self.assertEqual(PerfType.from_json("blitz"), PerfType.BLITZ)
     self.assertEqual(PerfType.from_json("rapid"), PerfType.RAPID)
@@ -47,11 +47,11 @@ class TestLichessClient(unittest.TestCase):
     self.assertEqual(PerfType.from_json("racingKings"), PerfType.RACING_KINGS)
     self.assertEqual(PerfType.from_json(""), PerfType.UNKNOWN)
 
-  def test_perf_type_to_string_round_trip(self) -> None:
+  def test_to_string_round_trip(self) -> None:
     for perf_type in PerfType:
       self.assertEqual(PerfType.from_json(perf_type.to_string()), perf_type)
 
-  def test_perf_type_all_except_unknown(self) -> None:
+  def test_all_except_unknown(self) -> None:
     all_except_unknown = list(PerfType.all_except_unknown())
     for perf_type in PerfType:
       if perf_type == PerfType.UNKNOWN:
@@ -59,7 +59,11 @@ class TestLichessClient(unittest.TestCase):
       else:
         self.assertIn(perf_type, all_except_unknown)
 
-  def test_bot_user_from_json(self) -> None:
+
+class TestLichessClient(unittest.TestCase):
+  """Tests for BotUser."""
+
+  def test_from_json(self) -> None:
     bot_user = BotUser.from_json(TEST_BOT_USER_JSON)
     expected_perfs = [
       Perf(PerfType.BULLET, 123, 1450, False),

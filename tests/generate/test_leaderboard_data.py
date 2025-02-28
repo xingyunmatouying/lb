@@ -15,20 +15,24 @@ SECOND_MIDDLE_BOT = LeaderboardPerf("Second Middle Bot", 1500, 200, "2023-04-01"
 BOTTOM_BOT = LeaderboardPerf("Bottom Bot", 1200, 300, "2025-04-01", "2025-10-12")
 
 
-class TestLeaderboard(unittest.TestCase):
-  """Tests for leaderboard related functionality."""
+class TestLeaderboardPerf(unittest.TestCase):
+  """Tests for LeaderboardPeft."""
 
-  def test_leaderboard_perf_from_bot_user(self) -> None:
+  def test_from_bot_user(self) -> None:
     leaderboard_perf = LeaderboardPerf.from_bot_user(TEST_BOT_USER, TEST_BULLET_PERF)
     self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "TODO", "TODO"))
 
-  def test_leaderboard_row_from_psv(self) -> None:
+
+class TestLeaderboardRow(unittest.TestCase):
+  """Tests for LeaderboardRow."""
+
+  def test_from_psv(self) -> None:
     leaderboard_row = LeaderboardRow.from_psv("Bot1|1500|100|2024-04-01|2025-04-01|4|1|50|3|1600")
     expected_perf = LeaderboardPerf("Bot1", 1500, 100, "2024-04-01", "2025-04-01")
     expected_leaderboard_row = LeaderboardRow(expected_perf, 4, 1, 50, 3, 1600)
     self.assertEqual(leaderboard_row, expected_leaderboard_row)
 
-  def test_leaderboard_row_to_psv(self) -> None:
+  def test_to_psv(self) -> None:
     perf = LeaderboardPerf("Bot1", 1500, 100, "2024-04-01", "2025-04-01")
     leaderboard_row = LeaderboardRow(perf, 4, 1, 50, 3, 1600)
     expected_psv = "Bot1|1500|100|2024-04-01|2025-04-01|4|1|50|3|1600"
