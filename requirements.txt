@@ -1,0 +1,3 @@
+# All requirements required to generate the leaderboard
+
+-r requirements/requirements-leaderboard.txt
