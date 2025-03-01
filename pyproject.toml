@@ -50,11 +50,8 @@ select = [
   "W", # pycodestyle warning
 ]
 ignore = [
-  "D1", # Missing docstring in ...
-  "D203", # incorrect-blank-line-before-class
-  "D212", # multi-line-summary-first-line
-  "PLR0911", # too-many-return-statements (6)
-  "PLR0912", # too-many-branches (12)
+  "D203", # incorrect-blank-line-before-class (conflicts with "D211": blank-line-before-class)
+  "D213", # multi-line-summary-second-line (conflicts with "D212": multi-line-summary-first-line)
 ]
 
 [tool.ruff.lint.isort]
@@ -63,6 +60,12 @@ combine-as-imports = true
 # If global variables directly following imports, by default there will only be one blank line.
 # PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
+
+[tool.ruff.per-file-ignores]
+# Ignore all .py files starting with test_.
+"test_*.py" = [
+  "D102", # undocumented-public-method
+]
 
 
 # pyright
@@ -86,10 +89,6 @@ command_line = "-m unittest discover -v -s tests -p test_*.py"
 dynamic_context = "test_function"
 source = [
   "src",
-]
-# Include all python files in the coverage report
-include = [
-  "src/**/*.py",
 ]
 omit = [
   "**/__pycache__",

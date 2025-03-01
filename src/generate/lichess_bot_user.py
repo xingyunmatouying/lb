@@ -1,18 +1,17 @@
-"""
-Bot user and related dataclasses.
+"""Bot user and related dataclasses.
 
 These dataclasses include functions for parsing their corresponding lichess json representations.
 """
 
 import dataclasses
 import json
+from collections.abc import Generator
 from enum import Enum
 from typing import Any
 
 
 class PerfType(Enum):
-  """
-  Represents the time controls and variants (a.k.a. game modes) available on lichess.
+  """Represents the time controls and variants (a.k.a. game modes) available on lichess.
 
   Related lichess documentation:
     - https://lichess.org/faq#time-controls
@@ -55,42 +54,55 @@ class PerfType(Enum):
   RACING_KINGS = 13  # https://lichess.org/variant/racingKings
 
   @classmethod
+  def all_except_unknown(cls) -> Generator["PerfType"]:
+    """Yield all PerfType values except UNKNOWN."""
+    for perf_type in PerfType:
+      if perf_type != PerfType.UNKNOWN:
+        yield perf_type
+
+  @classmethod
   def from_json(cls, json_str: str) -> "PerfType":
-    match json_str:
-      case "bullet":
-        return PerfType.BULLET
-      case "blitz":
-        return PerfType.BLITZ
-      case "rapid":
-        return PerfType.RAPID
-      case "classical":
-        return PerfType.CLASSICAL
-      case "correspondence":
-        return PerfType.CORRESPONDENCE
-      case "crazyhouse":
-        return PerfType.CRAZYHOUSE
-      case "chess960":
-        return PerfType.CHESS960
-      case "kingOfTheHill":
-        return PerfType.KING_OF_THE_HILL
-      case "threeCheck":
-        return PerfType.THREE_CHECK
-      case "antichess":
-        return PerfType.ANTICHESS
-      case "atomic":
-        return PerfType.ATOMIC
-      case "horde":
-        return PerfType.HORDE
-      case "racingKings":
-        return PerfType.RACING_KINGS
-      case _:
-        return PerfType.UNKNOWN
+    """Return the corresponding PerfType based on the json representation."""
+    name_to_perf_type = {
+      "bullet": PerfType.BULLET,
+      "blitz": PerfType.BLITZ,
+      "rapid": PerfType.RAPID,
+      "classical": PerfType.CLASSICAL,
+      "correspondence": PerfType.CORRESPONDENCE,
+      "crazyhouse": PerfType.CRAZYHOUSE,
+      "chess960": PerfType.CHESS960,
+      "kingOfTheHill": PerfType.KING_OF_THE_HILL,
+      "threeCheck": PerfType.THREE_CHECK,
+      "antichess": PerfType.ANTICHESS,
+      "atomic": PerfType.ATOMIC,
+      "horde": PerfType.HORDE,
+      "racingKings": PerfType.RACING_KINGS,
+    }
+    return name_to_perf_type.get(json_str, PerfType.UNKNOWN)
+
+  def to_string(self) -> str:
+    """Return the original string (json) representation."""
+    perf_type_to_name = {
+      PerfType.BULLET: "bullet",
+      PerfType.BLITZ: "blitz",
+      PerfType.RAPID: "rapid",
+      PerfType.CLASSICAL: "classical",
+      PerfType.CORRESPONDENCE: "correspondence",
+      PerfType.CRAZYHOUSE: "crazyhouse",
+      PerfType.CHESS960: "chess960",
+      PerfType.KING_OF_THE_HILL: "kingOfTheHill",
+      PerfType.THREE_CHECK: "threeCheck",
+      PerfType.ANTICHESS: "antichess",
+      PerfType.ATOMIC: "atomic",
+      PerfType.HORDE: "horde",
+      PerfType.RACING_KINGS: "racingKings",
+    }
+    return perf_type_to_name.get(self, "unknown")
 
 
 @dataclasses.dataclass(frozen=True)
 class Perf:
-  """
-  Performance refers to a players ratings for a particular time control or variant.
+  """Performance refers to a players ratings for a particular time control or variant.
 
   Example game modes include: bullet, blitz, classical, chess960, ...
 
@@ -106,18 +118,18 @@ class Perf:
   prov: bool
 
   @classmethod
-  def from_json(cls, perf_type_key: str, perf_json: Any) -> "Perf":  # noqa: ANN401 - json makes Any unavoidable
+  def from_json(cls, perf_type_key: str, perf_json: dict[str, Any]) -> "Perf":
+    """Create a Perf based on a json key and value."""
+    perf_type = PerfType.from_json(perf_type_key)
     games = perf_json.get("games", 0)
     rating = perf_json.get("rating", 0)
     prov = perf_json.get("prov", False)
-    perf_type = PerfType.from_json(perf_type_key)
     return Perf(perf_type, games, rating, prov)
 
 
 @dataclasses.dataclass(frozen=True)
-class OnlineBotUser:
-  """
-  A bot user and their list of performances.
+class BotUser:
+  """A bot user and their list of performances.
 
   This only contains a small subset of what is available via the lichess API.
   """
@@ -127,8 +139,8 @@ class OnlineBotUser:
   perfs: list[Perf]
 
   @classmethod
-  def from_json(cls, json_str: str) -> "OnlineBotUser":
-    """Parse a line of ndjson and converts it to an OnlineBotUser."""
+  def from_json(cls, json_str: str) -> "BotUser":
+    """Parse a line of ndjson and converts it to an BotUser."""
     json_dict = json.loads(json_str)
     username = json_dict.get("username", "")
     perfs_dict = json_dict.get("perfs", [])
@@ -137,4 +149,4 @@ class OnlineBotUser:
     for perf_type_key, perf_json in perfs_dict.items():
       perfs.append(Perf.from_json(perf_type_key, perf_json))
 
-    return OnlineBotUser(username, perfs)
+    return BotUser(username, perfs)

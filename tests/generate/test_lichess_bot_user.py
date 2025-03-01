@@ -1,11 +1,11 @@
-"""Tests for online_bot_user.py."""
+"""Tests for lichess_bot_user.py."""
 
 import unittest
 
-from src.generate.online_bot_user import OnlineBotUser, Perf, PerfType
+from src.generate.lichess_bot_user import BotUser, Perf, PerfType
 
 
-TEST_ONLINE_BOT_USER_JSON = """
+TEST_BOT_USER_JSON = """
 {
   "id": "test_username",
   "username": "Test_Username",
@@ -28,8 +28,10 @@ TEST_ONLINE_BOT_USER_JSON = """
 """
 
 
-class TestLichessClient(unittest.TestCase):
-  def test_perf_type_from_json_parses_all_perf_types(self) -> None:
+class TestPerfType(unittest.TestCase):
+  """Tests for PerfType."""
+
+  def test_from_json(self) -> None:
     self.assertEqual(PerfType.from_json("bullet"), PerfType.BULLET)
     self.assertEqual(PerfType.from_json("blitz"), PerfType.BLITZ)
     self.assertEqual(PerfType.from_json("rapid"), PerfType.RAPID)
@@ -45,15 +47,28 @@ class TestLichessClient(unittest.TestCase):
     self.assertEqual(PerfType.from_json("racingKings"), PerfType.RACING_KINGS)
     self.assertEqual(PerfType.from_json(""), PerfType.UNKNOWN)
 
-  def test_online_bot_user_from_json_parses_username(self) -> None:
-    bot_user = OnlineBotUser.from_json(TEST_ONLINE_BOT_USER_JSON)
-    self.assertEqual(bot_user.username, "Test_Username")
+  def test_to_string_round_trip(self) -> None:
+    for perf_type in PerfType:
+      self.assertEqual(PerfType.from_json(perf_type.to_string()), perf_type)
 
-  def test_online_bot_user_from_json_parses_perfs(self) -> None:
-    bot_user = OnlineBotUser.from_json(TEST_ONLINE_BOT_USER_JSON)
+  def test_all_except_unknown(self) -> None:
+    all_except_unknown = list(PerfType.all_except_unknown())
+    for perf_type in PerfType:
+      if perf_type == PerfType.UNKNOWN:
+        self.assertNotIn(perf_type, all_except_unknown)
+      else:
+        self.assertIn(perf_type, all_except_unknown)
+
+
+class TestLichessClient(unittest.TestCase):
+  """Tests for BotUser."""
+
+  def test_from_json(self) -> None:
+    bot_user = BotUser.from_json(TEST_BOT_USER_JSON)
     expected_perfs = [
       Perf(PerfType.BULLET, 123, 1450, False),
       Perf(PerfType.BLITZ, 456, 1500, False),
       Perf(PerfType.RAPID, 789, 1550, True),
     ]
+    self.assertEqual(bot_user.username, "Test_Username")
     self.assertListEqual(bot_user.perfs, expected_perfs)
