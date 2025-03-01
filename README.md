@@ -26,7 +26,7 @@
     pip install -r requirements.txt
     ```
 
-4. Generate the leaderboard
+4. Generate the leaderboards
 
     ```shell
     python -m src.generate
@@ -38,7 +38,7 @@
 
 1. Create a virtual environment
 2. Activate the environment
-3. Install all requirements to generate the leaderboard as well as for linting, formatting, and code coverage
+3. Install all requirements to generate the leaderboards as well as for linting, formatting, and code coverage
 
     ```shell
     pip install -r requirements\requirements-all.txt
