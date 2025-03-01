@@ -44,10 +44,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: 🛠️ Install dependencies (python)
-        # Currently no dependencies ...
-        run: |
-          python -m pip install --upgrade pip
       # Setup node.js
       - name: 🐸 Setup node.js
         uses: actions/setup-node@v3
@@ -79,10 +75,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      # Currently no dependencies ...
-      - name: 🛠️ Install dependencies
-        run: |
-          python -m pip install --upgrade pip
       # Run tests
       - name: ⚗️ Run unit tests
         run: |
