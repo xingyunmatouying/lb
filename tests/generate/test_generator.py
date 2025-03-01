@@ -81,7 +81,7 @@ class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
   def test_get_psv_file_name(self) -> None:
-    self.assertEqual(generator.get_psv_file_name(PerfType.BLITZ), "blitz.psv")
+    self.assertEqual(generator.get_psv_file_name(PerfType.BLITZ), "leaderboard_data/blitz.psv")
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()

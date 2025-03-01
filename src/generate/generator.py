@@ -10,7 +10,7 @@ from src.generate.lichess_client import LichessClient
 
 def get_psv_file_name(perf_type: PerfType) -> str:
   """Return the data file name for a PerfType."""
-  return f"{perf_type.to_string()}.psv"
+  return f"leaderboard_data/{perf_type.to_string()}.psv"
 
 
 def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
