@@ -156,9 +156,7 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @classmethod
-  def from_previous_row_and_current_perf(
-    cls, previous_row: LeaderboardRow | None, current_perf: LeaderboardPerf | None
-  ) -> "LeaderboardUpdate":
+  def create_update(cls, previous_row: LeaderboardRow | None, current_perf: LeaderboardPerf | None) -> "LeaderboardUpdate":
     """Return the specific type of update based on the presence of previous_row and current_perf.
 
     If both parameters are None, a ValueError will be raised.

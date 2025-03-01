@@ -83,10 +83,10 @@ class TestLeaderboardUpdate(unittest.TestCase):
   """Tests for LeaderboardUpdate and subclasses."""
 
   def test_from_previous_row_and_current_perf(self) -> None:
-    self.assertIsInstance(LeaderboardUpdate.from_previous_row_and_current_perf(TOP_BOT_ROW, TOP_BOT_PERF), FullUpdate)
-    self.assertIsInstance(LeaderboardUpdate.from_previous_row_and_current_perf(TOP_BOT_ROW, None), PreviousRowOnlyUpdate)
-    self.assertIsInstance(LeaderboardUpdate.from_previous_row_and_current_perf(None, TOP_BOT_PERF), CurrentPerfOnlyUpdate)
-    self.assertRaises(ValueError, lambda: LeaderboardUpdate.from_previous_row_and_current_perf(None, None))
+    self.assertIsInstance(LeaderboardUpdate.create_update(TOP_BOT_ROW, TOP_BOT_PERF), FullUpdate)
+    self.assertIsInstance(LeaderboardUpdate.create_update(TOP_BOT_ROW, None), PreviousRowOnlyUpdate)
+    self.assertIsInstance(LeaderboardUpdate.create_update(None, TOP_BOT_PERF), CurrentPerfOnlyUpdate)
+    self.assertRaises(ValueError, lambda: LeaderboardUpdate.create_update(None, None))
 
   def test_row_only_update(self) -> None:
     previous_perf = LeaderboardPerf("Bot 1", 1500, 100, "2024-01-01", "2025-01-01")
