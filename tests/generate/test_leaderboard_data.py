@@ -48,36 +48,6 @@ class TestLeaderboardRow(unittest.TestCase):
     expected_psv = "Bot1|1500|100|2024-04-01|2025-04-01|4|1|50|3|1600"
     self.assertEqual(leaderboard_row.to_psv(), expected_psv)
 
-  def test_create_leaderboard_rows_with_one_perf(self) -> None:
-    leaderboard_rows = LeaderboardRow.create_leaderboard_rows([TOP_BOT_PERF])
-    self.assertEqual(len(leaderboard_rows), 1)
-    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT_PERF, 1, 0, 0, 1, 1800))
-
-  def test_create_leaderboard_rows_with_three_perfs(self) -> None:
-    leaderboard_rows = LeaderboardRow.create_leaderboard_rows([FIRST_MIDDLE_BOT_PERF, BOTTOM_BOT_PERF, TOP_BOT_PERF])
-    self.assertEqual(len(leaderboard_rows), 3)
-    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT_PERF, 1, 0, 0, 1, 1800))
-    self.assertEqual(leaderboard_rows[1], LeaderboardRow(FIRST_MIDDLE_BOT_PERF, 2, 0, 0, 2, 1500))
-    self.assertEqual(leaderboard_rows[2], LeaderboardRow(BOTTOM_BOT_PERF, 3, 0, 0, 3, 1200))
-
-  def test_create_leaderboard_rows_with_tied_ratings(self) -> None:
-    leaderboard_rows = LeaderboardRow.create_leaderboard_rows(
-      [SECOND_MIDDLE_BOT_PERF, BOTTOM_BOT_PERF, TOP_BOT_PERF, FIRST_MIDDLE_BOT_PERF]
-    )
-    self.assertEqual(len(leaderboard_rows), 4)
-    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT_PERF, 1, 0, 0, 1, 1800))
-    self.assertEqual(leaderboard_rows[1], LeaderboardRow(FIRST_MIDDLE_BOT_PERF, 2, 0, 0, 2, 1500))
-    self.assertEqual(leaderboard_rows[2], LeaderboardRow(SECOND_MIDDLE_BOT_PERF, 2, 0, 0, 2, 1500))
-    self.assertEqual(leaderboard_rows[3], LeaderboardRow(BOTTOM_BOT_PERF, 4, 0, 0, 4, 1200))
-
-  def test_create_leaderboard_rows_with_three_way_tie(self) -> None:
-    leaderboard_rows = LeaderboardRow.create_leaderboard_rows([BOTTOM_BOT_PERF, TOP_BOT_PERF, TOP_BOT_PERF, TOP_BOT_PERF])
-    self.assertEqual(len(leaderboard_rows), 4)
-    self.assertEqual(leaderboard_rows[0], LeaderboardRow(TOP_BOT_PERF, 1, 0, 0, 1, 1800))
-    self.assertEqual(leaderboard_rows[1], LeaderboardRow(TOP_BOT_PERF, 1, 0, 0, 1, 1800))
-    self.assertEqual(leaderboard_rows[1], LeaderboardRow(TOP_BOT_PERF, 1, 0, 0, 1, 1800))
-    self.assertEqual(leaderboard_rows[3], LeaderboardRow(BOTTOM_BOT_PERF, 4, 0, 0, 4, 1200))
-
 
 class TestLeaderboardUpdate(unittest.TestCase):
   """Tests for LeaderboardUpdate and subclasses."""

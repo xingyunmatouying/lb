@@ -97,45 +97,6 @@ class LeaderboardRow:
     ]
     return "|".join(values)
 
-  @classmethod
-  def create_leaderboard_rows(cls, perf_list: list[LeaderboardPerf]) -> list["LeaderboardRow"]:
-    """Take a list of bot info and create a list of leaderboard rows.
-
-    The resulting list is sorted by rating descending. This is a consequence of rank is determined (by sorting).
-
-    rank_delta, rating_delta, peak_rank, and peak_rating all depend on what was within the leaderboard previously. As a result
-    these are set to default values here and are expected to be updated later when we merge this list with an existing
-    leaderboard.
-    """
-    # Primary sort: by rating descending, Secondary sort: creation date ascending
-    sorted_perf_list = sorted(perf_list, key=lambda perf: (-perf.rating, perf.created_date))
-
-    # The first in the list will be ranked #1
-    rank = 0
-    # No change for deltas since we have nothing to compare to (yet)
-    rank_delta = 0
-    rating_delta = 0
-
-    # Used for 1224 ranking (https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking))
-    same_rank_count = 0
-    previous_rating = 0
-
-    leaderboard_rows: list[LeaderboardRow] = []
-    for perf in sorted_perf_list:
-      if perf.rating == previous_rating:
-        same_rank_count += 1
-      else:
-        rank += same_rank_count
-        rank += 1
-        same_rank_count = 0
-      # The peaks become more interesting when comparing with a previous iteration of the leaderboard
-      peak_rank = rank
-      peak_rating = perf.rating
-      leaderboard_rows.append(LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating))
-      previous_rating = perf.rating
-
-    return leaderboard_rows
-
 
 class LeaderboardUpdate(abc.ABC):
   """The information required to update a row in the leaderboard."""
