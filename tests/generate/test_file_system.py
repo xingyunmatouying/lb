@@ -15,4 +15,4 @@ class TestFileSystem(unittest.TestCase):
   def test_save_and_load(self) -> None:
     file_system = InMemoryFileSystem()
     file_system.save_file_lines(TEST_FILE_NAME, TEST_FILE_LINES)
-    self.assertEqual(file_system.load_file_lines(TEST_FILE_NAME), TEST_FILE_LINES)
+    self.assertListEqual(file_system.load_file_lines(TEST_FILE_NAME), TEST_FILE_LINES)
