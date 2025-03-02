@@ -127,6 +127,7 @@ class Perf:
   prog: int
 
   # If the bot's rating is provisional
+  # See: https://lichess.org/faq#provisional
   prov: bool
 
   @classmethod
