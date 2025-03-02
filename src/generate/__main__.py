@@ -16,6 +16,9 @@ from src.generate.real_lichess_client import RealLichessClient
 
 
 if __name__ == "__main__":
+  # Start timer
+  start_time = time.time()
+
   # Setup logging
   logger = logging.getLogger()
   logger.setLevel(logging.INFO)
@@ -32,10 +35,9 @@ if __name__ == "__main__":
   date_provider = RealDateProvider()
 
   # Generate leaderboard
-  start_time = time.time()
   leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, date_provider)
   leaderboard_generator.generate_all_leaderboards()
-  time_elapsed_ms = (time.time() - start_time) * 1000
 
   # Print time elapsed
-  logger.info(f"Generation completed in {time_elapsed_ms:.2f}ms")
+  time_elapsed = time.time() - start_time
+  logger.info(f"Finished in {time_elapsed:.2f}s")
