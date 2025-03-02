@@ -33,7 +33,7 @@ class LeaderboardPerf:
   @classmethod
   def from_bot_user(cls, bot_user: BotUser, perf: Perf) -> "LeaderboardPerf":
     """Create a leaderboard perf from a bot user and a perf."""
-    return LeaderboardPerf(bot_user.username, perf.rating, perf.games, "TODO", "TODO")
+    return LeaderboardPerf(bot_user.username, perf.rating, perf.games, bot_user.created_date, "TODO")
 
 
 @dataclasses.dataclass(frozen=True)

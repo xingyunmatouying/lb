@@ -33,6 +33,7 @@ BOT_1_ROW_BLITZ = LeaderboardRow(BOT_2_PERF_BLITZ, 2, -1, -150, 1, 2650)
 BOT_1_CURRENT_JSON = """
 {
   "username": "Bot-1",
+  "createdAt": 1711929600000,
   "perfs": {
     "bullet": {
         "games": 1100,
@@ -48,6 +49,7 @@ BOT_1_CURRENT_JSON = """
 BOT_2_CURRENT_JSON = """
 {
   "username": "Bot-2",
+  "createdAt": 1648771200000,
   "perfs": {
     "bullet": {
         "games": 1000,
@@ -62,11 +64,11 @@ BOT_2_CURRENT_JSON = """
 """
 
 # Leaderboard Perfs matching the above json
-BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-1", 2950, 1100, "TODO", "TODO")  # "2024-04-01", "2025-04-01")
-BOT_2_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-2", 3000, 1000, "TODO", "TODO")  # "2022-04-01", "2025-04-01")
+BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-1", 2950, 1100, "2024-04-01", "TODO")  # "", "2025-04-01")
+BOT_2_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-2", 3000, 1000, "2022-04-01", "TODO")  # "", "2025-04-01")
 
-BOT_1_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-1", 2550, 100, "TODO", "TODO")  # "2024-04-01", "2025-04-01")
-BOT_2_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-2", 2500, 300, "TODO", "TODO")  # "2022-04-01", "2025-04-01")
+BOT_1_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-1", 2550, 100, "2024-04-01", "TODO")  # "", "2025-04-01")
+BOT_2_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-2", 2500, 300, "2022-04-01", "TODO")  # "", "2025-04-01")
 
 
 def remove_whitespace(whitespace_str: str) -> str:
@@ -172,5 +174,8 @@ class TestLeaderboardGenerator(unittest.TestCase):
     leaderboard_generator = LeaderboardGenerator(file_system, lichess_client)
     leaderboard_generator.generate_all_leaderboards()
     saved_leaderboard = file_system.load_file_lines(generator.get_psv_file_name(PerfType.BULLET))
-    expected_leaderboard = ["Bot-2|3000|1000|TODO|TODO|1|1|100|1|3000", "Bot-1|2950|1100|TODO|TODO|2|-1|-50|1|3000"]
+    expected_leaderboard = [
+      "Bot-2|3000|1000|2022-04-01|TODO|1|1|100|1|3000",
+      "Bot-1|2950|1100|2024-04-01|TODO|2|-1|-50|1|3000",
+    ]
     self.assertEqual(saved_leaderboard, expected_leaderboard)

@@ -14,7 +14,7 @@ from src.generate.lichess_bot_user import BotUser, Perf, PerfType
 
 
 TEST_BULLET_LICHESS_PERF = Perf(PerfType.BULLET, 100, 1450, False)
-TEST_BOT_USER = BotUser("Bot1", [TEST_BULLET_LICHESS_PERF])
+TEST_BOT_USER = BotUser("Bot1", "2024-01-01", [TEST_BULLET_LICHESS_PERF])
 
 TOP_BOT_PERF = LeaderboardPerf("Top Bot", 1800, 400, "2021-04-01", "2025-10-12")
 FIRST_MIDDLE_BOT_PERF = LeaderboardPerf("First Middle Bot", 1500, 100, "2022-04-01", "2025-10-12")
@@ -30,7 +30,7 @@ class TestLeaderboardPerf(unittest.TestCase):
 
   def test_from_bot_user(self) -> None:
     leaderboard_perf = LeaderboardPerf.from_bot_user(TEST_BOT_USER, TEST_BULLET_LICHESS_PERF)
-    self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "TODO", "TODO"))
+    self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "2024-01-01", "TODO"))
 
 
 class TestLeaderboardRow(unittest.TestCase):

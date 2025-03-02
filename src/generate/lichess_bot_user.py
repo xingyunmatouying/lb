@@ -9,6 +9,8 @@ from collections.abc import Generator
 from enum import Enum
 from typing import Any
 
+from src.generate import date_provider
+
 
 class PerfType(Enum):
   """Represents the time controls and variants (a.k.a. game modes) available on lichess.
@@ -136,6 +138,8 @@ class BotUser:
 
   username: str
 
+  created_date: str
+
   perfs: list[Perf]
 
   @classmethod
@@ -143,10 +147,10 @@ class BotUser:
     """Parse a line of ndjson and converts it to an BotUser."""
     json_dict = json.loads(json_str)
     username = json_dict.get("username", "")
-    perfs_dict = json_dict.get("perfs", [])
+    created_date = date_provider.format_date(json_dict.get("createdAt", 0))
 
     perfs: list[Perf] = []
-    for perf_type_key, perf_json in perfs_dict.items():
+    for perf_type_key, perf_json in json_dict.get("perfs", []).items():
       perfs.append(Perf.from_json(perf_type_key, perf_json))
 
-    return BotUser(username, perfs)
+    return BotUser(username, created_date, perfs)
