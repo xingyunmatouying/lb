@@ -8,7 +8,7 @@ from src.generate.lichess_bot_user import BotUser, Perf
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardPerf:
-  """A bots performance for a known PerfType.
+  """A bot's performance for a particular PerfType.
 
   The performance type is not stored within this object itself.
 
@@ -21,19 +21,19 @@ class LeaderboardPerf:
   # The bot's flair
   flair: str
 
-  # The country flag
+  # The bot's country flag
   flag: str
 
-  # The bot's rating for a particular PerfType
+  # The bot's rating
   rating: int
 
-  # The bots rating deviation
+  # The bot's rating deviation
   rd: int
 
-  # The bots rating change over the last 12 games
+  # The bot's rating change (progress) over the last 12 games
   prog: int
 
-  # The number of games the bot has played for this PerfType
+  # The number of games the bot has played
   games: int
 
   # The date the bot was created (YYYY-MM-DD)
