@@ -117,6 +117,10 @@ class Perf:
 
   rating: int
 
+  # TODO add rd: int
+
+  # TODO add rd: int
+
   prov: bool
 
   @classmethod
@@ -140,17 +144,28 @@ class BotUser:
 
   created_date: str
 
+  flag: str
+
+  # TODO add flair: str
+
+  # TODO add patron: bool
+
+  # TODO add tos_violation: bool
+
   perfs: list[Perf]
 
   @classmethod
   def from_json(cls, json_str: str) -> "BotUser":
     """Parse a line of ndjson and converts it to an BotUser."""
     json_dict = json.loads(json_str)
+
     username = json_dict.get("username", "")
     created_date = date_provider.format_date(json_dict.get("createdAt", 0) / 1000.0)
+    profile_dict = json_dict.get("profile", {})
+    flag = profile_dict.get("flag", "")
 
     perfs: list[Perf] = []
     for perf_type_key, perf_json in json_dict.get("perfs", []).items():
       perfs.append(Perf.from_json(perf_type_key, perf_json))
 
-    return BotUser(username, created_date, perfs)
+    return BotUser(username, created_date, flag, perfs)

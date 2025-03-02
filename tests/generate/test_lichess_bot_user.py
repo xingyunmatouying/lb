@@ -9,6 +9,10 @@ TEST_BOT_USER_JSON = """
 {
   "id": "test_username",
   "username": "Test_Username",
+  "createdAt": 0,
+  "profile": {
+    "flag": "_earth"
+  },
   "perfs": {
     "bullet": {
         "games": 123,
@@ -71,4 +75,6 @@ class TestLichessClient(unittest.TestCase):
       Perf(PerfType.RAPID, 789, 1550, True),
     ]
     self.assertEqual(bot_user.username, "Test_Username")
+    self.assertEqual(bot_user.flag, "_earth")
+    self.assertEqual(bot_user.created_date, "1970-01-01")
     self.assertListEqual(bot_user.perfs, expected_perfs)

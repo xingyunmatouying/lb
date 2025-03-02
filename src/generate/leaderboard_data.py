@@ -18,6 +18,9 @@ class LeaderboardPerf:
   # The bot's username
   username: str
 
+  # The country flag
+  flag: str
+
   # The bot's rating for a particular PerfType
   rating: int
 
@@ -33,7 +36,7 @@ class LeaderboardPerf:
   @classmethod
   def from_bot_user(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "LeaderboardPerf":
     """Create a leaderboard perf from a bot user and a perf."""
-    return LeaderboardPerf(bot_user.username, perf.rating, perf.games, bot_user.created_date, last_seen_date)
+    return LeaderboardPerf(bot_user.username, bot_user.flag, perf.rating, perf.games, bot_user.created_date, last_seen_date)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -70,18 +73,19 @@ class LeaderboardRow:
     values = psv_string.split("|")
 
     username = values[0]
-    rating = int(values[1])
-    games = int(values[2])
-    created_date = values[3]
-    last_seen_date = values[4]
-    perf = LeaderboardPerf(username, rating, games, created_date, last_seen_date)
+    flag = values[1]
+    rating = int(values[2])
+    games = int(values[3])
+    created_date = values[4]
+    last_seen_date = values[5]
+    perf = LeaderboardPerf(username, flag, rating, games, created_date, last_seen_date)
 
-    rank = int(values[5])
-    rank_delta = int(values[6])
-    rating_delta = int(values[7])
-    peak_rank = int(values[8])
-    peak_rating = int(values[9])
-    is_new = values[10] == "True"
+    rank = int(values[6])
+    rank_delta = int(values[7])
+    rating_delta = int(values[8])
+    peak_rank = int(values[9])
+    peak_rating = int(values[10])
+    is_new = values[11] == "True"
 
     return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new)
 
@@ -89,6 +93,7 @@ class LeaderboardRow:
     """Convert the bot in to a string of pipe separated values."""
     values: list[str] = [
       self.perf.username,
+      self.perf.flag,
       str(self.perf.rating),
       str(self.perf.games),
       self.perf.created_date,
