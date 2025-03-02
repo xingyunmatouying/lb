@@ -36,7 +36,9 @@ def get_all_current_perfs(lichess_client: LichessClient, date_provider: DateProv
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)
     for perf in bot_user.perfs:
-      current_perfs_by_perf_type[perf.perf_type].append(LeaderboardPerf.from_bot_user(bot_user, perf, current_date))
+      # Don't include provisional ratings (this ends up being redundant if taking rd into account)
+      if not perf.prov:
+        current_perfs_by_perf_type[perf.perf_type].append(LeaderboardPerf.from_bot_user(bot_user, perf, current_date))
   return current_perfs_by_perf_type
 
 

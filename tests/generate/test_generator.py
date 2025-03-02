@@ -71,6 +71,7 @@ BOT_2_CURRENT_JSON = """
 }
 """
 
+
 # Leaderboard Perfs matching the above json
 BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf(
   "Bot-1", "flair", "_earth", 2950, 42, -50, 1100, "2024-04-01", "2025-04-01", True, False
@@ -114,7 +115,7 @@ class TestGenerator(unittest.TestCase):
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BLITZ], [BOT_2_ROW_BLITZ, BOT_1_ROW_BLITZ])
 
-  def test_load_all_current_perfs(self) -> None:
+  def test_get_all_current_perfs(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     date_provider = FakeDateProvider()
@@ -123,6 +124,12 @@ class TestGenerator(unittest.TestCase):
     self.assertEqual(len(current_perfs_by_perf_type), 2)
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
+
+  def test_get_all_current_perfs_no_provisional(self) -> None:
+    lichess_client = FakeLichessClient()
+    lichess_client.set_online_bots("""{"username":"Bot","perfs":{"bullet":{"rating":3000,"prov":true}}}\n""")
+    current_perfs_by_perf_type = generator.get_all_current_perfs(lichess_client, FakeDateProvider())
+    self.assertDictEqual(current_perfs_by_perf_type, {})
 
   def test_create_updates(self) -> None:
     updates = generator.create_updates([], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
