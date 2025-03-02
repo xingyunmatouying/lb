@@ -18,6 +18,9 @@ class LeaderboardPerf:
   # The bot's username
   username: str
 
+  # The bot's flair
+  flair: str
+
   # The country flag
   flag: str
 
@@ -39,11 +42,27 @@ class LeaderboardPerf:
   # The date the bot was last seen (YYYY-MM-DD)
   last_seen_date: str
 
+  # If the bot is a patron
+  patron: bool
+
+  # If the bot has violated the terms of service
+  tos_violation: bool
+
   @classmethod
   def from_bot_user(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "LeaderboardPerf":
     """Create a leaderboard perf from a bot user and a perf."""
     return LeaderboardPerf(
-      bot_user.username, bot_user.flag, perf.rating, perf.rd, perf.prog, perf.games, bot_user.created_date, last_seen_date
+      bot_user.username,
+      bot_user.flair,
+      bot_user.flag,
+      perf.rating,
+      perf.rd,
+      perf.prog,
+      perf.games,
+      bot_user.created_date,
+      last_seen_date,
+      bot_user.patron,
+      bot_user.tos_violation,
     )
 
 
@@ -81,21 +100,24 @@ class LeaderboardRow:
     values = psv_string.split("|")
 
     username = values[0]
-    flag = values[1]
-    rating = int(values[2])
-    rd = int(values[3])
-    prog = int(values[4])
-    games = int(values[5])
-    created_date = values[6]
-    last_seen_date = values[7]
-    perf = LeaderboardPerf(username, flag, rating, rd, prog, games, created_date, last_seen_date)
+    flair = values[1]
+    flag = values[2]
+    rating = int(values[3])
+    rd = int(values[4])
+    prog = int(values[5])
+    games = int(values[6])
+    created_date = values[7]
+    last_seen_date = values[8]
+    patron = values[9] == "True"
+    tos_violation = values[10] == "True"
+    perf = LeaderboardPerf(username, flair, flag, rating, rd, prog, games, created_date, last_seen_date, patron, tos_violation)
 
-    rank = int(values[8])
-    rank_delta = int(values[9])
-    rating_delta = int(values[10])
-    peak_rank = int(values[11])
-    peak_rating = int(values[12])
-    is_new = values[13] == "True"
+    rank = int(values[11])
+    rank_delta = int(values[12])
+    rating_delta = int(values[13])
+    peak_rank = int(values[14])
+    peak_rating = int(values[15])
+    is_new = values[16] == "True"
 
     return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new)
 
@@ -103,6 +125,7 @@ class LeaderboardRow:
     """Convert the bot in to a string of pipe separated values."""
     values: list[str] = [
       self.perf.username,
+      self.perf.flair,
       self.perf.flag,
       str(self.perf.rating),
       str(self.perf.rd),
@@ -110,6 +133,8 @@ class LeaderboardRow:
       str(self.perf.games),
       self.perf.created_date,
       self.perf.last_seen_date,
+      str(self.perf.patron),
+      str(self.perf.tos_violation),
       str(self.rank),
       str(self.rank_delta),
       str(self.rating_delta),

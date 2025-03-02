@@ -9,10 +9,12 @@ TEST_BOT_USER_JSON = """
 {
   "id": "test_username",
   "username": "Test_Username",
-  "createdAt": 0,
+  "flair": "symbol",
   "profile": {
     "flag": "_earth"
   },
+  "createdAt": 0,
+  "patron": true,
   "perfs": {
     "bullet": {
         "games": 123,
@@ -84,6 +86,9 @@ class TestBotUser(unittest.TestCase):
       Perf(PerfType.RAPID, 789, 1550, 0, 0, True),
     ]
     self.assertEqual(bot_user.username, "Test_Username")
+    self.assertEqual(bot_user.flair, "symbol")
     self.assertEqual(bot_user.flag, "_earth")
     self.assertEqual(bot_user.created_date, "1970-01-01")
+    self.assertEqual(bot_user.patron, True)
+    self.assertEqual(bot_user.tos_violation, False)
     self.assertListEqual(bot_user.perfs, expected_perfs)

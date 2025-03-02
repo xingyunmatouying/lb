@@ -144,15 +144,15 @@ class BotUser:
 
   username: str
 
-  created_date: str
+  flair: str
 
   flag: str
 
-  # TODO add flair: str
+  created_date: str
 
-  # TODO add patron: bool
+  patron: bool
 
-  # TODO add tos_violation: bool
+  tos_violation: bool
 
   perfs: list[Perf]
 
@@ -162,12 +162,15 @@ class BotUser:
     json_dict = json.loads(json_str)
 
     username = json_dict.get("username", "")
-    created_date = date_provider.format_date(json_dict.get("createdAt", 0) / 1000.0)
+    flair = json_dict.get("flair", "")
     profile_dict = json_dict.get("profile", {})
     flag = profile_dict.get("flag", "")
+    created_date = date_provider.format_date(json_dict.get("createdAt", 0) / 1000.0)
+    patron = json_dict.get("patron", False)
+    tos_violation = json_dict.get("tosViolation", False)
 
     perfs: list[Perf] = []
     for perf_type_key, perf_json in json_dict.get("perfs", []).items():
       perfs.append(Perf.from_json(perf_type_key, perf_json))
 
-    return BotUser(username, created_date, flag, perfs)
+    return BotUser(username, flair, flag, created_date, patron, tos_violation, perfs)
