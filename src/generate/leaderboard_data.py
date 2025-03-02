@@ -8,7 +8,7 @@ from src.generate.lichess_bot_user import BotUser, Perf
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardPerf:
-  """A bots performance for a known PerfType.
+  """A bot's performance for a particular PerfType.
 
   The performance type is not stored within this object itself.
 
@@ -18,10 +18,22 @@ class LeaderboardPerf:
   # The bot's username
   username: str
 
-  # The bot's rating for a particular PerfType
+  # The bot's flair
+  flair: str
+
+  # The bot's country flag
+  flag: str
+
+  # The bot's rating
   rating: int
 
-  # The number of games the bot has played for this PerfType
+  # The bot's rating deviation
+  rd: int
+
+  # The bot's rating change (progress) over the last 12 games
+  prog: int
+
+  # The number of games the bot has played
   games: int
 
   # The date the bot was created (YYYY-MM-DD)
@@ -30,10 +42,28 @@ class LeaderboardPerf:
   # The date the bot was last seen (YYYY-MM-DD)
   last_seen_date: str
 
+  # If the bot is a patron
+  patron: bool
+
+  # If the bot has violated the terms of service
+  tos_violation: bool
+
   @classmethod
   def from_bot_user(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "LeaderboardPerf":
     """Create a leaderboard perf from a bot user and a perf."""
-    return LeaderboardPerf(bot_user.username, perf.rating, perf.games, bot_user.created_date, last_seen_date)
+    return LeaderboardPerf(
+      bot_user.username,
+      bot_user.flair,
+      bot_user.flag,
+      perf.rating,
+      perf.rd,
+      perf.prog,
+      perf.games,
+      bot_user.created_date,
+      last_seen_date,
+      bot_user.patron,
+      bot_user.tos_violation,
+    )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -61,39 +91,56 @@ class LeaderboardRow:
   # The maximum rating observed at any point when generating the leaderboard
   peak_rating: int
 
+  # Whether or not this is the bots first time on the leaderboard.
+  is_new: bool
+
   @classmethod
   def from_psv(cls, psv_string: str) -> "LeaderboardRow":
     """Create a LeaderboardRow based on pipe separated values."""
     values = psv_string.split("|")
 
     username = values[0]
-    rating = int(values[1])
-    games = int(values[2])
-    created_date = values[3]
-    last_seen_date = values[4]
-    perf = LeaderboardPerf(username, rating, games, created_date, last_seen_date)
+    flair = values[1]
+    flag = values[2]
+    rating = int(values[3])
+    rd = int(values[4])
+    prog = int(values[5])
+    games = int(values[6])
+    created_date = values[7]
+    last_seen_date = values[8]
+    patron = values[9] == "True"
+    tos_violation = values[10] == "True"
+    perf = LeaderboardPerf(username, flair, flag, rating, rd, prog, games, created_date, last_seen_date, patron, tos_violation)
 
-    rank = int(values[5])
-    rank_delta = int(values[6])
-    rating_delta = int(values[7])
-    peak_rank = int(values[8])
-    peak_rating = int(values[9])
+    rank = int(values[11])
+    rank_delta = int(values[12])
+    rating_delta = int(values[13])
+    peak_rank = int(values[14])
+    peak_rating = int(values[15])
+    is_new = values[16] == "True"
 
-    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new)
 
   def to_psv(self) -> str:
     """Convert the bot in to a string of pipe separated values."""
     values: list[str] = [
       self.perf.username,
+      self.perf.flair,
+      self.perf.flag,
       str(self.perf.rating),
+      str(self.perf.rd),
+      str(self.perf.prog),
       str(self.perf.games),
       self.perf.created_date,
       self.perf.last_seen_date,
+      str(self.perf.patron),
+      str(self.perf.tos_violation),
       str(self.rank),
       str(self.rank_delta),
       str(self.rating_delta),
       str(self.peak_rank),
       str(self.peak_rating),
+      str(self.is_new),
     ]
     return "|".join(values)
 
@@ -154,7 +201,7 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     rating_delta = 0
     peak_rank = min(self.row.rank, rank)
     peak_rating = self.row.peak_rating
-    return LeaderboardRow(self.row.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(self.row.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, False)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -176,12 +223,11 @@ class CurrentPerfOnlyUpdate(LeaderboardUpdate):
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
-    # TODO it would be nice if instead of 0, there were some indication that this is a new bot.
     rank_delta = 0
     rating_delta = 0
     peak_rank = rank
     peak_rating = self.perf.rating
-    return LeaderboardRow(self.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(self.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, True)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -210,4 +256,4 @@ class FullUpdate(LeaderboardUpdate):
     # Higher ranking, lower rank number
     peak_rank = min(self.previous_row.rank, rank)
     peak_rating = max(self.previous_row.perf.rating, self.current_perf.rating)
-    return LeaderboardRow(self.current_perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(self.current_perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, False)

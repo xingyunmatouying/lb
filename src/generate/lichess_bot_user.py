@@ -111,12 +111,23 @@ class Perf:
   In the lichess API the field `perfs` is a list of performances. Not all fields are represented here.
   """
 
+  # The time control or variant
   perf_type: PerfType
 
+  # The number of games the bot has played
   games: int
 
+  # The bot's rating for this PerfType
   rating: int
 
+  # The bot's rating deviation
+  rd: int
+
+  # The bot's rating change (progress) over the last 12 games
+  prog: int
+
+  # If the bot's rating is provisional
+  # See: https://lichess.org/faq#provisional
   prov: bool
 
   @classmethod
@@ -125,8 +136,10 @@ class Perf:
     perf_type = PerfType.from_json(perf_type_key)
     games = perf_json.get("games", 0)
     rating = perf_json.get("rating", 0)
+    rd = perf_json.get("rd", 0)
+    prog = perf_json.get("prog", 0)
     prov = perf_json.get("prov", False)
-    return Perf(perf_type, games, rating, prov)
+    return Perf(perf_type, games, rating, rd, prog, prov)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -136,21 +149,42 @@ class BotUser:
   This only contains a small subset of what is available via the lichess API.
   """
 
+  # The bot's username
   username: str
 
+  # The bot's flair
+  flair: str
+
+  # The bot's country flag
+  flag: str
+
+  # The date the bot was created (YYYY-MM-DD)
   created_date: str
 
+  # If the bot is a patron
+  patron: bool
+
+  # If the bot has violated the terms of service
+  tos_violation: bool
+
+  # The bot's list of performance ratings
   perfs: list[Perf]
 
   @classmethod
   def from_json(cls, json_str: str) -> "BotUser":
     """Parse a line of ndjson and converts it to an BotUser."""
     json_dict = json.loads(json_str)
+
     username = json_dict.get("username", "")
+    flair = json_dict.get("flair", "")
+    profile_dict = json_dict.get("profile", {})
+    flag = profile_dict.get("flag", "")
     created_date = date_provider.format_date(json_dict.get("createdAt", 0) / 1000.0)
+    patron = json_dict.get("patron", False)
+    tos_violation = json_dict.get("tosViolation", False)
 
     perfs: list[Perf] = []
     for perf_type_key, perf_json in json_dict.get("perfs", []).items():
       perfs.append(Perf.from_json(perf_type_key, perf_json))
 
-    return BotUser(username, created_date, perfs)
+    return BotUser(username, flair, flag, created_date, patron, tos_violation, perfs)

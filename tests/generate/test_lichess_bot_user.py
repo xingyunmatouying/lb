@@ -5,10 +5,16 @@ import unittest
 from src.generate.lichess_bot_user import BotUser, Perf, PerfType
 
 
-TEST_BOT_USER_JSON = """
+BOT_USER_JSON = """
 {
   "id": "test_username",
   "username": "Test_Username",
+  "flair": "symbol",
+  "profile": {
+    "flag": "_earth"
+  },
+  "createdAt": 0,
+  "patron": true,
   "perfs": {
     "bullet": {
         "games": 123,
@@ -60,15 +66,29 @@ class TestPerfType(unittest.TestCase):
         self.assertIn(perf_type, all_except_unknown)
 
 
-class TestLichessClient(unittest.TestCase):
+class TestPerf(unittest.TestCase):
+  """Tests for Perf."""
+
+  def test_from_json(self) -> None:
+    json_key = "bullet"
+    json_value = {"games": 15, "rating": 2800, "rd": 200, "prog": 700, "prov": True}
+    self.assertEqual(Perf.from_json(json_key, json_value), Perf(PerfType.BULLET, 15, 2800, 200, 700, True))
+
+
+class TestBotUser(unittest.TestCase):
   """Tests for BotUser."""
 
   def test_from_json(self) -> None:
-    bot_user = BotUser.from_json(TEST_BOT_USER_JSON)
+    bot_user = BotUser.from_json(BOT_USER_JSON)
     expected_perfs = [
-      Perf(PerfType.BULLET, 123, 1450, False),
-      Perf(PerfType.BLITZ, 456, 1500, False),
-      Perf(PerfType.RAPID, 789, 1550, True),
+      Perf(PerfType.BULLET, 123, 1450, 0, 0, False),
+      Perf(PerfType.BLITZ, 456, 1500, 0, 0, False),
+      Perf(PerfType.RAPID, 789, 1550, 0, 0, True),
     ]
     self.assertEqual(bot_user.username, "Test_Username")
+    self.assertEqual(bot_user.flair, "symbol")
+    self.assertEqual(bot_user.flag, "_earth")
+    self.assertEqual(bot_user.created_date, "1970-01-01")
+    self.assertEqual(bot_user.patron, True)
+    self.assertEqual(bot_user.tos_violation, False)
     self.assertListEqual(bot_user.perfs, expected_perfs)

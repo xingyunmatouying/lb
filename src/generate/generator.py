@@ -36,7 +36,9 @@ def get_all_current_perfs(lichess_client: LichessClient, date_provider: DateProv
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)
     for perf in bot_user.perfs:
-      current_perfs_by_perf_type[perf.perf_type].append(LeaderboardPerf.from_bot_user(bot_user, perf, current_date))
+      # Don't include provisional ratings (this ends up being redundant if taking rd into account)
+      if not perf.prov:
+        current_perfs_by_perf_type[perf.perf_type].append(LeaderboardPerf.from_bot_user(bot_user, perf, current_date))
   return current_perfs_by_perf_type
 
 
@@ -44,10 +46,16 @@ def create_updates(previous_rows: list[LeaderboardRow], current_perfs: list[Lead
   """Group previous rows and current perfs by bot name and create updates."""
   previous_row_by_name: dict[str, LeaderboardRow] = {row.perf.username: row for row in previous_rows}
   current_perf_by_name: dict[str, LeaderboardPerf] = {perf.username: perf for perf in current_perfs}
-  return [
-    LeaderboardUpdate.create_update(previous_row_by_name.get(name), current_perf_by_name.get(name))
-    for name in previous_row_by_name.keys() | current_perf_by_name.keys()
-  ]
+  updates: list[LeaderboardUpdate] = []
+  for name in previous_row_by_name.keys() | current_perf_by_name.keys():
+    current_perf = current_perf_by_name.get(name)
+    include_in_leaderboard = True
+    if current_perf and current_perf.tos_violation:
+      include_in_leaderboard = False
+    if include_in_leaderboard:
+      update = LeaderboardUpdate.create_update(previous_row_by_name.get(name), current_perf)
+      updates.append(update)
+  return updates
 
 
 def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]:
