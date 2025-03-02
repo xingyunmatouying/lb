@@ -5,7 +5,7 @@ import unittest
 from generate.fake_lichess_client import FakeLichessClient
 
 
-TEST_ONLINE_BOT_NDJSON = "{some json}"
+ONLINE_BOT_NDJSON = "{some json}"
 
 
 class TestLichessClient(unittest.TestCase):
@@ -13,5 +13,5 @@ class TestLichessClient(unittest.TestCase):
 
   def test_get_online_bots(self) -> None:
     lichess_client = FakeLichessClient()
-    lichess_client.set_online_bots(TEST_ONLINE_BOT_NDJSON)
-    self.assertEqual(lichess_client.get_online_bots(), TEST_ONLINE_BOT_NDJSON)
+    lichess_client.set_online_bots(ONLINE_BOT_NDJSON)
+    self.assertEqual(lichess_client.get_online_bots(), ONLINE_BOT_NDJSON)

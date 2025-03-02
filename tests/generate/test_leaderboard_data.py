@@ -18,18 +18,18 @@ def create_perf(username: str, rating: int, games: int, created_date: str) -> Le
   return LeaderboardPerf(username, "", "", rating, 0, 0, games, created_date, "2025-04-01", False, False)
 
 
-TEST_BULLET_LICHESS_PERF = Perf(PerfType.BULLET, 100, 1450, 0, 0, False)
-TEST_BOT_USER = BotUser("Bot1", "", "", "2024-01-01", False, False, [TEST_BULLET_LICHESS_PERF])
+BOT_1_LICHESS_PERF = Perf(PerfType.BULLET, 100, 1450, 0, 0, False)
+BOT_1_BOT_USER = BotUser("Bot1", "", "", "2024-01-01", False, False, [BOT_1_LICHESS_PERF])
 
-TOP_BOT_PERF = create_perf("Top Bot", 1800, 400, "2021-04-01")
-TOP_BOT_ROW = LeaderboardRow(TOP_BOT_PERF, 1, 0, 0, 1, 1800, False)
+BOT_2_PERF = create_perf("Bot-2", 1800, 400, "2021-04-01")
+BOT_2_ROW = LeaderboardRow(BOT_2_PERF, 1, 0, 0, 1, 1800, False)
 
 
 class TestLeaderboardPerf(unittest.TestCase):
   """Tests for LeaderboardPeft."""
 
   def test_from_bot_user(self) -> None:
-    leaderboard_perf = LeaderboardPerf.from_bot_user(TEST_BOT_USER, TEST_BULLET_LICHESS_PERF, "2025-04-01")
+    leaderboard_perf = LeaderboardPerf.from_bot_user(BOT_1_BOT_USER, BOT_1_LICHESS_PERF, "2025-04-01")
     self.assertEqual(leaderboard_perf, create_perf("Bot1", 1450, 100, "2024-01-01"))
 
 
@@ -55,9 +55,9 @@ class TestLeaderboardUpdate(unittest.TestCase):
   """Tests for LeaderboardUpdate and subclasses."""
 
   def test_from_previous_row_and_current_perf(self) -> None:
-    self.assertIsInstance(LeaderboardUpdate.create_update(TOP_BOT_ROW, TOP_BOT_PERF), FullUpdate)
-    self.assertIsInstance(LeaderboardUpdate.create_update(TOP_BOT_ROW, None), PreviousRowOnlyUpdate)
-    self.assertIsInstance(LeaderboardUpdate.create_update(None, TOP_BOT_PERF), CurrentPerfOnlyUpdate)
+    self.assertIsInstance(LeaderboardUpdate.create_update(BOT_2_ROW, BOT_2_PERF), FullUpdate)
+    self.assertIsInstance(LeaderboardUpdate.create_update(BOT_2_ROW, None), PreviousRowOnlyUpdate)
+    self.assertIsInstance(LeaderboardUpdate.create_update(None, BOT_2_PERF), CurrentPerfOnlyUpdate)
     self.assertRaises(ValueError, lambda: LeaderboardUpdate.create_update(None, None))
 
   def test_row_only_update(self) -> None:
