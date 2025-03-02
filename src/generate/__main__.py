@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
   # Generate leaderboard
   leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, date_provider)
-  leaderboard_generator.generate_all_leaderboards()
+  leaderboard_generator.generate_leaderboard_data()
 
   # Print time elapsed
   time_elapsed = time.time() - start_time

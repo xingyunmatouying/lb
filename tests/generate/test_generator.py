@@ -177,7 +177,7 @@ class TestLeaderboardGenerator(unittest.TestCase):
     date_provider = FakeDateProvider()
     date_provider.set_current_date("2025-04-01")
     leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, date_provider)
-    leaderboard_generator.generate_all_leaderboards()
+    leaderboard_generator.generate_leaderboard_data()
     saved_leaderboard = file_system.load_file_lines(generator.get_psv_file_name(PerfType.BULLET))
     expected_leaderboard = [
       "Bot-2|3000|1000|2022-04-01|2025-04-01|1|1|100|1|3000",
