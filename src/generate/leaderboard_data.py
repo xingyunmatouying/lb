@@ -31,9 +31,9 @@ class LeaderboardPerf:
   last_seen_date: str
 
   @classmethod
-  def from_bot_user(cls, bot_user: BotUser, perf: Perf) -> "LeaderboardPerf":
+  def from_bot_user(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "LeaderboardPerf":
     """Create a leaderboard perf from a bot user and a perf."""
-    return LeaderboardPerf(bot_user.username, perf.rating, perf.games, "TODO", "TODO")
+    return LeaderboardPerf(bot_user.username, perf.rating, perf.games, bot_user.created_date, last_seen_date)
 
 
 @dataclasses.dataclass(frozen=True)
