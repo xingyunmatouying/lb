@@ -24,6 +24,12 @@ class LeaderboardPerf:
   # The bot's rating for a particular PerfType
   rating: int
 
+  # The bots rating deviation
+  rd: int
+
+  # The bots rating change over the last 12 games
+  prog: int
+
   # The number of games the bot has played for this PerfType
   games: int
 
@@ -36,7 +42,9 @@ class LeaderboardPerf:
   @classmethod
   def from_bot_user(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "LeaderboardPerf":
     """Create a leaderboard perf from a bot user and a perf."""
-    return LeaderboardPerf(bot_user.username, bot_user.flag, perf.rating, perf.games, bot_user.created_date, last_seen_date)
+    return LeaderboardPerf(
+      bot_user.username, bot_user.flag, perf.rating, perf.rd, perf.prog, perf.games, bot_user.created_date, last_seen_date
+    )
 
 
 @dataclasses.dataclass(frozen=True)
@@ -75,17 +83,19 @@ class LeaderboardRow:
     username = values[0]
     flag = values[1]
     rating = int(values[2])
-    games = int(values[3])
-    created_date = values[4]
-    last_seen_date = values[5]
-    perf = LeaderboardPerf(username, flag, rating, games, created_date, last_seen_date)
+    rd = int(values[3])
+    prog = int(values[4])
+    games = int(values[5])
+    created_date = values[6]
+    last_seen_date = values[7]
+    perf = LeaderboardPerf(username, flag, rating, rd, prog, games, created_date, last_seen_date)
 
-    rank = int(values[6])
-    rank_delta = int(values[7])
-    rating_delta = int(values[8])
-    peak_rank = int(values[9])
-    peak_rating = int(values[10])
-    is_new = values[11] == "True"
+    rank = int(values[8])
+    rank_delta = int(values[9])
+    rating_delta = int(values[10])
+    peak_rank = int(values[11])
+    peak_rating = int(values[12])
+    is_new = values[13] == "True"
 
     return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new)
 
@@ -95,6 +105,8 @@ class LeaderboardRow:
       self.perf.username,
       self.perf.flag,
       str(self.perf.rating),
+      str(self.perf.rd),
+      str(self.perf.prog),
       str(self.perf.games),
       self.perf.created_date,
       self.perf.last_seen_date,

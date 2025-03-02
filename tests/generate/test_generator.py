@@ -13,14 +13,14 @@ from generate.in_memory_file_system import InMemoryFileSystem
 
 
 # Bullet leaderboard perfs
-BOT_1_PERF_BULLET = LeaderboardPerf("Bot-1", "", 3000, 1000, "2021-04-01", "2025-04-01")
-BOT_2_PERF_BULLET = LeaderboardPerf("Bot-2", "", 2900, 900, "2022-04-01", "2025-04-01")
-BOT_3_PERF_BULLET = LeaderboardPerf("Bot-3", "", 2900, 800, "2023-04-01", "2025-04-01")
-BOT_4_PERF_BULLET = LeaderboardPerf("Bot-4", "", 2800, 700, "2024-04-01", "2025-04-01")
+BOT_1_PERF_BULLET = LeaderboardPerf("Bot-1", "", 3000, 0, 0, 1000, "2021-04-01", "2025-04-01")
+BOT_2_PERF_BULLET = LeaderboardPerf("Bot-2", "", 2900, 0, 0, 900, "2022-04-01", "2025-04-01")
+BOT_3_PERF_BULLET = LeaderboardPerf("Bot-3", "", 2900, 0, 0, 800, "2023-04-01", "2025-04-01")
+BOT_4_PERF_BULLET = LeaderboardPerf("Bot-4", "", 2800, 0, 0, 700, "2024-04-01", "2025-04-01")
 
 # Blitz leaderboard perfs
-BOT_1_PERF_BLITZ = LeaderboardPerf("Bot-1", "", 2500, 50, "2021-04-01", "2025-04-01")
-BOT_2_PERF_BLITZ = LeaderboardPerf("Bot-2", "", 2600, 200, "2022-04-01", "2025-04-01")
+BOT_1_PERF_BLITZ = LeaderboardPerf("Bot-1", "", 2500, 0, 0, 50, "2021-04-01", "2025-04-01")
+BOT_2_PERF_BLITZ = LeaderboardPerf("Bot-2", "", 2600, 0, 0, 200, "2022-04-01", "2025-04-01")
 
 # Bullet leaderboard rows
 BOT_1_ROW_BULLET = LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3001, False)
@@ -41,7 +41,9 @@ BOT_1_CURRENT_JSON = """
   "perfs": {
     "bullet": {
         "games": 1100,
-        "rating": 2950
+        "rating": 2950,
+        "rd": 42,
+        "prog": -50
     },
     "blitz": {
         "games": 100,
@@ -68,11 +70,11 @@ BOT_2_CURRENT_JSON = """
 """
 
 # Leaderboard Perfs matching the above json
-BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-1", "_earth", 2950, 1100, "2024-04-01", "2025-04-01")
-BOT_2_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-2", "", 3000, 1000, "2022-04-01", "2025-04-01")
+BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-1", "_earth", 2950, 42, -50, 1100, "2024-04-01", "2025-04-01")
+BOT_2_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-2", "", 3000, 0, 0, 1000, "2022-04-01", "2025-04-01")
 
-BOT_1_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-1", "_earth", 2550, 100, "2024-04-01", "2025-04-01")
-BOT_2_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-2", "", 2500, 300, "2022-04-01", "2025-04-01")
+BOT_1_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-1", "_earth", 2550, 0, 0, 100, "2024-04-01", "2025-04-01")
+BOT_2_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-2", "", 2500, 0, 0, 300, "2022-04-01", "2025-04-01")
 
 
 def remove_whitespace(whitespace_str: str) -> str:
@@ -183,7 +185,7 @@ class TestLeaderboardGenerator(unittest.TestCase):
     leaderboard_generator.generate_leaderboard_data()
     saved_leaderboard = file_system.load_file_lines(generator.get_psv_file_name(PerfType.BULLET))
     expected_leaderboard = [
-      "Bot-2||3000|1000|2022-04-01|2025-04-01|1|1|100|1|3000|False",
-      "Bot-1|_earth|2950|1100|2024-04-01|2025-04-01|2|-1|-50|1|3000|False",
+      "Bot-2||3000|0|0|1000|2022-04-01|2025-04-01|1|1|100|1|3000|False",
+      "Bot-1|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|2|-1|-50|1|3000|False",
     ]
     self.assertEqual(saved_leaderboard, expected_leaderboard)

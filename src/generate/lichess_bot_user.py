@@ -117,9 +117,9 @@ class Perf:
 
   rating: int
 
-  # TODO add rd: int
+  rd: int
 
-  # TODO add rd: int
+  prog: int
 
   prov: bool
 
@@ -129,8 +129,10 @@ class Perf:
     perf_type = PerfType.from_json(perf_type_key)
     games = perf_json.get("games", 0)
     rating = perf_json.get("rating", 0)
+    rd = perf_json.get("rd", 0)
+    prog = perf_json.get("prog", 0)
     prov = perf_json.get("prov", False)
-    return Perf(perf_type, games, rating, prov)
+    return Perf(perf_type, games, rating, rd, prog, prov)
 
 
 @dataclasses.dataclass(frozen=True)
