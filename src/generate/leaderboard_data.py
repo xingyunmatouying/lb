@@ -61,6 +61,9 @@ class LeaderboardRow:
   # The maximum rating observed at any point when generating the leaderboard
   peak_rating: int
 
+  # Whether or not this is the bots first time on the leaderboard.
+  is_new: bool
+
   @classmethod
   def from_psv(cls, psv_string: str) -> "LeaderboardRow":
     """Create a LeaderboardRow based on pipe separated values."""
@@ -78,8 +81,9 @@ class LeaderboardRow:
     rating_delta = int(values[7])
     peak_rank = int(values[8])
     peak_rating = int(values[9])
+    is_new = values[10] == "True"
 
-    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new)
 
   def to_psv(self) -> str:
     """Convert the bot in to a string of pipe separated values."""
@@ -94,6 +98,7 @@ class LeaderboardRow:
       str(self.rating_delta),
       str(self.peak_rank),
       str(self.peak_rating),
+      str(self.is_new),
     ]
     return "|".join(values)
 
@@ -154,7 +159,7 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     rating_delta = 0
     peak_rank = min(self.row.rank, rank)
     peak_rating = self.row.peak_rating
-    return LeaderboardRow(self.row.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(self.row.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, False)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -176,12 +181,11 @@ class CurrentPerfOnlyUpdate(LeaderboardUpdate):
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
-    # TODO it would be nice if instead of 0, there were some indication that this is a new bot.
     rank_delta = 0
     rating_delta = 0
     peak_rank = rank
     peak_rating = self.perf.rating
-    return LeaderboardRow(self.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(self.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, True)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -210,4 +214,4 @@ class FullUpdate(LeaderboardUpdate):
     # Higher ranking, lower rank number
     peak_rank = min(self.previous_row.rank, rank)
     peak_rating = max(self.previous_row.perf.rating, self.current_perf.rating)
-    return LeaderboardRow(self.current_perf, rank, rank_delta, rating_delta, peak_rank, peak_rating)
+    return LeaderboardRow(self.current_perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, False)

@@ -23,12 +23,12 @@ BOT_1_PERF_BLITZ = LeaderboardPerf("Bot-1", 2500, 50, "2021-04-01", "2025-04-01"
 BOT_2_PERF_BLITZ = LeaderboardPerf("Bot-2", 2600, 200, "2022-04-01", "2025-04-01")
 
 # Bullet leaderboard rows
-BOT_1_ROW_BULLET = LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3001)
-BOT_2_ROW_BULLET = LeaderboardRow(BOT_2_PERF_BULLET, 2, 1, -100, 1, 3000)
+BOT_1_ROW_BULLET = LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3001, False)
+BOT_2_ROW_BULLET = LeaderboardRow(BOT_2_PERF_BULLET, 2, 1, -100, 1, 3000, False)
 
 # Blitz leaderboard rows
-BOT_2_ROW_BLITZ = LeaderboardRow(BOT_1_PERF_BLITZ, 1, 1, 100, 1, 2600)
-BOT_1_ROW_BLITZ = LeaderboardRow(BOT_2_PERF_BLITZ, 2, -1, -150, 1, 2650)
+BOT_2_ROW_BLITZ = LeaderboardRow(BOT_1_PERF_BLITZ, 1, 1, 100, 1, 2600, False)
+BOT_1_ROW_BLITZ = LeaderboardRow(BOT_2_PERF_BLITZ, 2, -1, -150, 1, 2650, False)
 
 # Response for get online bots
 BOT_1_CURRENT_JSON = """
@@ -126,9 +126,9 @@ class TestGenerator(unittest.TestCase):
     ]
     leaderboard_rows = generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000),
-      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900),
-      LeaderboardRow(BOT_4_PERF_BULLET, 3, 0, 0, 3, 2800),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
+      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True),
+      LeaderboardRow(BOT_4_PERF_BULLET, 3, 0, 0, 3, 2800, True),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -141,10 +141,10 @@ class TestGenerator(unittest.TestCase):
     ]
     leaderboard_rows = generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000),
-      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900),
-      LeaderboardRow(BOT_3_PERF_BULLET, 2, 0, 0, 2, 2900),
-      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
+      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True),
+      LeaderboardRow(BOT_3_PERF_BULLET, 2, 0, 0, 2, 2900, True),
+      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800, True),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -157,10 +157,10 @@ class TestGenerator(unittest.TestCase):
     ]
     leaderboard_rows = generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000),
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000),
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000),
-      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
+      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800, True),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -180,7 +180,7 @@ class TestLeaderboardGenerator(unittest.TestCase):
     leaderboard_generator.generate_leaderboard_data()
     saved_leaderboard = file_system.load_file_lines(generator.get_psv_file_name(PerfType.BULLET))
     expected_leaderboard = [
-      "Bot-2|3000|1000|2022-04-01|2025-04-01|1|1|100|1|3000",
-      "Bot-1|2950|1100|2024-04-01|2025-04-01|2|-1|-50|1|3000",
+      "Bot-2|3000|1000|2022-04-01|2025-04-01|1|1|100|1|3000|False",
+      "Bot-1|2950|1100|2024-04-01|2025-04-01|2|-1|-50|1|3000|False",
     ]
     self.assertEqual(saved_leaderboard, expected_leaderboard)
