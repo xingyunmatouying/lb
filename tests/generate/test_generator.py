@@ -136,6 +136,11 @@ class TestGenerator(unittest.TestCase):
     expected_updates = [CurrentPerfOnlyUpdate(BOT_1_CURRENT_PERF_BULLET), CurrentPerfOnlyUpdate(BOT_2_CURRENT_PERF_BULLET)]
     self.assertCountEqual(updates, expected_updates)
 
+  def test_create_updates_no_tos_violation(self) -> None:
+    bot_with_tos_violation = LeaderboardPerf("Bot", "", "", 2500, 0, 0, 300, "2022-04-01", "2025-04-01", False, True)
+    updates = generator.create_updates([], [bot_with_tos_violation])
+    self.assertCountEqual(updates, [])
+
   def test_create_ranked_rows(self) -> None:
     updates: list[LeaderboardUpdate] = [
       CurrentPerfOnlyUpdate(BOT_2_PERF_BULLET),
