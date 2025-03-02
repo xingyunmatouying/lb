@@ -11,7 +11,7 @@ class TestDateProviderMethods(unittest.TestCase):
   """Tests for date_provider methods."""
 
   def test_format_date(self) -> None:
-    self.assertEqual(date_provider.format_date(1290415680000), "2010-11-22")
+    self.assertEqual(date_provider.format_date(1290415680), "2010-11-22")
 
 
 class TestDateProvider(unittest.TestCase):

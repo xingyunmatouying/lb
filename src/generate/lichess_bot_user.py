@@ -147,7 +147,7 @@ class BotUser:
     """Parse a line of ndjson and converts it to an BotUser."""
     json_dict = json.loads(json_str)
     username = json_dict.get("username", "")
-    created_date = date_provider.format_date(json_dict.get("createdAt", 0))
+    created_date = date_provider.format_date(json_dict.get("createdAt", 0) / 1000.0)
 
     perfs: list[Perf] = []
     for perf_type_key, perf_json in json_dict.get("perfs", []).items():

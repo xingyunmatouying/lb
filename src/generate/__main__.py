@@ -10,6 +10,7 @@ import logging
 import time
 
 from src.generate.generator import LeaderboardGenerator
+from src.generate.real_date_provider import RealDateProvider
 from src.generate.real_file_system import RealFileSystem
 from src.generate.real_lichess_client import RealLichessClient
 
@@ -28,10 +29,11 @@ if __name__ == "__main__":
   # Instantiate dependencies
   file_system = RealFileSystem()
   lichess_client = RealLichessClient()
+  date_provider = RealDateProvider()
 
   # Generate leaderboard
   start_time = time.time()
-  leaderboard_generator = LeaderboardGenerator(file_system, lichess_client)
+  leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, date_provider)
   leaderboard_generator.generate_all_leaderboards()
   time_elapsed_ms = (time.time() - start_time) * 1000
 

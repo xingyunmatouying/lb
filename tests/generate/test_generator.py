@@ -7,6 +7,7 @@ from src.generate.generator import LeaderboardGenerator
 from src.generate.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
 from src.generate.lichess_bot_user import PerfType
 
+from generate.fake_date_provider import FakeDateProvider
 from generate.fake_lichess_client import FakeLichessClient
 from generate.in_memory_file_system import InMemoryFileSystem
 
@@ -64,11 +65,11 @@ BOT_2_CURRENT_JSON = """
 """
 
 # Leaderboard Perfs matching the above json
-BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-1", 2950, 1100, "2024-04-01", "TODO")  # "", "2025-04-01")
-BOT_2_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-2", 3000, 1000, "2022-04-01", "TODO")  # "", "2025-04-01")
+BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-1", 2950, 1100, "2024-04-01", "2025-04-01")
+BOT_2_CURRENT_PERF_BULLET = LeaderboardPerf("Bot-2", 3000, 1000, "2022-04-01", "2025-04-01")
 
-BOT_1_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-1", 2550, 100, "2024-04-01", "TODO")  # "", "2025-04-01")
-BOT_2_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-2", 2500, 300, "2022-04-01", "TODO")  # "", "2025-04-01")
+BOT_1_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-1", 2550, 100, "2024-04-01", "2025-04-01")
+BOT_2_CURRENT_PERF_BLITZ = LeaderboardPerf("Bot-2", 2500, 300, "2022-04-01", "2025-04-01")
 
 
 def remove_whitespace(whitespace_str: str) -> str:
@@ -105,7 +106,9 @@ class TestGenerator(unittest.TestCase):
   def test_load_all_current_perfs(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
-    current_perfs_by_perf_type = generator.get_all_current_perfs(lichess_client)
+    date_provider = FakeDateProvider()
+    date_provider.set_current_date("2025-04-01")
+    current_perfs_by_perf_type = generator.get_all_current_perfs(lichess_client, date_provider)
     self.assertEqual(len(current_perfs_by_perf_type), 2)
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
@@ -171,11 +174,13 @@ class TestLeaderboardGenerator(unittest.TestCase):
     file_system.save_file_lines(generator.get_psv_file_name(PerfType.BULLET), bullet_leaderboard)
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
-    leaderboard_generator = LeaderboardGenerator(file_system, lichess_client)
+    date_provider = FakeDateProvider()
+    date_provider.set_current_date("2025-04-01")
+    leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, date_provider)
     leaderboard_generator.generate_all_leaderboards()
     saved_leaderboard = file_system.load_file_lines(generator.get_psv_file_name(PerfType.BULLET))
     expected_leaderboard = [
-      "Bot-2|3000|1000|2022-04-01|TODO|1|1|100|1|3000",
-      "Bot-1|2950|1100|2024-04-01|TODO|2|-1|-50|1|3000",
+      "Bot-2|3000|1000|2022-04-01|2025-04-01|1|1|100|1|3000",
+      "Bot-1|2950|1100|2024-04-01|2025-04-01|2|-1|-50|1|3000",
     ]
     self.assertEqual(saved_leaderboard, expected_leaderboard)

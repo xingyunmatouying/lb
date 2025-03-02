@@ -4,9 +4,9 @@ import abc
 import datetime
 
 
-def format_date(epoch_ms: int) -> str:
+def format_date(epoch_seconds: float) -> str:
   """Convert ms since epoch to YYYY-MM-DD."""
-  return datetime.datetime.fromtimestamp(epoch_ms / 1000, tz=datetime.UTC).strftime("%Y-%m-%d")
+  return datetime.datetime.fromtimestamp(epoch_seconds, tz=datetime.UTC).strftime("%Y-%m-%d")
 
 
 class DateProvider(abc.ABC):

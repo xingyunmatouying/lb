@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 
+from src.generate.date_provider import DateProvider
 from src.generate.file_system import FileSystem
 from src.generate.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
 from src.generate.lichess_bot_user import BotUser, PerfType
@@ -25,16 +26,17 @@ def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[Leade
   return previous_rows_by_perf_type
 
 
-def get_all_current_perfs(lichess_client: LichessClient) -> dict[PerfType, list[LeaderboardPerf]]:
+def get_all_current_perfs(lichess_client: LichessClient, date_provider: DateProvider) -> dict[PerfType, list[LeaderboardPerf]]:
   """Load all of the current online bots.
 
   Returns lists of leaderboard perfs grouped by perf type.
   """
+  current_date = date_provider.get_current_date()
   current_perfs_by_perf_type: dict[PerfType, list[LeaderboardPerf]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)
     for perf in bot_user.perfs:
-      current_perfs_by_perf_type[perf.perf_type].append(LeaderboardPerf.from_bot_user(bot_user, perf))
+      current_perfs_by_perf_type[perf.perf_type].append(LeaderboardPerf.from_bot_user(bot_user, perf, current_date))
   return current_perfs_by_perf_type
 
 
@@ -81,17 +83,18 @@ class LeaderboardGenerator:
   The generator takes a file_system and a lichess_client as parameters.
   """
 
-  def __init__(self, file_system: FileSystem, lichess_client: LichessClient) -> None:
+  def __init__(self, file_system: FileSystem, lichess_client: LichessClient, date_provider: DateProvider) -> None:
     """Initialize a new generator."""
     self.file_system: FileSystem = file_system
     self.lichess_client: LichessClient = lichess_client
+    self.date_provider: DateProvider = date_provider
 
   def generate_all_leaderboards(self) -> None:
     """Generate and save all leaderboards to disk."""
     # Load the existing leaderboards
     previous_rows_by_perf_type = load_all_previous_rows(self.file_system)
     # Get the current online bot info
-    current_perfs_by_perf_type = get_all_current_perfs(self.lichess_client)
+    current_perfs_by_perf_type = get_all_current_perfs(self.lichess_client, self.date_provider)
     # Combine the data and create update objects for all of the leaderboards
     updates_by_perf_type = {
       perf_type: create_updates(previous_rows_by_perf_type.get(perf_type, []), current_perfs_by_perf_type.get(perf_type, []))

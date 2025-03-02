@@ -29,8 +29,8 @@ class TestLeaderboardPerf(unittest.TestCase):
   """Tests for LeaderboardPeft."""
 
   def test_from_bot_user(self) -> None:
-    leaderboard_perf = LeaderboardPerf.from_bot_user(TEST_BOT_USER, TEST_BULLET_LICHESS_PERF)
-    self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "2024-01-01", "TODO"))
+    leaderboard_perf = LeaderboardPerf.from_bot_user(TEST_BOT_USER, TEST_BULLET_LICHESS_PERF, "2025-04-01")
+    self.assertEqual(leaderboard_perf, LeaderboardPerf("Bot1", 1450, 100, "2024-01-01", "2025-04-01"))
 
 
 class TestLeaderboardRow(unittest.TestCase):
