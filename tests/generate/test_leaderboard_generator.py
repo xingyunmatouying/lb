@@ -95,8 +95,8 @@ def remove_whitespace(whitespace_str: str) -> str:
 class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
-  def test_get_psv_file_name(self) -> None:
-    self.assertEqual(leaderboard_generator.get_psv_file_name(PerfType.BLITZ), "leaderboard_data/blitz.psv")
+  def test_get_leaderboard_data_file_name(self) -> None:
+    self.assertEqual(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.psv")
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
@@ -108,8 +108,8 @@ class TestGenerator(unittest.TestCase):
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_psv(), BOT_2_ROW_BULLET.to_psv()]
     blitz_leaderboard = [BOT_2_ROW_BLITZ.to_psv(), BOT_1_ROW_BLITZ.to_psv()]
-    file_system.save_file_lines(leaderboard_generator.get_psv_file_name(PerfType.BULLET), bullet_leaderboard)
-    file_system.save_file_lines(leaderboard_generator.get_psv_file_name(PerfType.BLITZ), blitz_leaderboard)
+    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
+    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), blitz_leaderboard)
     previous_rows_by_perf_type = leaderboard_generator.load_all_previous_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
@@ -194,14 +194,14 @@ class TestLeaderboardDataGenerator(unittest.TestCase):
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_psv(), BOT_2_ROW_BULLET.to_psv()]
-    file_system.save_file_lines(leaderboard_generator.get_psv_file_name(PerfType.BULLET), bullet_leaderboard)
+    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     date_provider = FakeDateProvider()
     date_provider.set_current_date("2025-04-01")
     leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
     leaderboard_data_generator.generate_leaderboard_data()
-    saved_leaderboard = file_system.load_file_lines(leaderboard_generator.get_psv_file_name(PerfType.BULLET))
+    saved_leaderboard = file_system.load_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET))
     expected_leaderboard = [
       "Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False",
       "Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False",
