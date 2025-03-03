@@ -9,7 +9,7 @@ Process for generating the leaderboards:
 import logging
 import time
 
-from src.generate.generator import LeaderboardGenerator
+from src.generate.leaderboard_generator import LeaderboardDataGenerator
 from src.generate.real_date_provider import RealDateProvider
 from src.generate.real_file_system import RealFileSystem
 from src.generate.real_lichess_client import RealLichessClient
@@ -35,8 +35,8 @@ if __name__ == "__main__":
   date_provider = RealDateProvider()
 
   # Generate leaderboard
-  leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, date_provider)
-  leaderboard_generator.generate_leaderboard_data()
+  leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
+  leaderboard_data_generator.generate_leaderboard_data()
 
   # Print time elapsed
   time_elapsed = time.time() - start_time

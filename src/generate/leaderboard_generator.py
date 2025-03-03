@@ -85,8 +85,8 @@ def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]
   return new_rows
 
 
-class LeaderboardGenerator:
-  """Generator for leaderboards.
+class LeaderboardDataGenerator:
+  """Generator for leaderboard data.
 
   The generator takes a file_system and a lichess_client as parameters.
   """
