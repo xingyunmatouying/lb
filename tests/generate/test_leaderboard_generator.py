@@ -1,10 +1,10 @@
-"""Tests for generator.py."""
+"""Tests for leaderboard_generator.py."""
 
 import unittest
 
-from src.generate import generator
-from src.generate.generator import LeaderboardGenerator
+from src.generate import leaderboard_generator
 from src.generate.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
+from src.generate.leaderboard_generator import LeaderboardDataGenerator
 from src.generate.lichess_bot_user import PerfType
 
 from generate.fake_date_provider import FakeDateProvider
@@ -95,12 +95,12 @@ def remove_whitespace(whitespace_str: str) -> str:
 class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
-  def test_get_psv_file_name(self) -> None:
-    self.assertEqual(generator.get_psv_file_name(PerfType.BLITZ), "leaderboard_data/blitz.psv")
+  def test_get_leaderboard_data_file_name(self) -> None:
+    self.assertEqual(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.psv")
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
-    previous_rows_by_perf_type = generator.load_all_previous_rows(file_system)
+    previous_rows_by_perf_type = leaderboard_generator.load_all_previous_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertTrue(all(rows == [] for rows in previous_rows_by_perf_type.values()))
 
@@ -108,9 +108,9 @@ class TestGenerator(unittest.TestCase):
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_psv(), BOT_2_ROW_BULLET.to_psv()]
     blitz_leaderboard = [BOT_2_ROW_BLITZ.to_psv(), BOT_1_ROW_BLITZ.to_psv()]
-    file_system.save_file_lines(generator.get_psv_file_name(PerfType.BULLET), bullet_leaderboard)
-    file_system.save_file_lines(generator.get_psv_file_name(PerfType.BLITZ), blitz_leaderboard)
-    previous_rows_by_perf_type = generator.load_all_previous_rows(file_system)
+    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
+    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), blitz_leaderboard)
+    previous_rows_by_perf_type = leaderboard_generator.load_all_previous_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BLITZ], [BOT_2_ROW_BLITZ, BOT_1_ROW_BLITZ])
@@ -120,7 +120,7 @@ class TestGenerator(unittest.TestCase):
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     date_provider = FakeDateProvider()
     date_provider.set_current_date("2025-04-01")
-    current_perfs_by_perf_type = generator.get_all_current_perfs(lichess_client, date_provider)
+    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, date_provider)
     self.assertEqual(len(current_perfs_by_perf_type), 2)
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
@@ -128,17 +128,17 @@ class TestGenerator(unittest.TestCase):
   def test_get_all_current_perfs_no_provisional(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("""{"username":"Bot","perfs":{"bullet":{"rating":3000,"prov":true}}}\n""")
-    current_perfs_by_perf_type = generator.get_all_current_perfs(lichess_client, FakeDateProvider())
+    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, FakeDateProvider())
     self.assertDictEqual(current_perfs_by_perf_type, {})
 
   def test_create_updates(self) -> None:
-    updates = generator.create_updates([], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
+    updates = leaderboard_generator.create_updates([], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     expected_updates = [CurrentPerfOnlyUpdate(BOT_1_CURRENT_PERF_BULLET), CurrentPerfOnlyUpdate(BOT_2_CURRENT_PERF_BULLET)]
     self.assertCountEqual(updates, expected_updates)
 
   def test_create_updates_no_tos_violation(self) -> None:
     bot_with_tos_violation = LeaderboardPerf("Bot", "", "", 2500, 0, 0, 300, "2022-04-01", "2025-04-01", False, True)
-    updates = generator.create_updates([], [bot_with_tos_violation])
+    updates = leaderboard_generator.create_updates([], [bot_with_tos_violation])
     self.assertCountEqual(updates, [])
 
   def test_create_ranked_rows(self) -> None:
@@ -147,7 +147,7 @@ class TestGenerator(unittest.TestCase):
       CurrentPerfOnlyUpdate(BOT_1_PERF_BULLET),
       CurrentPerfOnlyUpdate(BOT_4_PERF_BULLET),
     ]
-    leaderboard_rows = generator.create_ranked_rows(updates)
+    leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
       LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True),
@@ -162,7 +162,7 @@ class TestGenerator(unittest.TestCase):
       CurrentPerfOnlyUpdate(BOT_4_PERF_BULLET),
       CurrentPerfOnlyUpdate(BOT_3_PERF_BULLET),
     ]
-    leaderboard_rows = generator.create_ranked_rows(updates)
+    leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
       LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True),
@@ -178,7 +178,7 @@ class TestGenerator(unittest.TestCase):
       CurrentPerfOnlyUpdate(BOT_1_PERF_BULLET),
       CurrentPerfOnlyUpdate(BOT_1_PERF_BULLET),
     ]
-    leaderboard_rows = generator.create_ranked_rows(updates)
+    leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
@@ -188,20 +188,20 @@ class TestGenerator(unittest.TestCase):
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
 
-class TestLeaderboardGenerator(unittest.TestCase):
-  """Tests for LeaderboardGenerator."""
+class TestLeaderboardDataGenerator(unittest.TestCase):
+  """Tests for LeaderboardDataGenerator."""
 
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_psv(), BOT_2_ROW_BULLET.to_psv()]
-    file_system.save_file_lines(generator.get_psv_file_name(PerfType.BULLET), bullet_leaderboard)
+    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     date_provider = FakeDateProvider()
     date_provider.set_current_date("2025-04-01")
-    leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, date_provider)
-    leaderboard_generator.generate_leaderboard_data()
-    saved_leaderboard = file_system.load_file_lines(generator.get_psv_file_name(PerfType.BULLET))
+    leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
+    leaderboard_data_generator.generate_leaderboard_data()
+    saved_leaderboard = file_system.load_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET))
     expected_leaderboard = [
       "Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False",
       "Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False",

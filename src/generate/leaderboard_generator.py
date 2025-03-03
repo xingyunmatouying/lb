@@ -9,7 +9,7 @@ from src.generate.lichess_bot_user import BotUser, PerfType
 from src.generate.lichess_client import LichessClient
 
 
-def get_psv_file_name(perf_type: PerfType) -> str:
+def get_leaderboard_data_file_name(perf_type: PerfType) -> str:
   """Return the data file name for a PerfType."""
   return f"leaderboard_data/{perf_type.to_string()}.psv"
 
@@ -21,7 +21,7 @@ def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[Leade
   """
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
-    psv_file_lines = file_system.load_file_lines(get_psv_file_name(perf_type))
+    psv_file_lines = file_system.load_file_lines(get_leaderboard_data_file_name(perf_type))
     previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_psv(psv_line) for psv_line in psv_file_lines]
   return previous_rows_by_perf_type
 
@@ -85,8 +85,8 @@ def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]
   return new_rows
 
 
-class LeaderboardGenerator:
-  """Generator for leaderboards.
+class LeaderboardDataGenerator:
+  """Generator for leaderboard data.
 
   The generator takes a file_system and a lichess_client as parameters.
   """
@@ -112,4 +112,4 @@ class LeaderboardGenerator:
     ranked_rows_by_perf_type = {perf_type: create_ranked_rows(updates) for perf_type, updates in updates_by_perf_type.items()}
     # Save the new leaderboards
     for perf_type, rows in ranked_rows_by_perf_type.items():
-      self.file_system.save_file_lines(get_psv_file_name(perf_type), [row.to_psv() for row in rows])
+      self.file_system.save_file_lines(get_leaderboard_data_file_name(perf_type), [row.to_psv() for row in rows])
