@@ -206,9 +206,9 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
 
 @dataclasses.dataclass(frozen=True)
 class CurrentPerfOnlyUpdate(LeaderboardUpdate):
-  """Only the previous row was found.
+  """Only the current perf was found.
 
-  This happens when the bot has been seen previously but was not found now.
+  This happens when the bot is being seen for the first time.
   """
 
   perf: LeaderboardPerf
