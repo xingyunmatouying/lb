@@ -2,9 +2,8 @@
 
 import unittest
 
-from src.generate import date_provider
-
 from generate.fake_date_provider import FakeDateProvider
+from src.generate import date_provider
 
 
 class TestDateProviderMethods(unittest.TestCase):

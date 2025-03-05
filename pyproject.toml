@@ -66,6 +66,8 @@ combine-as-imports = true
 # If global variables directly following imports, by default there will only be one blank line.
 # PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
+# First party imports appear as a separate section.
+known-first-party = ["src"]
 
 
 # pyright
