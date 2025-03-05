@@ -1,6 +1,7 @@
 """An implementation of LichessClient which actually calls the lichess API."""
 
 import requests
+
 from src.generate.lichess_client import LichessClient
 
 
