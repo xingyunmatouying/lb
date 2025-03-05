@@ -61,7 +61,7 @@ combine-as-imports = true
 # PEP 8 leaves it up to our discretion to decide what is best here.
 lines-after-imports = 2
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Ignore all .py files starting with test_.
 "test_*.py" = [
   "D102", # undocumented-public-method
