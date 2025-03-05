@@ -88,7 +88,7 @@ def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]
 class LeaderboardDataGenerator:
   """Generator for leaderboard data.
 
-  The generator takes a file_system and a lichess_client as parameters.
+  The generator takes a file_system, a lichess_client, and a date_provider as parameters.
   """
 
   def __init__(self, file_system: FileSystem, lichess_client: LichessClient, date_provider: DateProvider) -> None:
