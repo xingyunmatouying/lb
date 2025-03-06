@@ -1,9 +1,14 @@
 {
     "recommendations": [
-        "charliermarsh.ruff",
+        // markdown
         "davidanson.vscode-markdownlint",
+        // python
+        "charliermarsh.ruff",
+        "ms-python.python",
         "ms-python.vscode-pylance",
-        "redhat.vscode-yaml",
+        // toml
         "tamasfe.even-better-toml",
+        // yaml
+        "redhat.vscode-yaml",
     ]
 }
