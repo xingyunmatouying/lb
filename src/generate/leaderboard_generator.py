@@ -98,7 +98,7 @@ class LeaderboardDataGenerator:
     self.date_provider: DateProvider = date_provider
 
   def generate_leaderboard_data(self) -> None:
-    """Generate and save all leaderboards to disk."""
+    """Generate and save all leaderboard data."""
     # Load the existing leaderboards
     previous_rows_by_perf_type = load_all_previous_rows(self.file_system)
     # Get the current online bot info
