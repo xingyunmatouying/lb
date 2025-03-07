@@ -132,19 +132,14 @@ class Perf:
 
   # The time control or variant
   perf_type: PerfType
-
   # The number of games the bot has played
   games: int
-
   # The bot's rating for this PerfType
   rating: int
-
   # The bot's rating deviation
   rd: int
-
   # The bot's rating change (progress) over the last 12 games
   prog: int
-
   # If the bot's rating is provisional
   # See: https://lichess.org/faq#provisional
   prov: bool
@@ -170,22 +165,16 @@ class BotUser:
 
   # The bot's username
   username: str
-
   # The bot's flair
   flair: str
-
   # The bot's country flag
   flag: str
-
   # The date the bot was created (YYYY-MM-DD)
   created_date: str
-
   # If the bot is a patron
   patron: bool
-
   # If the bot has violated the terms of service
   tos_violation: bool
-
   # The bot's list of performance ratings
   perfs: list[Perf]
 

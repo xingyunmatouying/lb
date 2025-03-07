@@ -14,9 +14,7 @@ class NavLink:
   """An element of the navigation bar."""
 
   link: str
-
   name: str
-
   is_active: bool
 
 
@@ -25,7 +23,6 @@ class MainFrame:
   """The main frame which is shared by the index and all of the leaderboard pages."""
 
   title: str
-
   nav_links: list[NavLink]
 
 
@@ -34,23 +31,14 @@ class HtmlLeaderboardRow:
   """The data required to render a leaderboard row in html."""
 
   rank: int
-
   rank_delta: int
-
   username: str
-
   flag: str
-
   rating: int
-
   rating_delta: int
-
   games: int
-
   created_date: str
-
   last_seen_date: str
-
   is_new: bool
 
   @classmethod
