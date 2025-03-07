@@ -101,6 +101,25 @@ class PerfType(Enum):
     }
     return perf_type_to_name.get(self, "unknown")
 
+  def get_readable_name(self) -> str:
+    """Return a readable name for the perf type with spaces, ect."""
+    perf_type_to_name = {
+      PerfType.BULLET: "Bullet",
+      PerfType.BLITZ: "Blitz",
+      PerfType.RAPID: "Rapid",
+      PerfType.CLASSICAL: "Classical",
+      PerfType.CORRESPONDENCE: "Correspondence",
+      PerfType.CRAZYHOUSE: "Crazyhouse",
+      PerfType.CHESS960: "Chess960",
+      PerfType.KING_OF_THE_HILL: "King of the Hill",
+      PerfType.THREE_CHECK: "Three Check",
+      PerfType.ANTICHESS: "Antichess",
+      PerfType.ATOMIC: "Atomic",
+      PerfType.HORDE: "Horde",
+      PerfType.RACING_KINGS: "Racing Kings",
+    }
+    return perf_type_to_name.get(self, "Unknown")
+
 
 @dataclasses.dataclass(frozen=True)
 class Perf:
@@ -108,7 +127,7 @@ class Perf:
 
   Example game modes include: bullet, blitz, classical, chess960, ...
 
-  In the lichess API the field `perfs` is a list of performances. Not all fields are represented here.
+  In the lichess API the field `perfs` is a list of performances.
   """
 
   # The time control or variant
