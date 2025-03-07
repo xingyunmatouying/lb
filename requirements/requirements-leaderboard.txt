@@ -1,3 +1,6 @@
 # leaderboard generation
 
+# html templating
+Jinja2~=3.1
+# calls to the lichess API
 requests~=2.32

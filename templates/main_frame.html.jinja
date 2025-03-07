@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="description" content="lichess bot leaderboard">
+    <meta name="keywords" content="lichess bot leaderboard">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ main_frame.title }}</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        {%- for nav_link in main_frame.nav_links %}
+          <a href="{{ nav_link.link }}"{% if nav_link.is_active %} class="active"{% endif %}>{{ nav_link.name }}</a>
+        {%- endfor %}
+      </nav>
+    </header>
+
+    <main>
+      {%- block content %}
+      {% endblock content %}
+    </main>
+  </body>
+</html>

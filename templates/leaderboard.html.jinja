@@ -1,0 +1,36 @@
+{% extends "main_frame.html.jinja" %}
+
+{% block content %}
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Δ</th>
+        <th>Name</th>
+        <th>⚑</th>
+        <th>Rating</th>
+        <th>Δ</th>
+        <th># Games</th>
+        <th>Created</th>
+        <th>Last Seen</th>
+        <th>New</th>
+      </tr>
+    </thead>
+    <tbody>
+      {%- for row in leaderboard_rows %}
+        <tr>
+          <td>{{ row.rank }}</td>
+          <td>{{ row.rank_delta }}</td>
+          <td>{{ row.username }}</td>
+          <td>{{ row.flag }}</td>
+          <td>{{ row.rating }}</td>
+          <td>{{ row.rating_delta }}</td>
+          <td>{{ row.games }}</td>
+          <td>{{ row.created_date }}</td>
+          <td>{{ row.last_seen_date }}</td>
+          <td>{{ row.is_new }}</td>
+        </tr>
+      {%- endfor %}
+    </tbody>
+  </table>
+{%- endblock content %}
