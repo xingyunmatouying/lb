@@ -5,6 +5,20 @@ description = "A leaderboard for lichess bots"
 requires-python = ">=3.11"
 
 
+# djlint
+[tool.djlint]
+# Not sure if the profile matters.
+profile = "jinja"
+# Nice and compact.
+indent = 2
+# The GitHub editor is 127 chars wide.
+max_line_length = 127
+# Don't let attributes undermine the max line length.
+max_attribute_length = 127
+# Allow blank lines.
+max_blank_lines = 1
+
+
 # ruff
 [tool.ruff]
 # Using a src/tests layout.
@@ -108,3 +122,4 @@ show_contexts = true
 
 [tool.coverage.xml]
 output = "coverage.xml"
+# Ignore leaderboard html output

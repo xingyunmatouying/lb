@@ -1,5 +1,8 @@
 {
     "recommendations": [
+        // jinja
+        "monosans.djlint",
+        "samuelcolvin.jinjahtml",
         // markdown
         "davidanson.vscode-markdownlint",
         // python
