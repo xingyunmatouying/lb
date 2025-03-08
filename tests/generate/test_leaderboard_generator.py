@@ -22,12 +22,12 @@ BOT_1_PERF_BLITZ = LeaderboardPerf("Bot-1", "", "", 2500, 0, 0, 50, "2021-04-01"
 BOT_2_PERF_BLITZ = LeaderboardPerf("Bot-2", "", "", 2600, 0, 0, 200, "2022-04-01", "2025-04-01", False, False)
 
 # Bullet leaderboard rows
-BOT_1_ROW_BULLET = LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3001, False)
-BOT_2_ROW_BULLET = LeaderboardRow(BOT_2_PERF_BULLET, 2, 1, -100, 1, 3000, False)
+BOT_1_ROW_BULLET = LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3001, False, True)
+BOT_2_ROW_BULLET = LeaderboardRow(BOT_2_PERF_BULLET, 2, 1, -100, 1, 3000, False, True)
 
 # Blitz leaderboard rows
-BOT_2_ROW_BLITZ = LeaderboardRow(BOT_1_PERF_BLITZ, 1, 1, 100, 1, 2600, False)
-BOT_1_ROW_BLITZ = LeaderboardRow(BOT_2_PERF_BLITZ, 2, -1, -150, 1, 2650, False)
+BOT_2_ROW_BLITZ = LeaderboardRow(BOT_1_PERF_BLITZ, 1, 1, 100, 1, 2600, False, True)
+BOT_1_ROW_BLITZ = LeaderboardRow(BOT_2_PERF_BLITZ, 2, -1, -150, 1, 2650, False, True)
 
 # Response for get online bots
 BOT_1_CURRENT_JSON = """
@@ -148,9 +148,9 @@ class TestGenerator(unittest.TestCase):
     ]
     leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
-      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True),
-      LeaderboardRow(BOT_4_PERF_BULLET, 3, 0, 0, 3, 2800, True),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
+      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True, True),
+      LeaderboardRow(BOT_4_PERF_BULLET, 3, 0, 0, 3, 2800, True, True),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -163,10 +163,10 @@ class TestGenerator(unittest.TestCase):
     ]
     leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
-      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True),
-      LeaderboardRow(BOT_3_PERF_BULLET, 2, 0, 0, 2, 2900, True),
-      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800, True),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
+      LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True, True),
+      LeaderboardRow(BOT_3_PERF_BULLET, 2, 0, 0, 2, 2900, True, True),
+      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800, True, True),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -179,10 +179,10 @@ class TestGenerator(unittest.TestCase):
     ]
     leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
-      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True),
-      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800, True),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
+      LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
+      LeaderboardRow(BOT_4_PERF_BULLET, 4, 0, 0, 4, 2800, True, True),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -202,7 +202,9 @@ class TestLeaderboardDataGenerator(unittest.TestCase):
     ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
     bullet_leaderboard = ranked_rows_by_perf_type[PerfType.BULLET]
     expected_leaderboard = [
-      LeaderboardRow.from_psv("Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False"),
-      LeaderboardRow.from_psv("Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False"),
+      LeaderboardRow.from_psv("Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False|True"),
+      LeaderboardRow.from_psv(
+        "Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False|True"
+      ),
     ]
     self.assertListEqual(bullet_leaderboard, expected_leaderboard)

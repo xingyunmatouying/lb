@@ -75,8 +75,10 @@ class LeaderboardRow:
   peak_rank: int
   # The maximum rating observed at any point when generating the leaderboard
   peak_rating: int
-  # Whether or not this is the bots first time on the leaderboard.
+  # Whether or not this is the bots first time on the leaderboard
   is_new: bool
+  # Whether or not the bot was online when the leaderboard was generated
+  is_online: bool
 
   @classmethod
   def from_psv(cls, psv_string: str) -> "LeaderboardRow":
@@ -102,8 +104,9 @@ class LeaderboardRow:
     peak_rank = int(values[14])
     peak_rating = int(values[15])
     is_new = values[16] == "True"
+    is_online = values[17] == "True"
 
-    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new)
+    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
 
   def to_psv(self) -> str:
     """Convert the bot in to a string of pipe separated values."""
@@ -125,6 +128,7 @@ class LeaderboardRow:
       str(self.peak_rank),
       str(self.peak_rating),
       str(self.is_new),
+      str(self.is_online),
     ]
     return "|".join(values)
 
@@ -185,7 +189,9 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     rating_delta = 0
     peak_rank = min(self.row.rank, rank)
     peak_rating = self.row.peak_rating
-    return LeaderboardRow(self.row.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, False)
+    is_new = False
+    is_online = False
+    return LeaderboardRow(self.row.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -211,7 +217,9 @@ class CurrentPerfOnlyUpdate(LeaderboardUpdate):
     rating_delta = 0
     peak_rank = rank
     peak_rating = self.perf.rating
-    return LeaderboardRow(self.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, True)
+    is_new = True
+    is_online = True
+    return LeaderboardRow(self.perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -239,4 +247,6 @@ class FullUpdate(LeaderboardUpdate):
     # Higher ranking, lower rank number
     peak_rank = min(self.previous_row.rank, rank)
     peak_rating = max(self.previous_row.perf.rating, self.current_perf.rating)
-    return LeaderboardRow(self.current_perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, False)
+    is_new = False
+    is_online = True
+    return LeaderboardRow(self.current_perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
