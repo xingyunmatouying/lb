@@ -122,4 +122,3 @@ show_contexts = true
 
 [tool.coverage.xml]
 output = "coverage.xml"
-# Ignore leaderboard html output
