@@ -20,8 +20,10 @@ class TestHtmlGenerator(unittest.TestCase):
     html_generator = LeaderboardHtmlGenerator()
     ranked_rows_by_perf_type = {
       PerfType.BULLET: [
-        LeaderboardRow.from_psv("Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False"),
-        LeaderboardRow.from_psv("Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False"),
+        LeaderboardRow.from_psv("Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False|True"),
+        LeaderboardRow.from_psv(
+          "Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False|True"
+        ),
       ]
     }
     html_by_file_name = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)

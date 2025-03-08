@@ -22,7 +22,7 @@ BOT_1_LICHESS_PERF = Perf(PerfType.BULLET, 100, 1450, 0, 0, False)
 BOT_1_BOT_USER = BotUser("Bot1", "", "", "2024-01-01", False, False, [BOT_1_LICHESS_PERF])
 
 BOT_2_PERF = create_perf("Bot-2", 1800, 400, "2021-04-01")
-BOT_2_ROW = LeaderboardRow(BOT_2_PERF, 1, 0, 0, 1, 1800, False)
+BOT_2_ROW = LeaderboardRow(BOT_2_PERF, 1, 0, 0, 1, 1800, False, True)
 
 
 class TestLeaderboardPerf(unittest.TestCase):
@@ -38,16 +38,16 @@ class TestLeaderboardRow(unittest.TestCase):
 
   def test_from_psv(self) -> None:
     leaderboard_row = LeaderboardRow.from_psv(
-      "Bot1|flair|flag|1500|12|34|100|2024-04-01|2025-04-01|False|False|4|1|50|3|1600|False"
+      "Bot1|flair|flag|1500|12|34|100|2024-04-01|2025-04-01|False|False|4|1|50|3|1600|False|False"
     )
     expected_perf = LeaderboardPerf("Bot1", "flair", "flag", 1500, 12, 34, 100, "2024-04-01", "2025-04-01", False, False)
-    expected_leaderboard_row = LeaderboardRow(expected_perf, 4, 1, 50, 3, 1600, False)
+    expected_leaderboard_row = LeaderboardRow(expected_perf, 4, 1, 50, 3, 1600, False, False)
     self.assertEqual(leaderboard_row, expected_leaderboard_row)
 
   def test_to_psv(self) -> None:
     perf = LeaderboardPerf("Bot1", "flair", "EU", 1500, 12, 34, 100, "2024-04-01", "2025-04-01", True, True)
-    leaderboard_row = LeaderboardRow(perf, 4, 1, 50, 3, 1600, True)
-    expected_psv = "Bot1|flair|EU|1500|12|34|100|2024-04-01|2025-04-01|True|True|4|1|50|3|1600|True"
+    leaderboard_row = LeaderboardRow(perf, 4, 1, 50, 3, 1600, True, False)
+    expected_psv = "Bot1|flair|EU|1500|12|34|100|2024-04-01|2025-04-01|True|True|4|1|50|3|1600|True|False"
     self.assertEqual(leaderboard_row.to_psv(), expected_psv)
 
 
@@ -62,24 +62,24 @@ class TestLeaderboardUpdate(unittest.TestCase):
 
   def test_row_only_update(self) -> None:
     previous_perf = create_perf("Bot 1", 1500, 100, "2024-01-01")
-    previous_row = LeaderboardRow(previous_perf, 5, 0, 0, 3, 1500, True)
+    previous_row = LeaderboardRow(previous_perf, 5, 0, 0, 3, 1500, True, True)
     update = PreviousRowOnlyUpdate(previous_row)
     self.assertEqual(update.get_rating(), 1500)
     self.assertEqual(update.get_created_date(), "2024-01-01")
-    self.assertEqual(update.to_leaderboard_row(2), LeaderboardRow(previous_perf, 2, 3, 0, 2, 1500, False))
+    self.assertEqual(update.to_leaderboard_row(2), LeaderboardRow(previous_perf, 2, 3, 0, 2, 1500, False, False))
 
   def test_perf_only_update(self) -> None:
     previous_perf = create_perf("Bot 1", 1500, 100, "2024-01-01")
     update = CurrentPerfOnlyUpdate(previous_perf)
     self.assertEqual(update.get_rating(), 1500)
     self.assertEqual(update.get_created_date(), "2024-01-01")
-    self.assertEqual(update.to_leaderboard_row(2), LeaderboardRow(previous_perf, 2, 0, 0, 2, 1500, True))
+    self.assertEqual(update.to_leaderboard_row(2), LeaderboardRow(previous_perf, 2, 0, 0, 2, 1500, True, True))
 
   def test_full_update(self) -> None:
     previous_perf = create_perf("Bot 1", 1500, 100, "2024-01-01")
-    previous_row = LeaderboardRow(previous_perf, 5, 0, 0, 3, 1500, True)
+    previous_row = LeaderboardRow(previous_perf, 5, 0, 0, 3, 1500, True, True)
     current_perf = create_perf("Bot 1", 1600, 120, "2024-01-01")
     update = FullUpdate(previous_row, current_perf)
     self.assertEqual(update.get_rating(), 1600)
     self.assertEqual(update.get_created_date(), "2024-01-01")
-    self.assertEqual(update.to_leaderboard_row(1), LeaderboardRow(current_perf, 1, 4, 100, 1, 1600, False))
+    self.assertEqual(update.to_leaderboard_row(1), LeaderboardRow(current_perf, 1, 4, 100, 1, 1600, False, True))
