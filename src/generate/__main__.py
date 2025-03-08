@@ -24,8 +24,7 @@ if __name__ == "__main__":
   logger.setLevel(logging.INFO)
   stream_handler = logging.StreamHandler()
   stream_handler.setLevel(logging.INFO)
-  formatter = logging.Formatter("%(levelname)s: %(message)s")
-  stream_handler.setFormatter(formatter)  # using the formatter.
+  stream_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
   logger.addHandler(stream_handler)
   logger.info("Generating leaderboard...")
 
