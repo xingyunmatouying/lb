@@ -1,0 +1,8 @@
+# Development requirements
+
+# code coverage
+coverage~=7.6
+# jinja linting and formatting
+djlint~=1.36
+# python linting and formatting
+ruff~=0.9

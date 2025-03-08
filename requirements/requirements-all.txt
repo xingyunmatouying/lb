@@ -1,5 +1,0 @@
-# All requirements files go here
-
--r requirements-leaderboard.txt
--r requirements-coverage.txt
--r requirements-style.txt

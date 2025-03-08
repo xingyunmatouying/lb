@@ -23,7 +23,7 @@
 3. Install requirements
 
     ```shell
-    pip install -r requirements.txt
+    pip install -r requirements\leaderboard.txt
     ```
 
 4. Generate the leaderboards
@@ -41,19 +41,7 @@
 3. Install all requirements to generate the leaderboards as well as for linting, formatting, and code coverage
 
     ```shell
-    pip install -r requirements\requirements-all.txt
-    ```
-
-    or only linting and formatting
-
-    ```shell
-    pip install -r requirements\requirements-style.txt
-    ```
-
-    or only code coverage
-
-    ```shell
-    pip install -r requirements\requirements-coverage.txt
+    pip install -r requirements\all.txt
     ```
 
 ### Check linting and formatting

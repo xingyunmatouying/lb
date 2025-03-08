@@ -1,6 +1,0 @@
-# linting and formatting
-
-# jinja
-djlint~=1.36
-# python
-ruff~=0.9

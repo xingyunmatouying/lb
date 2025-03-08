@@ -1,4 +1,4 @@
-# leaderboard generation
+# Production requirements
 
 # html templating
 Jinja2~=3.1
