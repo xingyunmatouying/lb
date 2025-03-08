@@ -91,8 +91,8 @@ jobs:
     name: 🧪 check-tests / ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     needs:
-      - check-types
       - check-style-jinja
+      - check-types
     strategy:
       matrix:
         include:
