@@ -1,3 +1,0 @@
-# leaderboard generation
-
-requests~=2.32

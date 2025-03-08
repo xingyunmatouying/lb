@@ -88,7 +88,7 @@ def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]
 class LeaderboardDataGenerator:
   """Generator for leaderboard data.
 
-  The generator takes a file_system and a lichess_client as parameters.
+  The generator takes a file_system, a lichess_client, and a date_provider as parameters.
   """
 
   def __init__(self, file_system: FileSystem, lichess_client: LichessClient, date_provider: DateProvider) -> None:
@@ -97,8 +97,8 @@ class LeaderboardDataGenerator:
     self.lichess_client: LichessClient = lichess_client
     self.date_provider: DateProvider = date_provider
 
-  def generate_leaderboard_data(self) -> None:
-    """Generate and save all leaderboards to disk."""
+  def generate_leaderboard_data(self) -> dict[PerfType, list[LeaderboardRow]]:
+    """Generate and save all leaderboard data."""
     # Load the existing leaderboards
     previous_rows_by_perf_type = load_all_previous_rows(self.file_system)
     # Get the current online bot info
@@ -108,8 +108,5 @@ class LeaderboardDataGenerator:
       perf_type: create_updates(previous_rows_by_perf_type.get(perf_type, []), current_perfs_by_perf_type.get(perf_type, []))
       for perf_type in PerfType.all_except_unknown()
     }
-    # Create the leaderboards with rank information
-    ranked_rows_by_perf_type = {perf_type: create_ranked_rows(updates) for perf_type, updates in updates_by_perf_type.items()}
-    # Save the new leaderboards
-    for perf_type, rows in ranked_rows_by_perf_type.items():
-      self.file_system.save_file_lines(get_leaderboard_data_file_name(perf_type), [row.to_psv() for row in rows])
+    # Create and return the leaderboards with rank information
+    return {perf_type: create_ranked_rows(updates) for perf_type, updates in updates_by_perf_type.items()}

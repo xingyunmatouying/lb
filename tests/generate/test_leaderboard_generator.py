@@ -199,10 +199,10 @@ class TestLeaderboardDataGenerator(unittest.TestCase):
     date_provider = FakeDateProvider()
     date_provider.set_current_date("2025-04-01")
     leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
-    leaderboard_data_generator.generate_leaderboard_data()
-    saved_leaderboard = file_system.load_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET))
+    ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
+    bullet_leaderboard = ranked_rows_by_perf_type[PerfType.BULLET]
     expected_leaderboard = [
-      "Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False",
-      "Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False",
+      LeaderboardRow.from_psv("Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False"),
+      LeaderboardRow.from_psv("Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False"),
     ]
-    self.assertEqual(saved_leaderboard, expected_leaderboard)
+    self.assertListEqual(bullet_leaderboard, expected_leaderboard)

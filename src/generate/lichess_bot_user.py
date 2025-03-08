@@ -101,6 +101,25 @@ class PerfType(Enum):
     }
     return perf_type_to_name.get(self, "unknown")
 
+  def get_readable_name(self) -> str:
+    """Return a readable name for the perf type with spaces, ect."""
+    perf_type_to_name = {
+      PerfType.BULLET: "Bullet",
+      PerfType.BLITZ: "Blitz",
+      PerfType.RAPID: "Rapid",
+      PerfType.CLASSICAL: "Classical",
+      PerfType.CORRESPONDENCE: "Correspondence",
+      PerfType.CRAZYHOUSE: "Crazyhouse",
+      PerfType.CHESS960: "Chess960",
+      PerfType.KING_OF_THE_HILL: "King of the Hill",
+      PerfType.THREE_CHECK: "Three Check",
+      PerfType.ANTICHESS: "Antichess",
+      PerfType.ATOMIC: "Atomic",
+      PerfType.HORDE: "Horde",
+      PerfType.RACING_KINGS: "Racing Kings",
+    }
+    return perf_type_to_name.get(self, "Unknown")
+
 
 @dataclasses.dataclass(frozen=True)
 class Perf:
@@ -108,24 +127,19 @@ class Perf:
 
   Example game modes include: bullet, blitz, classical, chess960, ...
 
-  In the lichess API the field `perfs` is a list of performances. Not all fields are represented here.
+  In the lichess API the field `perfs` is a list of performances.
   """
 
   # The time control or variant
   perf_type: PerfType
-
   # The number of games the bot has played
   games: int
-
   # The bot's rating for this PerfType
   rating: int
-
   # The bot's rating deviation
   rd: int
-
   # The bot's rating change (progress) over the last 12 games
   prog: int
-
   # If the bot's rating is provisional
   # See: https://lichess.org/faq#provisional
   prov: bool
@@ -151,22 +165,16 @@ class BotUser:
 
   # The bot's username
   username: str
-
   # The bot's flair
   flair: str
-
   # The bot's country flag
   flag: str
-
   # The date the bot was created (YYYY-MM-DD)
   created_date: str
-
   # If the bot is a patron
   patron: bool
-
   # If the bot has violated the terms of service
   tos_violation: bool
-
   # The bot's list of performance ratings
   perfs: list[Perf]
 

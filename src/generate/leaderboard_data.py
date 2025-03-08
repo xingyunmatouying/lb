@@ -17,34 +17,24 @@ class LeaderboardPerf:
 
   # The bot's username
   username: str
-
   # The bot's flair
   flair: str
-
   # The bot's country flag
   flag: str
-
   # The bot's rating
   rating: int
-
   # The bot's rating deviation
   rd: int
-
   # The bot's rating change (progress) over the last 12 games
   prog: int
-
   # The number of games the bot has played
   games: int
-
   # The date the bot was created (YYYY-MM-DD)
   created_date: str
-
   # The date the bot was last seen (YYYY-MM-DD)
   last_seen_date: str
-
   # If the bot is a patron
   patron: bool
-
   # If the bot has violated the terms of service
   tos_violation: bool
 
@@ -75,22 +65,16 @@ class LeaderboardRow:
 
   # Information about the bot returned by the lichess API
   perf: LeaderboardPerf
-
   # The bot's position within the leaderboard
   rank: int
-
   # How much their rank has changed since the last time the leaderboard was generated
   rank_delta: int
-
   # How much their rating has changed since the last time the leaderboard was generated
   rating_delta: int
-
   # The highest rank the bot has ever achieved on the leaderboard
   peak_rank: int
-
   # The maximum rating observed at any point when generating the leaderboard
   peak_rating: int
-
   # Whether or not this is the bots first time on the leaderboard.
   is_new: bool
 
@@ -235,7 +219,6 @@ class FullUpdate(LeaderboardUpdate):
   """The bot is already on the leaderboard and we have new data."""
 
   previous_row: LeaderboardRow
-
   current_perf: LeaderboardPerf
 
   def get_rating(self) -> int:

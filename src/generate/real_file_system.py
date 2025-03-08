@@ -20,5 +20,5 @@ class RealFileSystem(FileSystem):
     """Save all of the lines to a file."""
     path = Path(file_name)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w") as file:
+    with path.open("w", encoding="utf-8") as file:
       file.writelines([f"{line}\n" for line in file_lines])
