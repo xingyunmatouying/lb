@@ -15,17 +15,23 @@ from src.generate.real_file_system import RealFileSystem
 from src.generate.real_lichess_client import RealLichessClient
 
 
-if __name__ == "__main__":
-  # Start timer
-  start_time = time.time()
-
-  # Setup logging
+def create_logger() -> logging.Logger:
+  """Initialize and return a logger."""
   logger = logging.getLogger()
   logger.setLevel(logging.INFO)
   stream_handler = logging.StreamHandler()
   stream_handler.setLevel(logging.INFO)
   stream_handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
   logger.addHandler(stream_handler)
+  return logger
+
+
+if __name__ == "__main__":
+  # Start timer
+  start_time = time.time()
+
+  # Setup logging
+  logger = create_logger()
   logger.info("Generating leaderboard...")
 
   # Instantiate dependencies
