@@ -9,6 +9,8 @@ Process for generating the leaderboards:
 import logging
 import time
 
+from src.generate import leaderboard_generator
+from src.generate.html_generator import LeaderboardHtmlGenerator
 from src.generate.leaderboard_generator import LeaderboardDataGenerator
 from src.generate.real_date_provider import RealDateProvider
 from src.generate.real_file_system import RealFileSystem
@@ -41,7 +43,20 @@ if __name__ == "__main__":
 
   # Generate leaderboard
   leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
-  leaderboard_data_generator.generate_leaderboard_data()
+  ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
+
+  # Save the leaderboard data
+  for perf_type, rows in ranked_rows_by_perf_type.items():
+    file_system.save_file_lines(
+      leaderboard_generator.get_leaderboard_data_file_name(perf_type), [row.to_psv() for row in rows]
+    )
+
+  leaderboard_html_generator = LeaderboardHtmlGenerator()
+  html_by_name = leaderboard_html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
+
+  # save the leaderboard html
+  for name, html in html_by_name.items():
+    file_system.save_file_lines(f"leaderboard_html/{name}.html", [html])
 
   # Print time elapsed
   time_elapsed = time.time() - start_time
