@@ -1,89 +1,127 @@
-# (Unofficial) Lichess Bot Leaderboard
+# Lichess Bot Leaderboard
 
-## Installation (Windows)
+Automatically updating Lichess bot leaderboards.
 
-1. Create a virtual environment
+## Overview
 
-    ```shell
-    python -m venv .venv
-    ```
+This is a python script which queries the Lichess API for online bots. Using the online bot data, combined with data from prior runs, it outputs html files which contain leaderboards for all Lichess time controls and variants available to bots.
 
-2. Activate the environment
+## Generating the leaderboards locally
 
-    ```shell
-    .venv\Scripts\activate # cmd
-    ```
+The leaderboard html will be output to the folder `leaderboard_html`.
 
-    or
+### Installation
 
-    ```shell
-    .venv\Scripts\Activate.ps1 # powershell
-    ```
+Create a virtual environment
 
-3. Install requirements
+```shell
+python -m venv .venv
+```
 
-    ```shell
-    pip install -r requirements\leaderboard.txt
-    ```
+Activate the environment
 
-4. Generate the leaderboards
+```shell
+.venv\Scripts\activate      # Windows cmd
+```
 
-    ```shell
-    python -m src.generate
-    ```
+```shell
+.venv\Scripts\Activate.ps1  # Windows PowerShell
+```
+
+```shell
+source .venv/bin/activate   # MacOS and Linux
+```
+
+Install requirements
+
+```shell
+pip install -r requirements\leaderboard.txt
+```
+
+Generate the leaderboards
+
+```shell
+python -m src.generate
+```
 
 ## Development
 
-### Installation
+This project was developed in VS Code. The repo contains several recommended extensions to aid in development.
+
+### CI
+
+The CI for this project includes several checks which are configured as GitHub actions. All of these can be performed locally, too.
+
+#### **Setup**
+
+Begin following the same steps as above.
 
 1. Create a virtual environment
 2. Activate the environment
 3. Install all requirements to generate the leaderboards as well as for linting, formatting, and code coverage
 
-    ```shell
-    pip install -r requirements\all.txt
-    ```
+```shell
+pip install -r requirements\all.txt
+```
 
-### Check linting and formatting
+#### **Check linting and formatting**
 
-- Check formatting
+Python
 
-    ```shell
-    ruff format --check
-    ```
+```shell
+ruff format --check  # Check format
+```
 
-- Check linting
+```shell
+ruff check           # Check lint
+```
 
-    ```shell
-    ruff check
-    ```
+Jinja
 
-### Run tests
+```shell
+djlint templates -e jinja --check  # Check format
+```
 
-- Run tests in the `tests` directory which match the pattern `test_*.py`
+```shell
+djlint templates -e jinja --lint   # Check lint
+```
 
-    ```shell
-    python -m unittest discover -v -s tests -p test_*.py
-    ```
+#### **Check types**
 
-### Generate code coverage
+Install pyright with npm
 
-- Generate the coverage file
+```shell
+npm install -g pyright
+```
 
-    This is configured to use the same command as when running tests
+Run static type checking
 
-    ```shell
-    coverage run
-    ```
+``` shell
+pyright --verbose
+```
 
-- Generate coverage html
+Alternatively this can be done from within VS Code.
 
-    ```shell
-    coverage html
-    ```
+#### **Run tests**
 
-- Generate coverage xml
+The following command runs tests in the `tests` directory which match the pattern `test_*.py`
 
-    ```shell
-    coverage xml
-    ```
+```shell
+python -m unittest discover -v -s tests -p test_*.py
+```
+
+#### **Run code coverage**
+
+The `coverage run` command is configured to use the same command as above when running tests.
+
+```shell
+coverage run   # Generate the coverage file
+```
+
+```shell
+coverage html  # Generate coverage html
+```
+
+```shell
+coverage xml   # Generate coverage xml
+```
