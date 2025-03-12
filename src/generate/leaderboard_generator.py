@@ -31,7 +31,7 @@ def get_all_current_perfs(lichess_client: LichessClient, date_provider: DateProv
 
   Returns lists of leaderboard perfs grouped by perf type.
   """
-  current_date = date_provider.get_current_date()
+  current_date = date_provider.get_current_date_formatted()
   current_perfs_by_perf_type: dict[PerfType, list[LeaderboardPerf]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)

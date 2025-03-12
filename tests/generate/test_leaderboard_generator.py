@@ -118,7 +118,7 @@ class TestGenerator(unittest.TestCase):
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     date_provider = FakeDateProvider()
-    date_provider.set_current_date("2025-04-01")
+    date_provider.set_current_time(1743483600)
     current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, date_provider)
     self.assertEqual(len(current_perfs_by_perf_type), 2)
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
@@ -197,7 +197,7 @@ class TestLeaderboardDataGenerator(unittest.TestCase):
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     date_provider = FakeDateProvider()
-    date_provider.set_current_date("2025-04-01")
+    date_provider.set_current_time(1743483600)
     leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
     ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
     bullet_leaderboard = ranked_rows_by_perf_type[PerfType.BULLET]
