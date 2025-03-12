@@ -5,6 +5,7 @@ import datetime
 
 
 FORMAT_YYYY_MM_DD = "%Y-%m-%d"
+FORMAT_YYYY_MM_DD_HH_MM_SS = "%Y-%m-%d %H:%M:%S"
 
 
 def format_date(epoch_seconds: float, time_format: str) -> str:
@@ -23,3 +24,7 @@ class DateProvider(abc.ABC):
   def get_current_date_formatted(self) -> str:
     """Return the current date formatted as YYYY-MM-DD."""
     return format_date(self.get_current_time(), FORMAT_YYYY_MM_DD)
+
+  def get_current_date_time_formatted(self) -> str:
+    """Return the current date formatted as YYYY-MM-DD HH:MM:SS."""
+    return format_date(self.get_current_time(), FORMAT_YYYY_MM_DD_HH_MM_SS)

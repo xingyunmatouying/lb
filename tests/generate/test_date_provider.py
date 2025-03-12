@@ -16,7 +16,12 @@ class TestDateProviderMethods(unittest.TestCase):
 class TestDateProvider(unittest.TestCase):
   """Tests for DateProvider."""
 
-  def test_get_current_date(self) -> None:
+  def test_get_current_date_formatted(self) -> None:
     fake_date_provider = FakeDateProvider()
     fake_date_provider.set_current_time(1743483600)
     self.assertEqual(fake_date_provider.get_current_date_formatted(), "2025-04-01")
+
+  def test_get_current_date_time_formatted(self) -> None:
+    fake_date_provider = FakeDateProvider()
+    fake_date_provider.set_current_time(1743483600)
+    self.assertEqual(fake_date_provider.get_current_date_time_formatted(), "2025-04-01 05:00:00")

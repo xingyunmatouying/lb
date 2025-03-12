@@ -51,7 +51,7 @@ if __name__ == "__main__":
       leaderboard_generator.get_leaderboard_data_file_name(perf_type), [row.to_psv() for row in rows]
     )
 
-  leaderboard_html_generator = LeaderboardHtmlGenerator()
+  leaderboard_html_generator = LeaderboardHtmlGenerator(date_provider)
   html_by_name = leaderboard_html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
 
   # save the leaderboard html
