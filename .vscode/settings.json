@@ -1,54 +1,75 @@
 {
-    // general
-    // Trailing whitespace is trimmed on save for all files
-    "files.trimTrailingWhitespace": true,
-    // Ensure a new line at the end of files is present upon saving
-    "files.insertFinalNewline": true,
-    // jinja
-    "[jinja-html]": {
-        "editor.defaultFormatter": "monosans.djlint",
-        "editor.formatOnSave": true,
-        "editor.tabSize": 2,
+  // general
+  // Don't format on save (enabled on a case by case basis)
+  "editor.formatOnSave": false,
+  // Trailing whitespace is trimmed on save for all files
+  "files.trimTrailingWhitespace": true,
+  // Ensure a new line at the end of files is present upon saving
+  "files.insertFinalNewline": true,
+  // css
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  //html
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // jinja
+  "[jinja-html]": {
+    "editor.defaultFormatter": "monosans.djlint",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "djlint.useEditorIndentation": false,
+  "djlint.formatLanguages": ["jinja-html"],
+  // json
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  // markdown
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.formatOnSave": true
+  },
+  // python
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
     },
-    "djlint.useEditorIndentation": false,
-    "djlint.formatLanguages": [
-        "jinja-html",
-    ],
-    // markdown
-    "[markdown]": {
-        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
-        "editor.formatOnSave": true,
-    },
-    // python
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        },
-        "editor.formatOnSave": true,
-        "editor.tabSize": 2,
-    },
-    // toml
-    "[toml]": {
-        "editor.defaultFormatter": "tamasfe.even-better-toml",
-        "editor.formatOnSave": true,
-        "editor.tabSize": 2,
-    },
-    "evenBetterToml.formatter.columnWidth": 127,
-    "evenBetterToml.formatter.indentString": "  ",
-    "evenBetterToml.formatter.alignComments": false,
-    "evenBetterToml.formatter.allowedBlankLines": 2,
-    "evenBetterToml.formatter.arrayAutoCollapse": false,
-    "evenBetterToml.formatter.arrayTrailingComma": true,
-    "evenBetterToml.formatter.arrayAutoExpand": true,
-    "evenBetterToml.formatter.compactArrays": true,
-    "evenBetterToml.formatter.trailingNewline": true,
-    // yaml
-    "[yaml]": {
-        "editor.defaultFormatter": "redhat.vscode-yaml",
-        "editor.formatOnSave": true,
-        "editor.tabSize": 2,
-    },
-    "yaml.format.enable": true,
-    "yaml.format.printWidth": 127,
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  // toml
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "evenBetterToml.formatter.columnWidth": 127,
+  "evenBetterToml.formatter.indentString": "  ",
+  "evenBetterToml.formatter.alignComments": false,
+  "evenBetterToml.formatter.allowedBlankLines": 2,
+  "evenBetterToml.formatter.arrayAutoCollapse": false,
+  "evenBetterToml.formatter.arrayTrailingComma": true,
+  "evenBetterToml.formatter.arrayAutoExpand": true,
+  "evenBetterToml.formatter.compactArrays": true,
+  "evenBetterToml.formatter.trailingNewline": true,
+  // yaml
+  "[yaml]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "yaml.format.enable": true,
+  "yaml.format.printWidth": 127
 }

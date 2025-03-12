@@ -1,17 +1,19 @@
 {
-    "recommendations": [
-        // jinja
-        "monosans.djlint",
-        "samuelcolvin.jinjahtml",
-        // markdown
-        "davidanson.vscode-markdownlint",
-        // python
-        "charliermarsh.ruff",
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        // toml
-        "tamasfe.even-better-toml",
-        // yaml
-        "redhat.vscode-yaml",
-    ]
+  "recommendations": [
+    // css (and json)
+    "esbenp.prettier-vscode",
+    // jinja
+    "monosans.djlint",
+    "samuelcolvin.jinjahtml",
+    // markdown
+    "davidanson.vscode-markdownlint",
+    // python
+    "charliermarsh.ruff",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    // toml
+    "tamasfe.even-better-toml",
+    // yaml
+    "redhat.vscode-yaml"
+  ]
 }

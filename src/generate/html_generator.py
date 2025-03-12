@@ -4,6 +4,7 @@ import dataclasses
 
 from jinja2 import Environment, FileSystemLoader
 
+from src.generate.date_provider import DateProvider
 from src.generate.leaderboard_data import LeaderboardRow
 from src.generate.lichess_bot_user import PerfType
 
@@ -22,6 +23,7 @@ class MainFrame:
   """The main frame which is shared by the index and all of the leaderboard pages."""
 
   title: str
+  last_updated_time: str
   nav_links: list[NavLink]
 
 
@@ -74,23 +76,27 @@ def create_nav_links(active_perf_type: PerfType | None) -> list[NavLink]:
 class LeaderboardHtmlGenerator:
   """Generator for html."""
 
-  def __init__(self) -> None:
+  def __init__(self, date_provider: DateProvider) -> None:
     """Initialize a new generator."""
+    self.date_provider = date_provider
     self.jinja_environment = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
 
   def generate_leaderboard_html(self, ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]) -> dict[str, str]:
     """Generate index and leaderboard html."""
+    last_updated_time = self.date_provider.get_current_date_time_formatted()
     html_by_name: dict[str, str] = {}
     # Create index html
     index_template = self.jinja_environment.get_template("index.html.jinja")
-    index_html = index_template.render(main_frame=MainFrame("Lichess Bot Leaderboards", create_nav_links(None)))
+    index_html = index_template.render(
+      main_frame=MainFrame("Lichess Bot Leaderboards", last_updated_time, create_nav_links(None))
+    )
     html_by_name["index"] = index_html
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
       rows = ranked_rows_by_perf_type.get(perf_type, [])
       leaderboard_template = self.jinja_environment.get_template("leaderboard.html.jinja")
       leaderboard_html = leaderboard_template.render(
-        main_frame=MainFrame(perf_type.get_readable_name(), create_nav_links(perf_type)),
+        main_frame=MainFrame(perf_type.get_readable_name(), last_updated_time, create_nav_links(perf_type)),
         leaderboard_rows=[HtmlLeaderboardRow.from_leaderboard_row(row) for row in rows],
       )
       html_by_name[perf_type.to_string()] = leaderboard_html
