@@ -1,5 +1,7 @@
 {
   "recommendations": [
+    // css (and json)
+    "esbenp.prettier-vscode",
     // jinja
     "monosans.djlint",
     "samuelcolvin.jinjahtml",
