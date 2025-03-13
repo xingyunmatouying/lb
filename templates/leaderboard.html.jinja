@@ -20,7 +20,9 @@
       {%- for row in leaderboard_rows %}
         <tr>
           <td>{{ row.rank }}</td>
-          <td>{{ row.rank_delta }}</td>
+          <td {% if row.rank_delta.is_positive %}class="delta-pos"{% elif row.rank_delta.is_negative %}class="delta-neg"{% endif -%}>
+            {{ row.rank_delta_str }}
+          </td>
           <td>{{ row.username }}</td>
           <td>{{ row.flag }}</td>
           <td>{{ row.rating }}</td>
