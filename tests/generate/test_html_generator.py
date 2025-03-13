@@ -13,16 +13,14 @@ class TestHtmlGenerator(unittest.TestCase):
 
   def test_generate_index(self) -> None:
     html_generator = LeaderboardHtmlGenerator(FakeDateProvider())
-    html_by_file_name = html_generator.generate_leaderboard_html({})
-    index_html = html_by_file_name["index"]
+    index_html = html_generator.generate_leaderboard_html({})["index"]
     self.assertIn('<a href="index.html" class="active">Home</a>', index_html)
 
   def test_generate_last_updated(self) -> None:
     date_provider = FakeDateProvider()
     date_provider.set_current_time(1743483600)
     html_generator = LeaderboardHtmlGenerator(date_provider)
-    html_by_file_name = html_generator.generate_leaderboard_html({})
-    index_html = html_by_file_name["index"]
+    index_html = html_generator.generate_leaderboard_html({})["index"]
     self.assertIn("Last Updated:", index_html)
     self.assertIn("2025-04-01 05:00:00 UTC", index_html)
 
@@ -36,7 +34,6 @@ class TestHtmlGenerator(unittest.TestCase):
         ),
       ]
     }
-    html_by_file_name = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
-    bullet_html = html_by_file_name["bullet"]
+    bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
     self.assertIn("Bot-2", bullet_html)
     self.assertIn("Bot-1", bullet_html)
