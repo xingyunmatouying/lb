@@ -28,11 +28,34 @@ class MainFrame:
 
 
 @dataclasses.dataclass(frozen=True)
+class LeaderboardDelta:
+  """Conveniences which make it easier to style the delta columns."""
+
+  is_positive: bool
+  is_negative: bool
+  value_abs: int
+
+  @classmethod
+  def from_delta(cls, delta: int) -> "LeaderboardDelta":
+    """Construct a delta from an int."""
+    return LeaderboardDelta(delta > 0, delta < 0, abs(delta))
+
+  def to_string(self) -> str:
+    """Return ↑..., ↓..., or blank."""
+    if self.is_positive:
+      return f"↑{self.value_abs}"
+    if self.is_negative:
+      return f"↓{self.value_abs}"
+    return ""
+
+
+@dataclasses.dataclass(frozen=True)
 class HtmlLeaderboardRow:
   """The data required to render a leaderboard row in html."""
 
   rank: int
-  rank_delta: int
+  rank_delta: LeaderboardDelta
+  rank_delta_str: str
   username: str
   flag: str
   rating: int
@@ -45,9 +68,12 @@ class HtmlLeaderboardRow:
   @classmethod
   def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
+    rank_delta = LeaderboardDelta.from_delta(row.rank_delta)
+    rank_delta_str = "🆕" if row.is_new else rank_delta.to_string()
     return HtmlLeaderboardRow(
       row.rank,
-      row.rank_delta,
+      rank_delta,
+      rank_delta_str,
       row.perf.username,
       row.perf.flag,
       row.perf.rating,

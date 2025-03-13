@@ -37,3 +37,35 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
     self.assertIn("Bot-2", bullet_html)
     self.assertIn("Bot-1", bullet_html)
+
+  def test_generate_new_bot(self) -> None:
+    html_generator = LeaderboardHtmlGenerator(FakeDateProvider())
+    ranked_rows_by_perf_type = {
+      PerfType.BULLET: [
+        LeaderboardRow.from_psv("Bot-1|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|True|True")
+      ]
+    }
+    bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
+    self.assertIn("🆕", bullet_html)
+
+  def test_generate_positive_rank_delta(self) -> None:
+    html_generator = LeaderboardHtmlGenerator(FakeDateProvider())
+    ranked_rows_by_perf_type = {
+      PerfType.BULLET: [
+        LeaderboardRow.from_psv("Bot-1|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|3|100|1|3000|False|True")
+      ]
+    }
+    bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
+    self.assertIn("↑3", bullet_html)
+    self.assertIn('class="delta-pos"', bullet_html)
+
+  def test_generate_negative_rank_delta(self) -> None:
+    html_generator = LeaderboardHtmlGenerator(FakeDateProvider())
+    ranked_rows_by_perf_type = {
+      PerfType.BULLET: [
+        LeaderboardRow.from_psv("Bot-1|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|-3|100|1|3000|False|True")
+      ]
+    }
+    bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
+    self.assertIn("↓3", bullet_html)
+    self.assertIn('class="delta-neg"', bullet_html)

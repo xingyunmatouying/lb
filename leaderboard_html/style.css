@@ -104,3 +104,13 @@ th {
 tr:nth-child(even) {
   background-color: rgb(242, 242, 242);
 }
+
+/* Positive delta */
+td.delta-pos {
+  color: green;
+}
+
+/* Negative delta */
+td.delta-neg {
+  color: red;
+}
