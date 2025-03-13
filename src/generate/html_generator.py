@@ -63,7 +63,6 @@ class HtmlLeaderboardRow:
   games: int
   created_date: str
   last_seen_date: str
-  is_new: bool
 
   @classmethod
   def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
@@ -81,7 +80,6 @@ class HtmlLeaderboardRow:
       row.perf.games,
       row.perf.created_date,
       row.perf.last_seen_date,
-      row.is_new,
     )
 
 
