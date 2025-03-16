@@ -2,13 +2,13 @@
 
 import unittest
 
-from generate.fake_date_provider import FakeDateProvider
-from generate.fake_lichess_client import FakeLichessClient
-from generate.in_memory_file_system import InMemoryFileSystem
-from src.generate import leaderboard_generator
-from src.generate.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
-from src.generate.leaderboard_generator import LeaderboardDataGenerator
-from src.generate.lichess_bot_user import PerfType
+from leaderboard.fake_date_provider import FakeDateProvider
+from leaderboard.fake_lichess_client import FakeLichessClient
+from leaderboard.in_memory_file_system import InMemoryFileSystem
+from src.leaderboard import leaderboard_generator
+from src.leaderboard.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
+from src.leaderboard.leaderboard_generator import LeaderboardDataGenerator
+from src.leaderboard.lichess_bot_user import PerfType
 
 
 # Bullet leaderboard perfs
@@ -70,7 +70,6 @@ BOT_2_CURRENT_JSON = """
 }
 """
 
-
 # Leaderboard Perfs matching the above json
 BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf(
   "Bot-1", "flair", "_earth", 2950, 42, -50, 1100, "2024-04-01", "2025-04-01", True, False
@@ -95,7 +94,7 @@ class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
   def test_get_leaderboard_data_file_name(self) -> None:
-    self.assertEqual(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.psv")
+    self.assertEqual(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.ndjson")
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
@@ -105,8 +104,8 @@ class TestGenerator(unittest.TestCase):
 
   def test_load_all_previous_rows(self) -> None:
     file_system = InMemoryFileSystem()
-    bullet_leaderboard = [BOT_1_ROW_BULLET.to_psv(), BOT_2_ROW_BULLET.to_psv()]
-    blitz_leaderboard = [BOT_2_ROW_BLITZ.to_psv(), BOT_1_ROW_BLITZ.to_psv()]
+    bullet_leaderboard = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
+    blitz_leaderboard = [BOT_2_ROW_BLITZ.to_json(), BOT_1_ROW_BLITZ.to_json()]
     file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
     file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), blitz_leaderboard)
     previous_rows_by_perf_type = leaderboard_generator.load_all_previous_rows(file_system)
@@ -192,19 +191,20 @@ class TestLeaderboardDataGenerator(unittest.TestCase):
 
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
-    bullet_leaderboard = [BOT_1_ROW_BULLET.to_psv(), BOT_2_ROW_BULLET.to_psv()]
-    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
+    bullet_ndjson = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
+    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_ndjson)
+
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
+
     date_provider = FakeDateProvider()
     date_provider.set_current_time(1743483600)
+
     leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
-    ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
-    bullet_leaderboard = ranked_rows_by_perf_type[PerfType.BULLET]
-    expected_leaderboard = [
-      LeaderboardRow.from_psv("Bot-2|||3000|0|0|1000|2022-04-01|2025-04-01|False|False|1|1|100|1|3000|False|True"),
-      LeaderboardRow.from_psv(
-        "Bot-1|flair|_earth|2950|42|-50|1100|2024-04-01|2025-04-01|True|False|2|-1|-50|1|3000|False|True"
-      ),
+    bullet_ranked_rows = leaderboard_data_generator.generate_leaderboard_data()[PerfType.BULLET]
+
+    expected_ranked_rows = [
+      LeaderboardRow(BOT_2_CURRENT_PERF_BULLET, 1, 1, 100, 1, 3000, False, True),
+      LeaderboardRow(BOT_1_CURRENT_PERF_BULLET, 2, -1, -50, 1, 3000, False, True),
     ]
-    self.assertListEqual(bullet_leaderboard, expected_leaderboard)
+    self.assertListEqual(bullet_ranked_rows, expected_ranked_rows)

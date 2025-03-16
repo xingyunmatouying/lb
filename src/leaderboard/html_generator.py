@@ -4,9 +4,9 @@ import dataclasses
 
 from jinja2 import Environment, FileSystemLoader
 
-from src.generate.date_provider import DateProvider
-from src.generate.leaderboard_data import LeaderboardRow
-from src.generate.lichess_bot_user import PerfType
+from src.leaderboard.date_provider import DateProvider
+from src.leaderboard.leaderboard_data import LeaderboardRow
+from src.leaderboard.lichess_bot_user import PerfType
 
 
 @dataclasses.dataclass(frozen=True)
@@ -63,7 +63,6 @@ class HtmlLeaderboardRow:
   games: int
   created_date: str
   last_seen_date: str
-  is_new: bool
 
   @classmethod
   def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
@@ -81,7 +80,6 @@ class HtmlLeaderboardRow:
       row.perf.games,
       row.perf.created_date,
       row.perf.last_seen_date,
-      row.is_new,
     )
 
 

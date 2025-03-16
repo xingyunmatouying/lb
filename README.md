@@ -41,7 +41,7 @@ pip install -r requirements\leaderboard.txt
 Generate the leaderboards
 
 ```shell
-python -m src.generate
+python -m src.leaderboard
 ```
 
 ## Development

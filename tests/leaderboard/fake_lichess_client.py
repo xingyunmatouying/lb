@@ -1,6 +1,6 @@
 """Test implementation of LichessClient which allows setting the response."""
 
-from src.generate.lichess_client import LichessClient
+from src.leaderboard.lichess_client import LichessClient
 
 
 class FakeLichessClient(LichessClient):

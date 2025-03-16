@@ -2,8 +2,8 @@
 
 import unittest
 
-from generate.fake_date_provider import FakeDateProvider
-from src.generate import date_provider
+from leaderboard.fake_date_provider import FakeDateProvider
+from src.leaderboard import date_provider
 
 
 class TestDateProviderMethods(unittest.TestCase):

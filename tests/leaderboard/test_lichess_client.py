@@ -2,7 +2,7 @@
 
 import unittest
 
-from generate.fake_lichess_client import FakeLichessClient
+from leaderboard.fake_lichess_client import FakeLichessClient
 
 
 ONLINE_BOT_NDJSON = "{some json}"

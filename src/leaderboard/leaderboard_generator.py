@@ -2,16 +2,16 @@
 
 from collections import defaultdict
 
-from src.generate.date_provider import DateProvider
-from src.generate.file_system import FileSystem
-from src.generate.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
-from src.generate.lichess_bot_user import BotUser, PerfType
-from src.generate.lichess_client import LichessClient
+from src.leaderboard.date_provider import DateProvider
+from src.leaderboard.file_system import FileSystem
+from src.leaderboard.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
+from src.leaderboard.lichess_bot_user import BotUser, PerfType
+from src.leaderboard.lichess_client import LichessClient
 
 
 def get_leaderboard_data_file_name(perf_type: PerfType) -> str:
   """Return the data file name for a PerfType."""
-  return f"leaderboard_data/{perf_type.to_string()}.psv"
+  return f"leaderboard_data/{perf_type.to_string()}.ndjson"
 
 
 def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
@@ -21,8 +21,8 @@ def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[Leade
   """
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
-    psv_file_lines = file_system.load_file_lines(get_leaderboard_data_file_name(perf_type))
-    previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_psv(psv_line) for psv_line in psv_file_lines]
+    ndjson = file_system.load_file_lines(get_leaderboard_data_file_name(perf_type))
+    previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_json(json_line) for json_line in ndjson]
   return previous_rows_by_perf_type
 
 
