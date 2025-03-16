@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from src.generate.file_system import FileSystem
+from src.leaderboard.file_system import FileSystem
 
 
 class RealFileSystem(FileSystem):

@@ -2,10 +2,10 @@
 
 import unittest
 
-from generate.fake_date_provider import FakeDateProvider
-from src.generate.html_generator import LeaderboardHtmlGenerator
-from src.generate.leaderboard_data import LeaderboardRow
-from src.generate.lichess_bot_user import PerfType
+from leaderboard.fake_date_provider import FakeDateProvider
+from src.leaderboard.html_generator import LeaderboardHtmlGenerator
+from src.leaderboard.leaderboard_data import LeaderboardRow
+from src.leaderboard.lichess_bot_user import PerfType
 
 
 class TestHtmlGenerator(unittest.TestCase):

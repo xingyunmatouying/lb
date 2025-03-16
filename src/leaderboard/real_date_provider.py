@@ -2,7 +2,7 @@
 
 import time
 
-from src.generate.date_provider import DateProvider
+from src.leaderboard.date_provider import DateProvider
 
 
 class RealDateProvider(DateProvider):

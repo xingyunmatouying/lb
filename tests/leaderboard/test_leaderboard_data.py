@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.generate.leaderboard_data import (
+from src.leaderboard.leaderboard_data import (
   CurrentPerfOnlyUpdate,
   FullUpdate,
   LeaderboardPerf,
@@ -10,7 +10,7 @@ from src.generate.leaderboard_data import (
   LeaderboardUpdate,
   PreviousRowOnlyUpdate,
 )
-from src.generate.lichess_bot_user import BotUser, Perf, PerfType
+from src.leaderboard.lichess_bot_user import BotUser, Perf, PerfType
 
 
 def create_perf(username: str, rating: int, games: int, created_date: str) -> LeaderboardPerf:

@@ -2,7 +2,7 @@
 
 import requests
 
-from src.generate.lichess_client import LichessClient
+from src.leaderboard.lichess_client import LichessClient
 
 
 class RealLichessClient(LichessClient):

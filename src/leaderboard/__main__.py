@@ -9,12 +9,12 @@ Process for generating the leaderboards:
 import logging
 import time
 
-from src.generate import leaderboard_generator
-from src.generate.html_generator import LeaderboardHtmlGenerator
-from src.generate.leaderboard_generator import LeaderboardDataGenerator
-from src.generate.real_date_provider import RealDateProvider
-from src.generate.real_file_system import RealFileSystem
-from src.generate.real_lichess_client import RealLichessClient
+from src.leaderboard import leaderboard_generator
+from src.leaderboard.html_generator import LeaderboardHtmlGenerator
+from src.leaderboard.leaderboard_generator import LeaderboardDataGenerator
+from src.leaderboard.real_date_provider import RealDateProvider
+from src.leaderboard.real_file_system import RealFileSystem
+from src.leaderboard.real_lichess_client import RealLichessClient
 
 
 def create_logger() -> logging.Logger:

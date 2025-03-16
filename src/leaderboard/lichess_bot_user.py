@@ -9,7 +9,7 @@ from collections.abc import Generator
 from enum import Enum
 from typing import Any
 
-from src.generate import date_provider
+from src.leaderboard import date_provider
 
 
 class PerfType(Enum):

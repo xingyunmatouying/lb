@@ -1,6 +1,6 @@
 """Test implementation of FileSystem which saves and loads "files" in memory."""
 
-from src.generate.file_system import FileSystem
+from src.leaderboard.file_system import FileSystem
 
 
 class InMemoryFileSystem(FileSystem):

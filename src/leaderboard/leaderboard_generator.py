@@ -2,11 +2,11 @@
 
 from collections import defaultdict
 
-from src.generate.date_provider import DateProvider
-from src.generate.file_system import FileSystem
-from src.generate.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
-from src.generate.lichess_bot_user import BotUser, PerfType
-from src.generate.lichess_client import LichessClient
+from src.leaderboard.date_provider import DateProvider
+from src.leaderboard.file_system import FileSystem
+from src.leaderboard.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
+from src.leaderboard.lichess_bot_user import BotUser, PerfType
+from src.leaderboard.lichess_client import LichessClient
 
 
 def get_leaderboard_data_file_name(perf_type: PerfType) -> str:
