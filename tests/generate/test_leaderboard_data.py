@@ -36,19 +36,38 @@ class TestLeaderboardPerf(unittest.TestCase):
 class TestLeaderboardRow(unittest.TestCase):
   """Tests for LeaderboardRow."""
 
-  def test_from_psv(self) -> None:
-    leaderboard_row = LeaderboardRow.from_psv(
-      "Bot1|flair|flag|1500|12|34|100|2024-04-01|2025-04-01|False|False|4|1|50|3|1600|False|False"
+  def test_from_json(self) -> None:
+    leaderboard_row = LeaderboardRow.from_json(
+      """
+      {
+        "perf": {
+          "username": "Bot1",
+          "flair": "flair",
+          "flag": "flag",
+          "rating": 1500,
+          "rd": 12,
+          "prog": 34,
+          "games": 100,
+          "created_date": "2024-04-01",
+          "last_seen_date": "2025-04-01"
+        },
+        "rank": 4,
+        "rank_delta": 1,
+        "rating_delta": 50,
+        "peak_rank": 3,
+        "peak_rating": 1600,
+        "is_online": true
+      }
+      """
     )
     expected_perf = LeaderboardPerf("Bot1", "flair", "flag", 1500, 12, 34, 100, "2024-04-01", "2025-04-01", False, False)
-    expected_leaderboard_row = LeaderboardRow(expected_perf, 4, 1, 50, 3, 1600, False, False)
+    expected_leaderboard_row = LeaderboardRow(expected_perf, 4, 1, 50, 3, 1600, False, True)
     self.assertEqual(leaderboard_row, expected_leaderboard_row)
 
-  def test_to_psv(self) -> None:
+  def test_to_json_round_trip(self) -> None:
     perf = LeaderboardPerf("Bot1", "flair", "EU", 1500, 12, 34, 100, "2024-04-01", "2025-04-01", True, True)
     leaderboard_row = LeaderboardRow(perf, 4, 1, 50, 3, 1600, True, False)
-    expected_psv = "Bot1|flair|EU|1500|12|34|100|2024-04-01|2025-04-01|True|True|4|1|50|3|1600|True|False"
-    self.assertEqual(leaderboard_row.to_psv(), expected_psv)
+    self.assertEqual(LeaderboardRow.from_json(leaderboard_row.to_json()), leaderboard_row)
 
 
 class TestLeaderboardUpdate(unittest.TestCase):

@@ -2,6 +2,8 @@
 
 import abc
 import dataclasses
+import json
+from typing import Any
 
 from src.generate.lichess_bot_user import BotUser, Perf
 
@@ -55,6 +57,22 @@ class LeaderboardPerf:
       bot_user.tos_violation,
     )
 
+  @classmethod
+  def from_json(cls, json_dict: dict[str, Any]) -> "LeaderboardPerf":
+    """Create a LeaderboardPerf from json."""
+    username = json_dict.get("username", "")
+    flair = json_dict.get("flair", "")
+    flag = json_dict.get("flag", "")
+    rating = json_dict.get("rating", 0)
+    rd = json_dict.get("rd", 0)
+    prog = json_dict.get("prog", 0)
+    games = json_dict.get("games", 0)
+    created_date = json_dict.get("created_date", "")
+    last_seen_date = json_dict.get("last_seen_date", "")
+    patron = json_dict.get("patron", False)
+    tos_violation = json_dict.get("tos_violation", False)
+    return LeaderboardPerf(username, flair, flag, rating, rd, prog, games, created_date, last_seen_date, patron, tos_violation)
+
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardRow:
@@ -81,56 +99,27 @@ class LeaderboardRow:
   is_online: bool
 
   @classmethod
-  def from_psv(cls, psv_string: str) -> "LeaderboardRow":
-    """Create a LeaderboardRow based on pipe separated values."""
-    values = psv_string.split("|")
+  def from_json(cls, json_str: str) -> "LeaderboardRow":
+    """Create a LeaderboardRow from json."""
+    json_dict = json.loads(json_str)
 
-    username = values[0]
-    flair = values[1]
-    flag = values[2]
-    rating = int(values[3])
-    rd = int(values[4])
-    prog = int(values[5])
-    games = int(values[6])
-    created_date = values[7]
-    last_seen_date = values[8]
-    patron = values[9] == "True"
-    tos_violation = values[10] == "True"
-    perf = LeaderboardPerf(username, flair, flag, rating, rd, prog, games, created_date, last_seen_date, patron, tos_violation)
+    perf_dict = json_dict.get("perf", {})
+    perf = LeaderboardPerf.from_json(perf_dict)
 
-    rank = int(values[11])
-    rank_delta = int(values[12])
-    rating_delta = int(values[13])
-    peak_rank = int(values[14])
-    peak_rating = int(values[15])
-    is_new = values[16] == "True"
-    is_online = values[17] == "True"
+    rank = json_dict.get("rank", 0)
+    rank_delta = json_dict.get("rank_delta", 0)
+    rating_delta = json_dict.get("rating_delta", 0)
+    peak_rank = json_dict.get("peak_rank", 0)
+    peak_rating = json_dict.get("peak_rating", 0)
+    is_new = json_dict.get("is_new", False)
+    is_online = json_dict.get("is_online", False)
 
     return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
 
-  def to_psv(self) -> str:
-    """Convert the bot in to a string of pipe separated values."""
-    values: list[str] = [
-      self.perf.username,
-      self.perf.flair,
-      self.perf.flag,
-      str(self.perf.rating),
-      str(self.perf.rd),
-      str(self.perf.prog),
-      str(self.perf.games),
-      self.perf.created_date,
-      self.perf.last_seen_date,
-      str(self.perf.patron),
-      str(self.perf.tos_violation),
-      str(self.rank),
-      str(self.rank_delta),
-      str(self.rating_delta),
-      str(self.peak_rank),
-      str(self.peak_rating),
-      str(self.is_new),
-      str(self.is_online),
-    ]
-    return "|".join(values)
+  def to_json(self) -> str:
+    """Convert the leaderboard row to."""
+    self_as_dict = dataclasses.asdict(self)
+    return json.dumps(self_as_dict)
 
 
 class LeaderboardUpdate(abc.ABC):

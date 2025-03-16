@@ -48,7 +48,7 @@ if __name__ == "__main__":
   # Save the leaderboard data
   for perf_type, rows in ranked_rows_by_perf_type.items():
     file_system.save_file_lines(
-      leaderboard_generator.get_leaderboard_data_file_name(perf_type), [row.to_psv() for row in rows]
+      leaderboard_generator.get_leaderboard_data_file_name(perf_type), [row.to_json() for row in rows]
     )
 
   leaderboard_html_generator = LeaderboardHtmlGenerator(date_provider)
