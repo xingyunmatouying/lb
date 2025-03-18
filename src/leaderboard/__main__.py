@@ -10,8 +10,8 @@ import logging
 import time
 
 from src.leaderboard.chrono.real_time_provider import RealTimeProvider
-from src.leaderboard.data import leaderboard_generator
-from src.leaderboard.data.leaderboard_generator import LeaderboardDataGenerator
+from src.leaderboard.data import data_generator
+from src.leaderboard.data.data_generator import LeaderboardDataGenerator
 from src.leaderboard.fs.real_file_system import RealFileSystem
 from src.leaderboard.li.real_lichess_client import RealLichessClient
 from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
@@ -47,9 +47,7 @@ if __name__ == "__main__":
 
   # Save the leaderboard data
   for perf_type, rows in ranked_rows_by_perf_type.items():
-    file_system.save_file_lines(
-      leaderboard_generator.get_leaderboard_data_file_name(perf_type), [row.to_json() for row in rows]
-    )
+    file_system.save_file_lines(data_generator.get_leaderboard_data_file_name(perf_type), [row.to_json() for row in rows])
 
   leaderboard_html_generator = LeaderboardHtmlGenerator(time_provider)
   html_by_name = leaderboard_html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
