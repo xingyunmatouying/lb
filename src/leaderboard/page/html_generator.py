@@ -5,7 +5,7 @@ import dataclasses
 from jinja2 import Environment, FileSystemLoader
 
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data.leaderboard_data import LeaderboardRow
+from src.leaderboard.data.leaderboard_row import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
 
 

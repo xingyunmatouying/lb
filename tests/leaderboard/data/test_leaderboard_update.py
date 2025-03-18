@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.leaderboard.data.leaderboard_data import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import LeaderboardPerf, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import CurrentPerfOnlyUpdate, FullUpdate, LeaderboardUpdate, PreviousRowOnlyUpdate
 
 

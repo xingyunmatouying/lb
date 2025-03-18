@@ -7,7 +7,7 @@ from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
 from src.leaderboard.data import data_generator
 from src.leaderboard.data.data_generator import DataGenerator
-from src.leaderboard.data.leaderboard_data import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import LeaderboardPerf, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import CurrentPerfOnlyUpdate, LeaderboardUpdate
 from src.leaderboard.li.bot_user import PerfType
 
@@ -95,7 +95,7 @@ class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
   def test_get_leaderboard_data_file_name(self) -> None:
-    self.assertEqual(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.ndjson")
+    self.assertEqual(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_row/blitz.ndjson")
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()

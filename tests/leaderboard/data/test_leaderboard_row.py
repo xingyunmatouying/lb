@@ -1,8 +1,8 @@
-"""Tests for leaderboard.py."""
+"""Tests for leaderboard_row.py."""
 
 import unittest
 
-from src.leaderboard.data.leaderboard_data import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import LeaderboardPerf, LeaderboardRow
 from src.leaderboard.li.bot_user import BotUser, Perf, PerfType
 
 

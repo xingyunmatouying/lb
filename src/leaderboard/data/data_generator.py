@@ -3,7 +3,7 @@
 from collections import defaultdict
 
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data.leaderboard_data import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import LeaderboardPerf, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import LeaderboardUpdate
 from src.leaderboard.fs.file_system import FileSystem
 from src.leaderboard.li.bot_user import BotUser, PerfType
@@ -12,7 +12,7 @@ from src.leaderboard.li.lichess_client import LichessClient
 
 def get_leaderboard_data_file_name(perf_type: PerfType) -> str:
   """Return the data file name for a PerfType."""
-  return f"leaderboard_data/{perf_type.to_string()}.ndjson"
+  return f"leaderboard_row/{perf_type.to_string()}.ndjson"
 
 
 def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:

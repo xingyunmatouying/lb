@@ -3,7 +3,7 @@
 import abc
 import dataclasses
 
-from src.leaderboard.data.leaderboard_data import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import LeaderboardPerf, LeaderboardRow
 
 
 class LeaderboardUpdate(abc.ABC):
