@@ -1,9 +1,12 @@
 """Generate lichess bot leaderboards for each time control and variant.
 
 Process for generating the leaderboards:
- - Call the lichess `get online bots` API (https://lichess.org/api/bot/online)
- - Parse the response into collection of bots and ratings
- - Create leaderboards which are fun to look at
+ - Call the lichess `get online bots` API (https://lichess.org/api/bot/online).
+ - Parse the response into a collection of bots with ratings.
+ - Convert collection of bots into leaderboard rows for each time control and variant.
+ - Compare that data with data generated previously to create updated leaderboard rows.
+ - Save the new data for comparison next time.
+ - Generate html leaderboards from the data which are fun to look at.
 """
 
 import logging
