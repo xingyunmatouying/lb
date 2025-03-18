@@ -3,8 +3,8 @@
 from collections import defaultdict
 
 from src.leaderboard.chrono.time_provider import TimeProvider
+from src.leaderboard.data.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
 from src.leaderboard.fs.file_system import FileSystem
-from src.leaderboard.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
 from src.leaderboard.li.bot_user import BotUser, PerfType
 from src.leaderboard.li.lichess_client import LichessClient
 

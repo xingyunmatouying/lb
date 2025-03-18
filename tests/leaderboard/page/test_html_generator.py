@@ -3,7 +3,7 @@
 import unittest
 
 from leaderboard.chrono.fake_time_provider import FakeTimeProvider
-from src.leaderboard.leaderboard_data import LeaderboardRow
+from src.leaderboard.data.leaderboard_data import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
 from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
 

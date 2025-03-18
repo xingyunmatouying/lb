@@ -5,9 +5,9 @@ import unittest
 from leaderboard.chrono.fake_time_provider import FakeTimeProvider
 from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
-from src.leaderboard import leaderboard_generator
-from src.leaderboard.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
-from src.leaderboard.leaderboard_generator import LeaderboardDataGenerator
+from src.leaderboard.data import leaderboard_generator
+from src.leaderboard.data.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
+from src.leaderboard.data.leaderboard_generator import LeaderboardDataGenerator
 from src.leaderboard.li.bot_user import PerfType
 
 
