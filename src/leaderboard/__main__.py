@@ -10,7 +10,7 @@ import logging
 import time
 
 from src.leaderboard import leaderboard_generator
-from src.leaderboard.chrono.real_time_provider import RealDateProvider
+from src.leaderboard.chrono.real_time_provider import RealTimeProvider
 from src.leaderboard.fs.real_file_system import RealFileSystem
 from src.leaderboard.leaderboard_generator import LeaderboardDataGenerator
 from src.leaderboard.li.real_lichess_client import RealLichessClient
@@ -39,10 +39,10 @@ if __name__ == "__main__":
   # Instantiate dependencies
   file_system = RealFileSystem()
   lichess_client = RealLichessClient()
-  date_provider = RealDateProvider()
+  time_provider = RealTimeProvider()
 
   # Generate leaderboard
-  leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
+  leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, time_provider)
   ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
 
   # Save the leaderboard data
@@ -51,7 +51,7 @@ if __name__ == "__main__":
       leaderboard_generator.get_leaderboard_data_file_name(perf_type), [row.to_json() for row in rows]
     )
 
-  leaderboard_html_generator = LeaderboardHtmlGenerator(date_provider)
+  leaderboard_html_generator = LeaderboardHtmlGenerator(time_provider)
   html_by_name = leaderboard_html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
 
   # save the leaderboard html

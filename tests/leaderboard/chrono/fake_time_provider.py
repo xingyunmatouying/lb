@@ -1,13 +1,13 @@
-"""Test implementation of DateProvider which allows setting the current date."""
+"""Test implementation of TimeProvider which allows setting the current time."""
 
-from src.leaderboard.chrono.time_provider import DateProvider
+from src.leaderboard.chrono.time_provider import TimeProvider
 
 
-class FakeDateProvider(DateProvider):
-  """A fake implementation of DateProvider."""
+class FakeTimeProvider(TimeProvider):
+  """A fake implementation of TimeProvider."""
 
   def __init__(self) -> None:
-    """Create a fake date provider and set the current time to 0 (1970-01-01)."""
+    """Create a fake time provider and set the current time to 0 (1970-01-01)."""
     self.current_time = 0
 
   def set_current_time(self, current_time: float) -> None:

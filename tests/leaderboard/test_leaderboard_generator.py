@@ -2,7 +2,7 @@
 
 import unittest
 
-from leaderboard.chrono.fake_time_provider import FakeDateProvider
+from leaderboard.chrono.fake_time_provider import FakeTimeProvider
 from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
 from src.leaderboard import leaderboard_generator
@@ -116,9 +116,9 @@ class TestGenerator(unittest.TestCase):
   def test_get_all_current_perfs(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
-    date_provider = FakeDateProvider()
-    date_provider.set_current_time(1743483600)
-    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, date_provider)
+    time_provider = FakeTimeProvider()
+    time_provider.set_current_time(1743483600)
+    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, time_provider)
     self.assertEqual(len(current_perfs_by_perf_type), 2)
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
@@ -126,7 +126,7 @@ class TestGenerator(unittest.TestCase):
   def test_get_all_current_perfs_no_provisional(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("""{"username":"Bot","perfs":{"bullet":{"rating":3000,"prov":true}}}\n""")
-    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, FakeDateProvider())
+    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, FakeTimeProvider())
     self.assertDictEqual(current_perfs_by_perf_type, {})
 
   def test_create_updates(self) -> None:
@@ -197,10 +197,10 @@ class TestLeaderboardDataGenerator(unittest.TestCase):
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
 
-    date_provider = FakeDateProvider()
-    date_provider.set_current_time(1743483600)
+    time_provider = FakeTimeProvider()
+    time_provider.set_current_time(1743483600)
 
-    leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
+    leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, time_provider)
     bullet_ranked_rows = leaderboard_data_generator.generate_leaderboard_data()[PerfType.BULLET]
 
     expected_ranked_rows = [

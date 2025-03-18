@@ -2,11 +2,11 @@
 
 import time
 
-from src.leaderboard.chrono.time_provider import DateProvider
+from src.leaderboard.chrono.time_provider import TimeProvider
 
 
-class RealDateProvider(DateProvider):
-  """Provides the current date."""
+class RealDateProvider(TimeProvider):
+  """Provides the current time."""
 
   def get_current_time(self) -> float:
     """Return the current time."""

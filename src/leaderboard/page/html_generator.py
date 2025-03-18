@@ -4,7 +4,7 @@ import dataclasses
 
 from jinja2 import Environment, FileSystemLoader
 
-from src.leaderboard.chrono.time_provider import DateProvider
+from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.leaderboard_data import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
 
@@ -100,14 +100,14 @@ def create_nav_links(active_perf_type: PerfType | None) -> list[NavLink]:
 class LeaderboardHtmlGenerator:
   """Generator for html."""
 
-  def __init__(self, date_provider: DateProvider) -> None:
+  def __init__(self, time_provider: TimeProvider) -> None:
     """Initialize a new generator."""
-    self.date_provider = date_provider
+    self.time_provider = time_provider
     self.jinja_environment = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
 
   def generate_leaderboard_html(self, ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]) -> dict[str, str]:
     """Generate index and leaderboard html."""
-    last_updated_time = self.date_provider.get_current_date_time_formatted()
+    last_updated_time = self.time_provider.get_current_date_time_formatted()
     html_by_name: dict[str, str] = {}
     # Create index html
     index_template = self.jinja_environment.get_template("index.html.jinja")
