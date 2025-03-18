@@ -2,7 +2,7 @@
 
 import time
 
-from src.leaderboard.date_provider import DateProvider
+from src.leaderboard.chrono.time_provider import DateProvider
 
 
 class RealDateProvider(DateProvider):
