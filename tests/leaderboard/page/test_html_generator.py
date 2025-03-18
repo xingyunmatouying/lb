@@ -3,9 +3,9 @@
 import unittest
 
 from leaderboard.fake_date_provider import FakeDateProvider
-from src.leaderboard.html_generator import LeaderboardHtmlGenerator
 from src.leaderboard.leaderboard_data import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
+from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
 
 
 class TestHtmlGenerator(unittest.TestCase):
