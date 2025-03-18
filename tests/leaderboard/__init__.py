@@ -1,1 +1,1 @@
-"""Tests for src/generate."""
+"""Tests for src.leaderboard."""

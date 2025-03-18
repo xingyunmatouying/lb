@@ -1,4 +1,4 @@
-"""Tests for lichess_bot_user.py."""
+"""Tests for bot_user.py."""
 
 import unittest
 

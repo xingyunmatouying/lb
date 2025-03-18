@@ -1,4 +1,4 @@
-"""Leaderboard-related dataclasses."""
+"""Dataclasses related rows in a leaderboard."""
 
 import dataclasses
 import json

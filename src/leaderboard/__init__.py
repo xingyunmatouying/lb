@@ -1,1 +1,1 @@
-"""Module containing logic related to generating the lichess bot leaderboard."""
+"""Module containing the main entry point for leaderboard generation."""
