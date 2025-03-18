@@ -3,7 +3,7 @@
 import unittest
 
 from leaderboard.fake_date_provider import FakeDateProvider
-from leaderboard.in_memory_file_system import InMemoryFileSystem
+from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
 from src.leaderboard import leaderboard_generator
 from src.leaderboard.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
