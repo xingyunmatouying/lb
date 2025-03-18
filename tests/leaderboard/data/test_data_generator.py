@@ -95,7 +95,7 @@ class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
   def test_get_leaderboard_data_file_name(self) -> None:
-    self.assertEqual(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_row/blitz.ndjson")
+    self.assertEqual(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.ndjson")
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
