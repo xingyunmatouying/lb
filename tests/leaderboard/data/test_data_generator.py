@@ -7,7 +7,8 @@ from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
 from src.leaderboard.data import data_generator
 from src.leaderboard.data.data_generator import DataGenerator
-from src.leaderboard.data.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
+from src.leaderboard.data.leaderboard_data import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_update import CurrentPerfOnlyUpdate, LeaderboardUpdate
 from src.leaderboard.li.bot_user import PerfType
 
 
