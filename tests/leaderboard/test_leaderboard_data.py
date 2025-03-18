@@ -10,7 +10,7 @@ from src.leaderboard.leaderboard_data import (
   LeaderboardUpdate,
   PreviousRowOnlyUpdate,
 )
-from src.leaderboard.lichess_bot_user import BotUser, Perf, PerfType
+from src.leaderboard.li.bot_user import BotUser, Perf, PerfType
 
 
 def create_perf(username: str, rating: int, games: int, created_date: str) -> LeaderboardPerf:

@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.leaderboard.lichess_bot_user import BotUser, Perf, PerfType
+from src.leaderboard.li.bot_user import BotUser, Perf, PerfType
 
 
 BOT_USER_JSON = """

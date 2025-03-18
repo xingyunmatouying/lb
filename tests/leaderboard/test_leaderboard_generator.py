@@ -3,12 +3,12 @@
 import unittest
 
 from leaderboard.fake_date_provider import FakeDateProvider
-from leaderboard.fake_lichess_client import FakeLichessClient
 from leaderboard.in_memory_file_system import InMemoryFileSystem
+from leaderboard.li.fake_lichess_client import FakeLichessClient
 from src.leaderboard import leaderboard_generator
 from src.leaderboard.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
 from src.leaderboard.leaderboard_generator import LeaderboardDataGenerator
-from src.leaderboard.lichess_bot_user import PerfType
+from src.leaderboard.li.bot_user import PerfType
 
 
 # Bullet leaderboard perfs

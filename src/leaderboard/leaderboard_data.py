@@ -5,7 +5,7 @@ import dataclasses
 import json
 from typing import Any
 
-from src.leaderboard.lichess_bot_user import BotUser, Perf
+from src.leaderboard.li.bot_user import BotUser, Perf
 
 
 @dataclasses.dataclass(frozen=True)
