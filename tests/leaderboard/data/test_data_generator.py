@@ -6,7 +6,7 @@ from leaderboard.chrono.fake_time_provider import FakeTimeProvider
 from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
 from src.leaderboard.data import data_generator
-from src.leaderboard.data.data_generator import LeaderboardDataGenerator
+from src.leaderboard.data.data_generator import DataGenerator
 from src.leaderboard.data.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
 from src.leaderboard.li.bot_user import PerfType
 
@@ -186,8 +186,8 @@ class TestGenerator(unittest.TestCase):
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
 
-class TestLeaderboardDataGenerator(unittest.TestCase):
-  """Tests for LeaderboardDataGenerator."""
+class TestDataGenerator(unittest.TestCase):
+  """Tests for DataGenerator."""
 
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
@@ -200,7 +200,7 @@ class TestLeaderboardDataGenerator(unittest.TestCase):
     time_provider = FakeTimeProvider()
     time_provider.set_current_time(1743483600)
 
-    leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, time_provider)
+    leaderboard_data_generator = DataGenerator(file_system, lichess_client, time_provider)
     bullet_ranked_rows = leaderboard_data_generator.generate_leaderboard_data()[PerfType.BULLET]
 
     expected_ranked_rows = [

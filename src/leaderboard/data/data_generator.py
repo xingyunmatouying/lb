@@ -1,4 +1,4 @@
-"""The main logic for generating the leaderboards."""
+"""The main logic for generating the leaderboard data."""
 
 from collections import defaultdict
 
@@ -85,8 +85,8 @@ def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]
   return new_rows
 
 
-class LeaderboardDataGenerator:
-  """Generator for leaderboard data.
+class DataGenerator:
+  """Generator of leaderboard data.
 
   The generator takes a file_system, a lichess_client, and a time_provider as parameters.
   """
