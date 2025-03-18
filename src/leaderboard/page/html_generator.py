@@ -4,7 +4,7 @@ import dataclasses
 
 from jinja2 import Environment, FileSystemLoader
 
-from src.leaderboard.date_provider import DateProvider
+from src.leaderboard.chrono.time_provider import DateProvider
 from src.leaderboard.leaderboard_data import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
 

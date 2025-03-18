@@ -9,7 +9,7 @@ from collections.abc import Generator
 from enum import Enum
 from typing import Any
 
-from src.leaderboard import date_provider
+from src.leaderboard.chrono import time_provider
 
 
 class PerfType(Enum):
@@ -187,7 +187,7 @@ class BotUser:
     flair = json_dict.get("flair", "")
     profile_dict = json_dict.get("profile", {})
     flag = profile_dict.get("flag", "")
-    created_date = date_provider.format_date(json_dict.get("createdAt", 0) / 1000.0, date_provider.FORMAT_YYYY_MM_DD)
+    created_date = time_provider.format_date(json_dict.get("createdAt", 0) / 1000.0, time_provider.FORMAT_YYYY_MM_DD)
     patron = json_dict.get("patron", False)
     tos_violation = json_dict.get("tosViolation", False)
 

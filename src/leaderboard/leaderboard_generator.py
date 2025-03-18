@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from src.leaderboard.date_provider import DateProvider
+from src.leaderboard.chrono.time_provider import DateProvider
 from src.leaderboard.fs.file_system import FileSystem
 from src.leaderboard.leaderboard_data import LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
 from src.leaderboard.li.bot_user import BotUser, PerfType

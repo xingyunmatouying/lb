@@ -10,11 +10,11 @@ import logging
 import time
 
 from src.leaderboard import leaderboard_generator
+from src.leaderboard.chrono.real_time_provider import RealDateProvider
 from src.leaderboard.fs.real_file_system import RealFileSystem
 from src.leaderboard.leaderboard_generator import LeaderboardDataGenerator
 from src.leaderboard.li.real_lichess_client import RealLichessClient
 from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
-from src.leaderboard.real_date_provider import RealDateProvider
 
 
 def create_logger() -> logging.Logger:

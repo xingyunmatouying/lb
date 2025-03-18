@@ -1,6 +1,6 @@
 """Test implementation of DateProvider which allows setting the current date."""
 
-from src.leaderboard.date_provider import DateProvider
+from src.leaderboard.chrono.time_provider import DateProvider
 
 
 class FakeDateProvider(DateProvider):
