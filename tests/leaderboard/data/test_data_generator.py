@@ -1,14 +1,15 @@
-"""Tests for leaderboard_generator.py."""
+"""Tests for data_generator.py."""
 
 import unittest
 
-from leaderboard.fake_date_provider import FakeDateProvider
-from leaderboard.fake_lichess_client import FakeLichessClient
-from leaderboard.in_memory_file_system import InMemoryFileSystem
-from src.leaderboard import leaderboard_generator
-from src.leaderboard.leaderboard_data import CurrentPerfOnlyUpdate, LeaderboardPerf, LeaderboardRow, LeaderboardUpdate
-from src.leaderboard.leaderboard_generator import LeaderboardDataGenerator
-from src.leaderboard.lichess_bot_user import PerfType
+from leaderboard.chrono.fake_time_provider import FakeTimeProvider
+from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
+from leaderboard.li.fake_lichess_client import FakeLichessClient
+from src.leaderboard.data import data_generator
+from src.leaderboard.data.data_generator import DataGenerator
+from src.leaderboard.data.leaderboard_row import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_update import CurrentPerfOnlyUpdate, LeaderboardUpdate
+from src.leaderboard.li.bot_user import PerfType
 
 
 # Bullet leaderboard perfs
@@ -94,11 +95,11 @@ class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
   def test_get_leaderboard_data_file_name(self) -> None:
-    self.assertEqual(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.ndjson")
+    self.assertEqual(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.ndjson")
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
-    previous_rows_by_perf_type = leaderboard_generator.load_all_previous_rows(file_system)
+    previous_rows_by_perf_type = data_generator.load_all_previous_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertTrue(all(rows == [] for rows in previous_rows_by_perf_type.values()))
 
@@ -106,9 +107,9 @@ class TestGenerator(unittest.TestCase):
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
     blitz_leaderboard = [BOT_2_ROW_BLITZ.to_json(), BOT_1_ROW_BLITZ.to_json()]
-    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
-    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BLITZ), blitz_leaderboard)
-    previous_rows_by_perf_type = leaderboard_generator.load_all_previous_rows(file_system)
+    file_system.save_file_lines(data_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
+    file_system.save_file_lines(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), blitz_leaderboard)
+    previous_rows_by_perf_type = data_generator.load_all_previous_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BLITZ], [BOT_2_ROW_BLITZ, BOT_1_ROW_BLITZ])
@@ -116,9 +117,9 @@ class TestGenerator(unittest.TestCase):
   def test_get_all_current_perfs(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
-    date_provider = FakeDateProvider()
-    date_provider.set_current_time(1743483600)
-    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, date_provider)
+    time_provider = FakeTimeProvider()
+    time_provider.set_current_time(1743483600)
+    current_perfs_by_perf_type = data_generator.get_all_current_perfs(lichess_client, time_provider)
     self.assertEqual(len(current_perfs_by_perf_type), 2)
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     self.assertListEqual(current_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
@@ -126,17 +127,17 @@ class TestGenerator(unittest.TestCase):
   def test_get_all_current_perfs_no_provisional(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("""{"username":"Bot","perfs":{"bullet":{"rating":3000,"prov":true}}}\n""")
-    current_perfs_by_perf_type = leaderboard_generator.get_all_current_perfs(lichess_client, FakeDateProvider())
+    current_perfs_by_perf_type = data_generator.get_all_current_perfs(lichess_client, FakeTimeProvider())
     self.assertDictEqual(current_perfs_by_perf_type, {})
 
   def test_create_updates(self) -> None:
-    updates = leaderboard_generator.create_updates([], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
+    updates = data_generator.create_updates([], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     expected_updates = [CurrentPerfOnlyUpdate(BOT_1_CURRENT_PERF_BULLET), CurrentPerfOnlyUpdate(BOT_2_CURRENT_PERF_BULLET)]
     self.assertCountEqual(updates, expected_updates)
 
   def test_create_updates_no_tos_violation(self) -> None:
     bot_with_tos_violation = LeaderboardPerf("Bot", "", "", 2500, 0, 0, 300, "2022-04-01", "2025-04-01", False, True)
-    updates = leaderboard_generator.create_updates([], [bot_with_tos_violation])
+    updates = data_generator.create_updates([], [bot_with_tos_violation])
     self.assertCountEqual(updates, [])
 
   def test_create_ranked_rows(self) -> None:
@@ -145,7 +146,7 @@ class TestGenerator(unittest.TestCase):
       CurrentPerfOnlyUpdate(BOT_1_PERF_BULLET),
       CurrentPerfOnlyUpdate(BOT_4_PERF_BULLET),
     ]
-    leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
+    leaderboard_rows = data_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
       LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True, True),
@@ -160,7 +161,7 @@ class TestGenerator(unittest.TestCase):
       CurrentPerfOnlyUpdate(BOT_4_PERF_BULLET),
       CurrentPerfOnlyUpdate(BOT_3_PERF_BULLET),
     ]
-    leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
+    leaderboard_rows = data_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
       LeaderboardRow(BOT_2_PERF_BULLET, 2, 0, 0, 2, 2900, True, True),
@@ -176,7 +177,7 @@ class TestGenerator(unittest.TestCase):
       CurrentPerfOnlyUpdate(BOT_1_PERF_BULLET),
       CurrentPerfOnlyUpdate(BOT_1_PERF_BULLET),
     ]
-    leaderboard_rows = leaderboard_generator.create_ranked_rows(updates)
+    leaderboard_rows = data_generator.create_ranked_rows(updates)
     expected_leaderboard_rows = [
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
       LeaderboardRow(BOT_1_PERF_BULLET, 1, 0, 0, 1, 3000, True, True),
@@ -186,21 +187,21 @@ class TestGenerator(unittest.TestCase):
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
 
-class TestLeaderboardDataGenerator(unittest.TestCase):
-  """Tests for LeaderboardDataGenerator."""
+class TestDataGenerator(unittest.TestCase):
+  """Tests for DataGenerator."""
 
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
     bullet_ndjson = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
-    file_system.save_file_lines(leaderboard_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_ndjson)
+    file_system.save_file_lines(data_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_ndjson)
 
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
 
-    date_provider = FakeDateProvider()
-    date_provider.set_current_time(1743483600)
+    time_provider = FakeTimeProvider()
+    time_provider.set_current_time(1743483600)
 
-    leaderboard_data_generator = LeaderboardDataGenerator(file_system, lichess_client, date_provider)
+    leaderboard_data_generator = DataGenerator(file_system, lichess_client, time_provider)
     bullet_ranked_rows = leaderboard_data_generator.generate_leaderboard_data()[PerfType.BULLET]
 
     expected_ranked_rows = [

@@ -13,8 +13,8 @@ def format_date(epoch_seconds: float, time_format: str) -> str:
   return datetime.datetime.fromtimestamp(epoch_seconds, tz=datetime.UTC).strftime(time_format)
 
 
-class DateProvider(abc.ABC):
-  """Interface for providing the current date."""
+class TimeProvider(abc.ABC):
+  """Interface for providing the current time."""
 
   @abc.abstractmethod
   def get_current_time(self) -> float:

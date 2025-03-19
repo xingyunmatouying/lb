@@ -1,16 +1,9 @@
-"""Tests for leaderboard.py."""
+"""Tests for leaderboard_update.py."""
 
 import unittest
 
-from src.leaderboard.leaderboard_data import (
-  CurrentPerfOnlyUpdate,
-  FullUpdate,
-  LeaderboardPerf,
-  LeaderboardRow,
-  LeaderboardUpdate,
-  PreviousRowOnlyUpdate,
-)
-from src.leaderboard.lichess_bot_user import BotUser, Perf, PerfType
+from src.leaderboard.data.leaderboard_row import LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_update import CurrentPerfOnlyUpdate, FullUpdate, LeaderboardUpdate, PreviousRowOnlyUpdate
 
 
 def create_perf(username: str, rating: int, games: int, created_date: str) -> LeaderboardPerf:
@@ -18,56 +11,8 @@ def create_perf(username: str, rating: int, games: int, created_date: str) -> Le
   return LeaderboardPerf(username, "", "", rating, 0, 0, games, created_date, "2025-04-01", False, False)
 
 
-BOT_1_LICHESS_PERF = Perf(PerfType.BULLET, 100, 1450, 0, 0, False)
-BOT_1_BOT_USER = BotUser("Bot1", "", "", "2024-01-01", False, False, [BOT_1_LICHESS_PERF])
-
 BOT_2_PERF = create_perf("Bot-2", 1800, 400, "2021-04-01")
 BOT_2_ROW = LeaderboardRow(BOT_2_PERF, 1, 0, 0, 1, 1800, False, True)
-
-
-class TestLeaderboardPerf(unittest.TestCase):
-  """Tests for LeaderboardPeft."""
-
-  def test_from_bot_user(self) -> None:
-    leaderboard_perf = LeaderboardPerf.from_bot_user(BOT_1_BOT_USER, BOT_1_LICHESS_PERF, "2025-04-01")
-    self.assertEqual(leaderboard_perf, create_perf("Bot1", 1450, 100, "2024-01-01"))
-
-
-class TestLeaderboardRow(unittest.TestCase):
-  """Tests for LeaderboardRow."""
-
-  def test_from_json(self) -> None:
-    leaderboard_row = LeaderboardRow.from_json(
-      """
-      {
-        "perf": {
-          "username": "Bot1",
-          "flair": "flair",
-          "flag": "flag",
-          "rating": 1500,
-          "rd": 12,
-          "prog": 34,
-          "games": 100,
-          "created_date": "2024-04-01",
-          "last_seen_date": "2025-04-01"
-        },
-        "rank": 4,
-        "rank_delta": 1,
-        "rating_delta": 50,
-        "peak_rank": 3,
-        "peak_rating": 1600,
-        "is_online": true
-      }
-      """
-    )
-    expected_perf = LeaderboardPerf("Bot1", "flair", "flag", 1500, 12, 34, 100, "2024-04-01", "2025-04-01", False, False)
-    expected_leaderboard_row = LeaderboardRow(expected_perf, 4, 1, 50, 3, 1600, False, True)
-    self.assertEqual(leaderboard_row, expected_leaderboard_row)
-
-  def test_to_json_round_trip(self) -> None:
-    perf = LeaderboardPerf("Bot1", "flair", "EU", 1500, 12, 34, 100, "2024-04-01", "2025-04-01", True, True)
-    leaderboard_row = LeaderboardRow(perf, 4, 1, 50, 3, 1600, True, False)
-    self.assertEqual(LeaderboardRow.from_json(leaderboard_row.to_json()), leaderboard_row)
 
 
 class TestLeaderboardUpdate(unittest.TestCase):
