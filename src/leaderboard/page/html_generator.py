@@ -54,12 +54,12 @@ class HtmlLeaderboardRow:
   """The data required to render a leaderboard row in html."""
 
   rank: int
-  rank_delta: LeaderboardDelta
-  rank_delta_str: str
+  delta_rank: LeaderboardDelta
+  delta_rank_str: str
   username: str
   flag: str
   rating: int
-  rating_delta: int
+  delta_rating: int
   games: int
   created_date: str
   last_seen_date: str
@@ -67,19 +67,19 @@ class HtmlLeaderboardRow:
   @classmethod
   def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
-    rank_delta = LeaderboardDelta.from_delta(row.rank_delta)
-    rank_delta_str = "🆕" if row.is_new else rank_delta.to_string()
+    delta_rank = LeaderboardDelta.from_delta(row.delta_rank)
+    delta_rank_str = "🆕" if row.is_new else delta_rank.to_string()
     return HtmlLeaderboardRow(
       row.rank,
-      rank_delta,
-      rank_delta_str,
-      row.perf.username,
-      row.perf.flag,
-      row.perf.rating,
-      row.rating_delta,
-      row.perf.games,
-      row.perf.created_date,
-      row.perf.last_seen_date,
+      delta_rank,
+      delta_rank_str,
+      row.bot_info.profile.username,
+      row.bot_info.profile.flag,
+      row.bot_info.perf.rating,
+      row.delta_rating,
+      row.bot_info.perf.games,
+      row.bot_info.profile.created_date,
+      row.bot_info.last_seen_date,
     )
 
 
