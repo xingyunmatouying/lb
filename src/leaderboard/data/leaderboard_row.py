@@ -8,12 +8,10 @@ from src.leaderboard.li.bot_user import BotUser, Perf
 
 
 @dataclasses.dataclass(frozen=True)
-class LeaderboardPerf:
-  """A bot's performance for a particular PerfType.
+class BotProfile:
+  """Information related to the bot's profile.
 
-  The performance type is not stored within this object itself.
-
-  This also contains some additional information about the bot.
+  This is information that either never changes or does not change very often.
   """
 
   # The bot's username
@@ -22,6 +20,40 @@ class LeaderboardPerf:
   flair: str
   # The bot's country flag
   flag: str
+  # The date the bot was created (YYYY-MM-DD)
+  created_date: str
+  # If the bot is a patron
+  patron: bool
+  # If the bot has violated the terms of service
+  tos_violation: bool
+
+  @classmethod
+  def from_bot_user(cls, bot_user: BotUser) -> "BotProfile":
+    """Create a BotProfile from a BotUser."""
+    return BotProfile(
+      bot_user.username, bot_user.flair, bot_user.flag, bot_user.created_date, bot_user.patron, bot_user.tos_violation
+    )
+
+  @classmethod
+  def from_json(cls, json_dict: dict[str, Any]) -> "BotProfile":
+    """Create a BotProfile from json."""
+    return BotProfile(
+      json_dict.get("username", ""),
+      json_dict.get("flair", ""),
+      json_dict.get("flag", ""),
+      json_dict.get("created_date", ""),
+      json_dict.get("patron", False),
+      json_dict.get("tos_violation", False),
+    )
+
+
+@dataclasses.dataclass(frozen=True)
+class LeaderboardPerf:
+  """Information related to a bot's performance for a particular PerfType.
+
+  The performance type is not stored within this object itself.
+  """
+
   # The bot's rating
   rating: int
   # The bot's rating deviation
@@ -30,58 +62,55 @@ class LeaderboardPerf:
   prog: int
   # The number of games the bot has played
   games: int
-  # The date the bot was created (YYYY-MM-DD)
-  created_date: str
-  # The date the bot was last seen (YYYY-MM-DD)
-  last_seen_date: str
-  # If the bot is a patron
-  patron: bool
-  # If the bot has violated the terms of service
-  tos_violation: bool
 
   @classmethod
-  def from_bot_user(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "LeaderboardPerf":
-    """Create a leaderboard perf from a bot user and a perf."""
-    return LeaderboardPerf(
-      bot_user.username,
-      bot_user.flair,
-      bot_user.flag,
-      perf.rating,
-      perf.rd,
-      perf.prog,
-      perf.games,
-      bot_user.created_date,
-      last_seen_date,
-      bot_user.patron,
-      bot_user.tos_violation,
-    )
+  def from_perf(cls, perf: Perf) -> "LeaderboardPerf":
+    """Create a LeaderboardPerf from a Perf."""
+    return LeaderboardPerf(perf.rating, perf.rd, perf.prog, perf.games)
 
   @classmethod
   def from_json(cls, json_dict: dict[str, Any]) -> "LeaderboardPerf":
     """Create a LeaderboardPerf from json."""
-    username = json_dict.get("username", "")
-    flair = json_dict.get("flair", "")
-    flag = json_dict.get("flag", "")
-    rating = json_dict.get("rating", 0)
-    rd = json_dict.get("rd", 0)
-    prog = json_dict.get("prog", 0)
-    games = json_dict.get("games", 0)
-    created_date = json_dict.get("created_date", "")
-    last_seen_date = json_dict.get("last_seen_date", "")
-    patron = json_dict.get("patron", False)
-    tos_violation = json_dict.get("tos_violation", False)
-    return LeaderboardPerf(username, flair, flag, rating, rd, prog, games, created_date, last_seen_date, patron, tos_violation)
+    return LeaderboardPerf(
+      json_dict.get("rating", 0), json_dict.get("rd", 0), json_dict.get("prog", 0), json_dict.get("games", 0)
+    )
+
+
+@dataclasses.dataclass(frozen=True)
+class BotInfo:
+  """Information about the bot which may appear on the leaderboard."""
+
+  # Information related to the bot's profile.
+  profile: BotProfile
+  # Information related to a bot's performance for a particular PerfType.
+  perf: LeaderboardPerf
+  # The date the bot was last seen (YYYY-MM-DD)
+  last_seen_date: str
+
+  @classmethod
+  def create_bot_info(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "BotInfo":
+    """Create from information returned by the lichess API."""
+    return BotInfo(BotProfile.from_bot_user(bot_user), LeaderboardPerf.from_perf(perf), last_seen_date)
+
+  @classmethod
+  def from_json(cls, json_dict: dict[str, Any]) -> "BotInfo":
+    """Create a BotInfo from json."""
+    return BotInfo(
+      BotProfile.from_json(json_dict.get("profile", {})),
+      LeaderboardPerf.from_json(json_dict.get("perf", {})),
+      json_dict.get("last_seen_date", ""),
+    )
 
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardRow:
   """A row in the leaderboard: rank, name, rating, etc...
 
-  This class includes a LeaderboardPerf as well as additional details which are easier to calculate after the fact.
+  This class includes a BotInfo as well as additional details which are calculated.
   """
 
   # Information about the bot returned by the lichess API
-  perf: LeaderboardPerf
+  bot_info: BotInfo
   # The bot's position within the leaderboard
   rank: int
   # How much their rank has changed since the last time the leaderboard was generated
@@ -101,19 +130,16 @@ class LeaderboardRow:
   def from_json(cls, json_str: str) -> "LeaderboardRow":
     """Create a LeaderboardRow from json."""
     json_dict = json.loads(json_str)
-
-    perf_dict = json_dict.get("perf", {})
-    perf = LeaderboardPerf.from_json(perf_dict)
-
-    rank = json_dict.get("rank", 0)
-    rank_delta = json_dict.get("rank_delta", 0)
-    rating_delta = json_dict.get("rating_delta", 0)
-    peak_rank = json_dict.get("peak_rank", 0)
-    peak_rating = json_dict.get("peak_rating", 0)
-    is_new = json_dict.get("is_new", False)
-    is_online = json_dict.get("is_online", False)
-
-    return LeaderboardRow(perf, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
+    return LeaderboardRow(
+      BotInfo.from_json(json_dict.get("bot_info", {})),
+      json_dict.get("rank", 0),
+      json_dict.get("rank_delta", 0),
+      json_dict.get("rating_delta", 0),
+      json_dict.get("peak_rank", 0),
+      json_dict.get("peak_rating", 0),
+      json_dict.get("is_new", False),
+      json_dict.get("is_online", False),
+    )
 
   def to_json(self) -> str:
     """Convert the leaderboard row to."""

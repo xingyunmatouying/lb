@@ -73,13 +73,13 @@ class HtmlLeaderboardRow:
       row.rank,
       rank_delta,
       rank_delta_str,
-      row.perf.username,
-      row.perf.flag,
-      row.perf.rating,
+      row.bot_info.profile.username,
+      row.bot_info.profile.flag,
+      row.bot_info.perf.rating,
       row.rating_delta,
-      row.perf.games,
-      row.perf.created_date,
-      row.perf.last_seen_date,
+      row.bot_info.perf.games,
+      row.bot_info.profile.created_date,
+      row.bot_info.last_seen_date,
     )
 
 
