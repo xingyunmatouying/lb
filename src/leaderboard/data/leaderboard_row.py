@@ -114,9 +114,9 @@ class LeaderboardRow:
   # The bot's position within the leaderboard
   rank: int
   # How much their rank has changed since the last time the leaderboard was generated
-  rank_delta: int
+  delta_rank: int
   # How much their rating has changed since the last time the leaderboard was generated
-  rating_delta: int
+  delta_rating: int
   # The highest rank the bot has ever achieved on the leaderboard
   peak_rank: int
   # The maximum rating observed at any point when generating the leaderboard
@@ -133,8 +133,8 @@ class LeaderboardRow:
     return LeaderboardRow(
       BotInfo.from_json(json_dict.get("bot_info", {})),
       json_dict.get("rank", 0),
-      json_dict.get("rank_delta", 0),
-      json_dict.get("rating_delta", 0),
+      json_dict.get("delta_rank", 0),
+      json_dict.get("delta_rating", 0),
       json_dict.get("peak_rank", 0),
       json_dict.get("peak_rating", 0),
       json_dict.get("is_new", False),

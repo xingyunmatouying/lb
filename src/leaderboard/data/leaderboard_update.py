@@ -58,13 +58,13 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
-    rank_delta = self.row.rank - rank
-    rating_delta = 0
+    delta_rank = self.row.rank - rank
+    delta_rating = 0
     peak_rank = min(self.row.rank, rank)
     peak_rating = self.row.peak_rating
     is_new = False
     is_online = False
-    return LeaderboardRow(self.row.bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
+    return LeaderboardRow(self.row.bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -86,13 +86,13 @@ class CurrentBotInfoOnlyUpdate(LeaderboardUpdate):
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
-    rank_delta = 0
-    rating_delta = 0
+    delta_rank = 0
+    delta_rating = 0
     peak_rank = rank
     peak_rating = self.bot_info.perf.rating
     is_new = True
     is_online = True
-    return LeaderboardRow(self.bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
+    return LeaderboardRow(self.bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -115,11 +115,11 @@ class FullUpdate(LeaderboardUpdate):
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
     # Moving up in the leaderboard should count as a positive delta (3 -> 1 yields +2)
-    rank_delta = self.previous_row.rank - rank
-    rating_delta = self.current_bot_info.perf.rating - self.previous_row.bot_info.perf.rating
+    delta_rank = self.previous_row.rank - rank
+    delta_rating = self.current_bot_info.perf.rating - self.previous_row.bot_info.perf.rating
     # Higher ranking, lower rank number
     peak_rank = min(self.previous_row.rank, rank)
     peak_rating = max(self.previous_row.bot_info.perf.rating, self.current_bot_info.perf.rating)
     is_new = False
     is_online = True
-    return LeaderboardRow(self.current_bot_info, rank, rank_delta, rating_delta, peak_rank, peak_rating, is_new, is_online)
+    return LeaderboardRow(self.current_bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)

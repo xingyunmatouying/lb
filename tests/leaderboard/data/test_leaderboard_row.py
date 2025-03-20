@@ -85,8 +85,8 @@ class TestLeaderboardRow(unittest.TestCase):
           "last_seen_date": "2025-04-01"
         },
         "rank": 4,
-        "rank_delta": 1,
-        "rating_delta": 50,
+        "delta_rank": 1,
+        "delta_rating": 50,
         "peak_rank": 3,
         "peak_rating": 1600,
         "is_online": true
