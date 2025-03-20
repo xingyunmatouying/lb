@@ -89,7 +89,7 @@ class BotInfo:
 
   @classmethod
   def create_bot_info(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "BotInfo":
-    """Create from information returned by the lichess API."""
+    """Create a BotInfo from information returned by the lichess API."""
     return BotInfo(BotProfile.from_bot_user(bot_user), LeaderboardPerf.from_perf(perf), last_seen_date)
 
   @classmethod
