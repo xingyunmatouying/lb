@@ -62,11 +62,6 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* Slightly different color for time in the footer */
-footer time {
-  color: rgb(232, 232, 232);
-}
-
 /* Leaderboard container */
 main {
   background-color: white;
