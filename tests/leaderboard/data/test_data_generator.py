@@ -9,9 +9,9 @@ from leaderboard.chrono.epoch_seconds import (
   DATE_2024_04_01,
   DATE_2025_04_01,
 )
-from leaderboard.chrono.fake_time_provider import FakeTimeProvider
 from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
+from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data import data_generator
 from src.leaderboard.data.data_generator import DataGenerator
 from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
@@ -140,8 +140,7 @@ class TestGenerator(unittest.TestCase):
   def test_get_all_current_bot_infos(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
-    time_provider = FakeTimeProvider()
-    time_provider.set_current_time(DATE_2025_04_01)
+    time_provider = FixedTimeProvider(DATE_2025_04_01)
     current_infos_by_perf_type = data_generator.get_all_current_bot_infos(lichess_client, time_provider)
     self.assertEqual(len(current_infos_by_perf_type), 2)
     self.assertListEqual(current_infos_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_INFO_BULLET, BOT_2_CURRENT_INFO_BULLET])
@@ -150,7 +149,7 @@ class TestGenerator(unittest.TestCase):
   def test_get_all_current_bot_infos_no_provisional(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("""{"username":"Bot","perfs":{"bullet":{"rating":3000,"prov":true}}}\n""")
-    current_infos_by_perf_type = data_generator.get_all_current_bot_infos(lichess_client, FakeTimeProvider())
+    current_infos_by_perf_type = data_generator.get_all_current_bot_infos(lichess_client, FixedTimeProvider(0))
     self.assertDictEqual(current_infos_by_perf_type, {})
 
   def test_create_updates(self) -> None:
@@ -226,8 +225,7 @@ class TestDataGenerator(unittest.TestCase):
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
 
-    time_provider = FakeTimeProvider()
-    time_provider.set_current_time(DATE_2025_04_01)
+    time_provider = FixedTimeProvider(DATE_2025_04_01)
 
     leaderboard_data_generator = DataGenerator(file_system, lichess_client, time_provider)
     bullet_ranked_rows = leaderboard_data_generator.generate_leaderboard_data()[PerfType.BULLET]

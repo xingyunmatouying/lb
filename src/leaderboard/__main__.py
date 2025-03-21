@@ -12,6 +12,7 @@ Process for generating the leaderboards:
 import logging
 import time
 
+from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.chrono.real_time_provider import RealTimeProvider
 from src.leaderboard.data import data_generator
 from src.leaderboard.data.data_generator import DataGenerator
@@ -42,7 +43,7 @@ if __name__ == "__main__":
   # Instantiate dependencies
   file_system = RealFileSystem()
   lichess_client = RealLichessClient()
-  time_provider = RealTimeProvider()
+  time_provider = FixedTimeProvider(RealTimeProvider().get_current_time())
 
   # Generate leaderboard
   leaderboard_data_generator = DataGenerator(file_system, lichess_client, time_provider)
