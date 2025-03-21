@@ -9,8 +9,6 @@ from collections.abc import Generator
 from enum import Enum
 from typing import Any
 
-from src.leaderboard.chrono import time_provider
-
 
 class PerfType(Enum):
   """Represents the time controls and variants (a.k.a. game modes) available on lichess.
@@ -169,8 +167,8 @@ class BotUser:
   flair: str
   # The bot's country flag
   flag: str
-  # The date the bot was created (YYYY-MM-DD)
-  created_date: str
+  # The time the bot was created (seconds since epoch)
+  created_at: int
   # If the bot is a patron
   patron: bool
   # If the bot has violated the terms of service
@@ -187,7 +185,7 @@ class BotUser:
     flair = json_dict.get("flair", "")
     profile_dict = json_dict.get("profile", {})
     flag = profile_dict.get("flag", "")
-    created_date = time_provider.format_date(json_dict.get("createdAt", 0) / 1000.0, time_provider.FORMAT_YYYY_MM_DD)
+    created_at = json_dict.get("createdAt", 0) // 1000
     patron = json_dict.get("patron", False)
     tos_violation = json_dict.get("tosViolation", False)
 
@@ -195,4 +193,4 @@ class BotUser:
     for perf_type_key, perf_json in json_dict.get("perfs", []).items():
       perfs.append(Perf.from_json(perf_type_key, perf_json))
 
-    return BotUser(username, flair, flag, created_date, patron, tos_violation, perfs)
+    return BotUser(username, flair, flag, created_at, patron, tos_violation, perfs)

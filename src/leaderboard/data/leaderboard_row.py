@@ -20,8 +20,8 @@ class BotProfile:
   flair: str
   # The bot's country flag
   flag: str
-  # The date the bot was created (YYYY-MM-DD)
-  created_date: str
+  # The time the bot was created (seconds since epoch)
+  created_time: int
   # If the bot is a patron
   patron: bool
   # If the bot has violated the terms of service
@@ -31,7 +31,7 @@ class BotProfile:
   def from_bot_user(cls, bot_user: BotUser) -> "BotProfile":
     """Create a BotProfile from a BotUser."""
     return BotProfile(
-      bot_user.username, bot_user.flair, bot_user.flag, bot_user.created_date, bot_user.patron, bot_user.tos_violation
+      bot_user.username, bot_user.flair, bot_user.flag, bot_user.created_at, bot_user.patron, bot_user.tos_violation
     )
 
   @classmethod
@@ -41,7 +41,7 @@ class BotProfile:
       json_dict.get("username", ""),
       json_dict.get("flair", ""),
       json_dict.get("flag", ""),
-      json_dict.get("created_date", ""),
+      json_dict.get("created_time", 0),
       json_dict.get("patron", False),
       json_dict.get("tos_violation", False),
     )
@@ -84,13 +84,13 @@ class BotInfo:
   profile: BotProfile
   # Information related to a bot's performance for a particular PerfType.
   perf: LeaderboardPerf
-  # The date the bot was last seen (YYYY-MM-DD)
-  last_seen_date: str
+  # The time the bot was last seen (seconds since epoch)
+  last_seen_time: int
 
   @classmethod
-  def create_bot_info(cls, bot_user: BotUser, perf: Perf, last_seen_date: str) -> "BotInfo":
+  def create_bot_info(cls, bot_user: BotUser, perf: Perf, last_seen_time: int) -> "BotInfo":
     """Create a BotInfo from information returned by the lichess API."""
-    return BotInfo(BotProfile.from_bot_user(bot_user), LeaderboardPerf.from_perf(perf), last_seen_date)
+    return BotInfo(BotProfile.from_bot_user(bot_user), LeaderboardPerf.from_perf(perf), last_seen_time)
 
   @classmethod
   def from_json(cls, json_dict: dict[str, Any]) -> "BotInfo":
@@ -98,7 +98,7 @@ class BotInfo:
     return BotInfo(
       BotProfile.from_json(json_dict.get("profile", {})),
       LeaderboardPerf.from_json(json_dict.get("perf", {})),
-      json_dict.get("last_seen_date", ""),
+      json_dict.get("last_seen_time", 0),
     )
 
 

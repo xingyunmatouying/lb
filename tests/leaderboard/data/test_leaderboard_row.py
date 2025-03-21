@@ -2,11 +2,12 @@
 
 import unittest
 
+from leaderboard.chrono.epoch_seconds import DATE_2024_01_01, DATE_2024_04_01, DATE_2025_04_01
 from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
 from src.leaderboard.li.bot_user import BotUser, Perf, PerfType
 
 
-EMPTY_BOT_PROFILE = BotProfile("", "", "", "", False, False)
+EMPTY_BOT_PROFILE = BotProfile("", "", "", 0, False, False)
 EMPTY_LEADERBOARD_PERF = LeaderboardPerf(0, 0, 0, 0)
 
 
@@ -14,19 +15,19 @@ class TestBotProfile(unittest.TestCase):
   """Tests for BotProfile."""
 
   def test_from_perf(self) -> None:
-    bot_user = BotUser("Bot1", "flair", "flag", "2024-01-01", True, True, [])
-    self.assertEqual(BotProfile.from_bot_user(bot_user), BotProfile("Bot1", "flair", "flag", "2024-01-01", True, True))
+    bot_user = BotUser("Bot1", "flair", "flag", DATE_2024_01_01, True, True, [])
+    self.assertEqual(BotProfile.from_bot_user(bot_user), BotProfile("Bot1", "flair", "flag", DATE_2024_01_01, True, True))
 
   def test_from_json(self) -> None:
     json_dict = {
       "username": "Bot1",
       "flair": "flair",
       "flag": "FR",
-      "created_date": "2024-01-01",
+      "created_time": DATE_2024_01_01,
       "patron": True,
       "tos_violation": True,
     }
-    self.assertEqual(BotProfile.from_json(json_dict), BotProfile("Bot1", "flair", "FR", "2024-01-01", True, True))
+    self.assertEqual(BotProfile.from_json(json_dict), BotProfile("Bot1", "flair", "FR", DATE_2024_01_01, True, True))
 
   def test_from_json_default(self) -> None:
     self.assertEqual(BotProfile.from_json({}), EMPTY_BOT_PROFILE)
@@ -52,21 +53,21 @@ class TestBotInfo(unittest.TestCase):
 
   def test_create_bot_info(self) -> None:
     perf = Perf(PerfType.BULLET, 0, 1500, 0, 0, False)
-    bot_user = BotUser("Bot1", "", "", "", False, False, [])
-    bot_info = BotInfo.create_bot_info(bot_user, perf, "2025-04-01")
+    bot_user = BotUser("Bot1", "", "", 0, False, False, [])
+    bot_info = BotInfo.create_bot_info(bot_user, perf, DATE_2025_04_01)
     self.assertEqual(
-      bot_info, BotInfo(BotProfile("Bot1", "", "", "", False, False), LeaderboardPerf(1500, 0, 0, 0), "2025-04-01")
+      bot_info, BotInfo(BotProfile("Bot1", "", "", 0, False, False), LeaderboardPerf(1500, 0, 0, 0), DATE_2025_04_01)
     )
 
   def test_from_json(self) -> None:
-    json_dict = {"profile": {"username": "Bot1"}, "perf": {"rating": 1500}, "last_seen_date": "2025-04-01"}
+    json_dict = {"profile": {"username": "Bot1"}, "perf": {"rating": 1500}, "last_seen_time": DATE_2025_04_01}
     self.assertEqual(
       BotInfo.from_json(json_dict),
-      BotInfo(BotProfile("Bot1", "", "", "", False, False), LeaderboardPerf(1500, 0, 0, 0), "2025-04-01"),
+      BotInfo(BotProfile("Bot1", "", "", 0, False, False), LeaderboardPerf(1500, 0, 0, 0), DATE_2025_04_01),
     )
 
   def test_from_json_default(self) -> None:
-    self.assertEqual(BotInfo.from_json({}), BotInfo(EMPTY_BOT_PROFILE, EMPTY_LEADERBOARD_PERF, ""))
+    self.assertEqual(BotInfo.from_json({}), BotInfo(EMPTY_BOT_PROFILE, EMPTY_LEADERBOARD_PERF, 0))
 
 
 class TestLeaderboardRow(unittest.TestCase):
@@ -82,7 +83,7 @@ class TestLeaderboardRow(unittest.TestCase):
           "perf": {
             "rating": 1500
           },
-          "last_seen_date": "2025-04-01"
+          "last_seen_time": 1743500000
         },
         "rank": 4,
         "delta_rank": 1,
@@ -92,13 +93,13 @@ class TestLeaderboardRow(unittest.TestCase):
         "is_online": true
       }
       """
-    expected_bot_info = BotInfo(BotProfile("Bot1", "", "", "", False, False), LeaderboardPerf(1500, 0, 0, 0), "2025-04-01")
+    expected_bot_info = BotInfo(BotProfile("Bot1", "", "", 0, False, False), LeaderboardPerf(1500, 0, 0, 0), DATE_2025_04_01)
     expected_leaderboard_row = LeaderboardRow(expected_bot_info, 4, 1, 50, 3, 1600, False, True)
     self.assertEqual(LeaderboardRow.from_json(leaderboard_row_json), expected_leaderboard_row)
 
   def test_to_json_round_trip(self) -> None:
     bot_info = BotInfo(
-      BotProfile("Bot1", "flair", "EU", "2024-04-01", False, False), LeaderboardPerf(1500, 12, 34, 100), "2025-04-01"
+      BotProfile("Bot1", "flair", "EU", DATE_2024_04_01, False, False), LeaderboardPerf(1500, 12, 34, 100), DATE_2025_04_01
     )
     leaderboard_row = LeaderboardRow(bot_info, 4, 1, 50, 3, 1600, True, False)
     self.assertEqual(LeaderboardRow.from_json(leaderboard_row.to_json()), leaderboard_row)

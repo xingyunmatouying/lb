@@ -15,8 +15,8 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @abc.abstractmethod
-  def get_created_date(self) -> str:
-    """Return the date the bot was created."""
+  def get_created_time(self) -> int:
+    """Return the time the bot was created."""
     ...
 
   @abc.abstractmethod
@@ -52,9 +52,9 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     """Return the bot's rating."""
     return self.row.bot_info.perf.rating
 
-  def get_created_date(self) -> str:
-    """Return the date the bot was created."""
-    return self.row.bot_info.profile.created_date
+  def get_created_time(self) -> int:
+    """Return the time the bot was created."""
+    return self.row.bot_info.profile.created_time
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
@@ -80,9 +80,9 @@ class CurrentBotInfoOnlyUpdate(LeaderboardUpdate):
     """Return the bot's rating."""
     return self.bot_info.perf.rating
 
-  def get_created_date(self) -> str:
-    """Return the date the bot was created."""
-    return self.bot_info.profile.created_date
+  def get_created_time(self) -> int:
+    """Return the time the bot was created."""
+    return self.bot_info.profile.created_time
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
@@ -107,10 +107,10 @@ class FullUpdate(LeaderboardUpdate):
     # Use the current rating
     return self.current_bot_info.perf.rating
 
-  def get_created_date(self) -> str:
-    """Return the date the bot was created."""
-    # The old and new created dates are expected to be the same
-    return self.current_bot_info.profile.created_date
+  def get_created_time(self) -> int:
+    """Return the time the bot was created."""
+    # The old and new created times are expected to be the same
+    return self.current_bot_info.profile.created_time
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""

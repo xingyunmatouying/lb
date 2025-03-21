@@ -32,14 +32,14 @@ def get_all_current_bot_infos(lichess_client: LichessClient, time_provider: Time
 
   Returns lists of BotInfo grouped by perf type.
   """
-  current_date = time_provider.get_current_date_formatted()
+  current_time = time_provider.get_current_time()
   current_infos_by_perf_type: dict[PerfType, list[BotInfo]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)
     for perf in bot_user.perfs:
       # Don't include provisional ratings (this ends up being redundant if taking rd into account)
       if not perf.prov:
-        current_infos_by_perf_type[perf.perf_type].append(BotInfo.create_bot_info(bot_user, perf, current_date))
+        current_infos_by_perf_type[perf.perf_type].append(BotInfo.create_bot_info(bot_user, perf, current_time))
   return current_infos_by_perf_type
 
 
@@ -64,7 +64,7 @@ def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]
   """Create the leaderboard rows for each perf type based on a list of updates."""
   new_rows: list[LeaderboardRow] = []
   # Primary sort: by rating descending, Secondary sort: creation date ascending
-  sorted_update_list = sorted(updates, key=lambda update: (-update.get_rating(), update.get_created_date()))
+  sorted_update_list = sorted(updates, key=lambda update: (-update.get_rating(), update.get_created_time()))
   # The first in the list will be ranked #1
   rank = 0
   # Used for 1224 ranking (https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking))
