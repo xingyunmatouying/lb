@@ -36,7 +36,8 @@ class LeaderboardUpdate(abc.ABC):
       return CurrentBotInfoOnlyUpdate(current_bot_info)
     if previous_row and current_bot_info:
       return FullUpdate(previous_row, current_bot_info)
-    raise ValueError("At least one of previous_row or current_bot_info must be set.")
+    error_msg = "At least one of previous_row or current_bot_info must be set."
+    raise ValueError(error_msg)
 
 
 @dataclasses.dataclass(frozen=True)

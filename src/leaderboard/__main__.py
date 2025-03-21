@@ -62,4 +62,4 @@ if __name__ == "__main__":
 
   # Print time elapsed
   time_elapsed = time.time() - start_time
-  logger.info(f"Finished in {time_elapsed:.2f}s")
+  logging.info("Finished in %.2fs", time_elapsed)
