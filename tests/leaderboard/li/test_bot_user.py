@@ -104,7 +104,7 @@ class TestBotUser(unittest.TestCase):
     self.assertEqual(bot_user.username, "Test_Username")
     self.assertEqual(bot_user.flair, "symbol")
     self.assertEqual(bot_user.flag, "_earth")
-    self.assertEqual(bot_user.created_date, "1970-01-01")
+    self.assertEqual(bot_user.created_at, 0)
     self.assertEqual(bot_user.patron, True)
     self.assertEqual(bot_user.tos_violation, False)
     self.assertListEqual(bot_user.perfs, expected_perfs)

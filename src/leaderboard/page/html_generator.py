@@ -4,6 +4,7 @@ import dataclasses
 
 from jinja2 import Environment, FileSystemLoader
 
+from src.leaderboard.chrono import date_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.leaderboard_row import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
@@ -78,8 +79,8 @@ class HtmlLeaderboardRow:
       row.bot_info.perf.rating,
       row.delta_rating,
       row.bot_info.perf.games,
-      row.bot_info.profile.created_date,
-      row.bot_info.last_seen_date,
+      date_formatter.format_yyyy_mm_dd(row.bot_info.profile.created_time),
+      date_formatter.format_yyyy_mm_dd(row.bot_info.last_seen_time),
     )
 
 
@@ -107,7 +108,7 @@ class LeaderboardHtmlGenerator:
 
   def generate_leaderboard_html(self, ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]) -> dict[str, str]:
     """Generate index and leaderboard html."""
-    last_updated_time = self.time_provider.get_current_date_time_formatted()
+    last_updated_time = date_formatter.format_yyyy_mm_dd_hh_mm_ss(self.time_provider.get_current_time())
     html_by_name: dict[str, str] = {}
     # Create index html
     index_template = self.jinja_environment.get_template("index.html.jinja")

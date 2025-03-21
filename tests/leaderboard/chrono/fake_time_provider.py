@@ -10,10 +10,10 @@ class FakeTimeProvider(TimeProvider):
     """Create a fake time provider and set the current time to 0 (1970-01-01)."""
     self.current_time = 0
 
-  def set_current_time(self, current_time: float) -> None:
+  def set_current_time(self, current_time: int) -> None:
     """Set the current time to be returned by get_current_time."""
     self.current_time = current_time
 
-  def get_current_time(self) -> float:
+  def get_current_time(self) -> int:
     """Return the current time."""
     return self.current_time

@@ -2,6 +2,13 @@
 
 import unittest
 
+from leaderboard.chrono.epoch_seconds import (
+  DATE_2021_04_01,
+  DATE_2022_04_01,
+  DATE_2023_04_01,
+  DATE_2024_04_01,
+  DATE_2025_04_01,
+)
 from leaderboard.chrono.fake_time_provider import FakeTimeProvider
 from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from leaderboard.li.fake_lichess_client import FakeLichessClient
@@ -14,24 +21,24 @@ from src.leaderboard.li.bot_user import PerfType
 
 # Bullet leaderboard BotInfos
 BOT_1_INFO_BULLET = BotInfo(
-  BotProfile("Bot-1", "", "", "2021-04-01", False, False), LeaderboardPerf(3000, 0, 0, 1000), "2025-04-01"
+  BotProfile("Bot-1", "", "", DATE_2021_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000), DATE_2025_04_01
 )
 BOT_2_INFO_BULLET = BotInfo(
-  BotProfile("Bot-2", "", "", "2022-04-01", False, False), LeaderboardPerf(2900, 0, 0, 900), "2025-04-01"
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(2900, 0, 0, 900), DATE_2025_04_01
 )
 BOT_3_INFO_BULLET = BotInfo(
-  BotProfile("Bot-3", "", "", "2023-04-01", False, False), LeaderboardPerf(2900, 0, 0, 800), "2025-04-01"
+  BotProfile("Bot-3", "", "", DATE_2023_04_01, False, False), LeaderboardPerf(2900, 0, 0, 800), DATE_2025_04_01
 )
 BOT_4_INFO_BULLET = BotInfo(
-  BotProfile("Bot-4", "", "", "2024-04-01", False, False), LeaderboardPerf(2800, 0, 0, 700), "2025-04-01"
+  BotProfile("Bot-4", "", "", DATE_2024_04_01, False, False), LeaderboardPerf(2800, 0, 0, 700), DATE_2025_04_01
 )
 
 # Blitz leaderboard BotInfos
 BOT_1_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-1", "", "", "2021-04-01", False, False), LeaderboardPerf(2500, 0, 0, 50), "2025-04-01"
+  BotProfile("Bot-1", "", "", DATE_2021_04_01, False, False), LeaderboardPerf(2500, 0, 0, 50), DATE_2025_04_01
 )
 BOT_2_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-2", "", "", "2022-04-01", False, False), LeaderboardPerf(2600, 0, 0, 200), "2025-04-01"
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(2600, 0, 0, 200), DATE_2025_04_01
 )
 
 # Bullet LeaderboardRows
@@ -50,7 +57,7 @@ BOT_1_CURRENT_JSON = """
   "profile": {
     "flag": "_earth"
   },
-  "createdAt": 1711929600000,
+  "createdAt": 1712000000000,
   "patron": true,
   "perfs": {
     "bullet": {
@@ -69,7 +76,7 @@ BOT_1_CURRENT_JSON = """
 BOT_2_CURRENT_JSON = """
 {
   "username": "Bot-2",
-  "createdAt": 1648771200000,
+  "createdAt": 1648800000000,
   "perfs": {
     "bullet": {
         "games": 1000,
@@ -85,17 +92,17 @@ BOT_2_CURRENT_JSON = """
 
 # Leaderboard Perfs matching the above json
 BOT_1_CURRENT_INFO_BULLET = BotInfo(
-  BotProfile("Bot-1", "flair", "_earth", "2024-04-01", True, False), LeaderboardPerf(2950, 42, -50, 1100), "2025-04-01"
+  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, True, False), LeaderboardPerf(2950, 42, -50, 1100), DATE_2025_04_01
 )
 BOT_2_CURRENT_INFO_BULLET = BotInfo(
-  BotProfile("Bot-2", "", "", "2022-04-01", False, False), LeaderboardPerf(3000, 0, 0, 1000), "2025-04-01"
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000), DATE_2025_04_01
 )
 
 BOT_1_CURRENT_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-1", "flair", "_earth", "2024-04-01", True, False), LeaderboardPerf(2550, 0, 0, 100), "2025-04-01"
+  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, True, False), LeaderboardPerf(2550, 0, 0, 100), DATE_2025_04_01
 )
 BOT_2_CURRENT_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-2", "", "", "2022-04-01", False, False), LeaderboardPerf(2500, 0, 0, 300), "2025-04-01"
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(2500, 0, 0, 300), DATE_2025_04_01
 )
 
 
@@ -134,7 +141,7 @@ class TestGenerator(unittest.TestCase):
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     time_provider = FakeTimeProvider()
-    time_provider.set_current_time(1743483600)
+    time_provider.set_current_time(DATE_2025_04_01)
     current_infos_by_perf_type = data_generator.get_all_current_bot_infos(lichess_client, time_provider)
     self.assertEqual(len(current_infos_by_perf_type), 2)
     self.assertListEqual(current_infos_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_INFO_BULLET, BOT_2_CURRENT_INFO_BULLET])
@@ -156,7 +163,7 @@ class TestGenerator(unittest.TestCase):
 
   def test_create_updates_no_tos_violation(self) -> None:
     bot_with_tos_violation = BotInfo(
-      BotProfile("Bot", "", "", "2022-04-01", False, True), LeaderboardPerf(2500, 0, 0, 300), "2025-04-01"
+      BotProfile("Bot", "", "", DATE_2022_04_01, False, True), LeaderboardPerf(2500, 0, 0, 300), DATE_2025_04_01
     )
     updates = data_generator.create_updates([], [bot_with_tos_violation])
     self.assertCountEqual(updates, [])
@@ -220,7 +227,7 @@ class TestDataGenerator(unittest.TestCase):
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
 
     time_provider = FakeTimeProvider()
-    time_provider.set_current_time(1743483600)
+    time_provider.set_current_time(DATE_2025_04_01)
 
     leaderboard_data_generator = DataGenerator(file_system, lichess_client, time_provider)
     bullet_ranked_rows = leaderboard_data_generator.generate_leaderboard_data()[PerfType.BULLET]
