@@ -48,19 +48,27 @@ select = [
   "D", # pydocstyle
   "DTZ", # flake8-datetimez
   "E", # pycodestyle error
+  "EM", # flake8-errmsg
   "ERA", # eradicate
   "F", # Pyflakes
   "FURB", # refurb
+  "G", # flake8-logging-format
   "I", # isort
   "INP", # flake8-no-pep420
   "ISC", # flake8-implicit-str-concat
+  "LOG", # flake8-logging
   "N", # pep8-naming
+  "PERF", # Perflint
   "PIE", # flake8-pie
   "PL", # Pylint
   "PTH", # flake8-use-pathlib
+  "RET", # flake8-return
+  "RSE", # flake8-raise
   "RUF", # Ruff-specific rules
   "S", # flake8-bandit
   "SIM", # flake8-simplify
+  "T20", # flake8-print
+  "TRY", # tryceratops
   "UP", # pyupgrade
   "W", # pycodestyle warning
 ]
