@@ -23,7 +23,7 @@ from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
 
 def create_logger() -> logging.Logger:
   """Initialize and return a logger."""
-  logger = logging.getLogger()
+  logger = logging.getLogger(__name__)
   logger.setLevel(logging.INFO)
   stream_handler = logging.StreamHandler()
   stream_handler.setLevel(logging.INFO)
@@ -62,4 +62,4 @@ if __name__ == "__main__":
 
   # Print time elapsed
   time_elapsed = time.time() - start_time
-  logger.info(f"Finished in {time_elapsed:.2f}s")
+  logging.info("Finished in %.2fs", time_elapsed)
