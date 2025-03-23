@@ -23,7 +23,7 @@ from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
 
 def create_logger() -> logging.Logger:
   """Initialize and return a logger."""
-  logger = logging.getLogger()
+  logger = logging.getLogger(__name__)
   logger.setLevel(logging.INFO)
   stream_handler = logging.StreamHandler()
   stream_handler.setLevel(logging.INFO)
