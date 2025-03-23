@@ -6,31 +6,6 @@ on:
     types: [opened, reopened, synchronize]
 
 jobs:
-  # Check linting and formatting (python)
-  check-style-python:
-    name: 🤵 check-style-python / 🐧 ubuntu
-    runs-on: ubuntu-latest
-    steps:
-      # Setup
-      - name: 🛒 Checkout repo
-        uses: actions/checkout@v4
-      - name: 🐍 Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: 🛠️ Install dependencies (python)
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements/dev.txt
-      # Format
-      - name: 🧹 Check format (ruff)
-        run: |
-          ruff format --check
-      # Lint
-      - name: ✨ Check lint (ruff)
-        run: |
-          ruff check
-
   # Check linting and formatting (jinja)
   check-style-jinja:
     name: 🐱‍👤 check-style-jinja / 🐧 ubuntu
@@ -55,6 +30,31 @@ jobs:
       - name: ✨ Check lint (djlint)
         run: |
           djlint templates -e jinja --lint
+
+  # Check linting and formatting (python)
+  check-style-python:
+    name: 🤵 check-style-python / 🐧 ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      # Setup
+      - name: 🛒 Checkout repo
+        uses: actions/checkout@v4
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 🛠️ Install dependencies (python)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/dev.txt
+      # Format
+      - name: 🧹 Check format (ruff)
+        run: |
+          ruff format --check
+      # Lint
+      - name: ✨ Check lint (ruff)
+        run: |
+          ruff check
 
   # Run static type checking
   check-types:
