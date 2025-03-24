@@ -24,7 +24,7 @@ runs:
         if git diff --quiet origin/main...HEAD -- \
           '.github/actions/check-dependencies-changed/action.yaml' \
           '.github/workflows/ci.yaml' \
-          "${{ inputs.files }}"
+          ${{ inputs.pathspec }}
         ; then
           echo "changed=false" >> "$GITHUB_OUTPUT"
         else
