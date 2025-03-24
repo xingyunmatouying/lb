@@ -1,0 +1,29 @@
+name: 🦋 Check Dependencies Changed
+description: Determine if the dependencies for a particular CI job have changed
+
+inputs:
+  # https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec
+  pathspec:
+    description: The pathspec to pass to git diff
+    required: true
+
+outputs:
+  changed:
+    description: Whether or not one of the dependencies has changed
+    value: ${{ steps.check-diff.outputs.changed }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: check-diff
+      shell: bash
+      run: |
+        if git diff --quiet origin/main...HEAD -- \
+          '.github/actions/check-dependencies-changed/action.yaml' \
+          '.github/workflows/ci.yaml' \
+          "${{ inputs.files }}"
+        ; then
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        fi
