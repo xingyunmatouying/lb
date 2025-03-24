@@ -46,7 +46,7 @@ jobs:
             '**/*.py' \
             'requirements/leaderboard.txt' \
             'pyproject.toml' \
-      - name: ⌨️ Consider check-tests
+      - name: 🧪 Consider check-tests
         id: check-tests
         uses: ./.github/actions/check-dependencies-changed
         with:
@@ -54,7 +54,7 @@ jobs:
             '**/*.jinja' \
             '**/*.py' \
             'requirements/leaderboard.txt' \
-      - name: ⌨️ Consider check-coverage
+      - name: 🔬 Consider check-coverage
         id: check-coverage
         uses: ./.github/actions/check-dependencies-changed
         with:
