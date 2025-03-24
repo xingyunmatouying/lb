@@ -5,6 +5,9 @@ on:
     branches: [main]
     types: [opened, reopened, synchronize]
 
+env:
+  PYTHON_VERSION: "3.11"
+
 jobs:
   # Determine which jobs need to be run
   determine-which-jobs:
@@ -85,7 +88,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -112,7 +115,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -161,7 +164,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -193,9 +196,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { name: 🐧 ubuntu, os: ubuntu-latest, python-version: "3.11" }
-          - { name: 🖼️ windows, os: windows-latest, python-version: "3.11" }
-          - { name: 🍏 macos, os: macos-latest, python-version: "3.11" }
+          - { name: 🐧 ubuntu, os: ubuntu-latest }
+          - { name: 🖼️ windows, os: windows-latest }
+          - { name: 🍏 macos, os: macos-latest }
     steps:
       # Setup
       - name: 🛒 Checkout repo
@@ -203,7 +206,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -230,7 +233,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
