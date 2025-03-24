@@ -155,7 +155,7 @@ jobs:
 
   # Run tests on mac, windows, and ubuntu
   check-tests:
-    name: 🧪 check-tests / ${{ matrix.name }}
+    name: 🧪 check-tests / ${{ matrix.name || '🤷' }}
     runs-on: ${{ matrix.os }}
     needs:
       - determine-which-jobs
