@@ -26,7 +26,7 @@ jobs:
         id: check-style-jinja
         uses: ./.github/actions/check-dependencies-changed
         with:
-          pathspec: |
+          pathspec: |-
             '**/*.jinja' \
             'requirements/dev.txt' \
             'pyproject.toml' \
@@ -34,7 +34,7 @@ jobs:
         id: check-style-python
         uses: ./.github/actions/check-dependencies-changed
         with:
-          pathspec: |
+          pathspec: |-
             '**/*.py' \
             'requirements/dev.txt' \
             'pyproject.toml' \
@@ -42,7 +42,7 @@ jobs:
         id: check-types
         uses: ./.github/actions/check-dependencies-changed
         with:
-          pathspec: |
+          pathspec: |-
             '**/*.py' \
             'requirements/leaderboard.txt' \
             'pyproject.toml' \
@@ -50,7 +50,7 @@ jobs:
         id: check-tests
         uses: ./.github/actions/check-dependencies-changed
         with:
-          pathspec: |
+          pathspec: |-
             '**/*.jinja' \
             '**/*.py' \
             'requirements/leaderboard.txt' \
@@ -58,7 +58,7 @@ jobs:
         id: check-coverage
         uses: ./.github/actions/check-dependencies-changed
         with:
-          pathspec: |
+          pathspec: |-
             '**/*.jinja' \
             '**/*.py' \
             'requirements/leaderboard.txt' \
