@@ -55,15 +55,6 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
-  "evenBetterToml.formatter.columnWidth": 127,
-  "evenBetterToml.formatter.indentString": "  ",
-  "evenBetterToml.formatter.alignComments": false,
-  "evenBetterToml.formatter.allowedBlankLines": 2,
-  "evenBetterToml.formatter.arrayAutoCollapse": false,
-  "evenBetterToml.formatter.arrayTrailingComma": true,
-  "evenBetterToml.formatter.arrayAutoExpand": true,
-  "evenBetterToml.formatter.compactArrays": true,
-  "evenBetterToml.formatter.trailingNewline": true,
   // yaml
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml",

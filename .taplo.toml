@@ -1,0 +1,11 @@
+# Configuration file for Taplo TOML Toolkit.
+
+include = [
+  # All TOML files are in the project's root directory
+  "*.toml",
+]
+
+[formatting]
+column_width = 127
+align_comments = false
+array_auto_collapse = false
