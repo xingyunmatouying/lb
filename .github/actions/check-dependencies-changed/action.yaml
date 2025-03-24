@@ -15,7 +15,8 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: check-diff
+    - name: ⚖️ Check diff
+      id: check-diff
       shell: bash
       run: |
         # Error handling and debuggability: errexit, nounset, xtrace, pipefail
