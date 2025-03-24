@@ -136,16 +136,11 @@ jobs:
       # Setup
       - name: 🛒 Checkout repo
         uses: actions/checkout@v4
-      # Setup node.js
-      - name: 🐸 Setup node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-      - name: 📦 Install dependencies (node.js)
-        run: |
-          npm install -g @taplo/cli
+      # Set up Taplo
+      - name: 🚿 Set up Taplo
+        uses: uncenter/setup-taplo@v1
       # Format
-      - name: 🧹 Check format (taplo)
+      - name: 🧹 Check format (Taplo)
         run: |
           taplo fmt --check
 
