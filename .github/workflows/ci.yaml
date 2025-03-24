@@ -24,70 +24,45 @@ jobs:
           fetch-depth: 0
       - name: 🐱‍👤 Consider check-style-jinja
         id: check-style-jinja
-        run: |
-          if git diff --quiet origin/main...HEAD -- \
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
             '**/*.jinja' \
-            '.github/workflows/ci.yaml' \
             'requirements/dev.txt' \
             'pyproject.toml' \
-          ; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
       - name: 🤵 Consider check-style-python
         id: check-style-python
-        run: |
-          if git diff --quiet origin/main...HEAD -- \
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
             '**/*.py' \
-            '.github/workflows/ci.yaml' \
             'requirements/dev.txt' \
             'pyproject.toml' \
-          ; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
       - name: ⌨️ Consider check-types
         id: check-types
-        run: |
-          if git diff --quiet origin/main...HEAD -- \
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
             '**/*.py' \
-            '.github/workflows/ci.yaml' \
             'requirements/leaderboard.txt' \
             'pyproject.toml' \
-          ; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-      - name: ⌨️ Consider check-tests
+      - name: 🧪 Consider check-tests
         id: check-tests
-        run: |
-          if git diff --quiet origin/main...HEAD -- \
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
             '**/*.jinja' \
             '**/*.py' \
-            '.github/workflows/ci.yaml' \
             'requirements/leaderboard.txt' \
-          ; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-      - name: ⌨️ Consider check-coverage
+      - name: 🔬 Consider check-coverage
         id: check-coverage
-        run: |
-          if git diff --quiet origin/main...HEAD -- \
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
             '**/*.jinja' \
             '**/*.py' \
-            '.github/workflows/ci.yaml' \
             'requirements/leaderboard.txt' \
             'pyproject.toml' \
-          ; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
 
   # Check linting and formatting (jinja)
   check-style-jinja:
