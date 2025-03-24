@@ -23,6 +23,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      # Determine which jobs need to be run based on which files have changed
       - name: 🐱‍👤 Consider check-style-jinja
         id: check-style-jinja
         uses: ./.github/actions/check-dependencies-changed
@@ -136,7 +137,6 @@ jobs:
       # Setup
       - name: 🛒 Checkout repo
         uses: actions/checkout@v4
-      # Set up Taplo
       - name: 🚿 Set up Taplo
         uses: uncenter/setup-taplo@v1
       # Format
@@ -166,8 +166,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements/leaderboard.txt
-      # Setup node.js
-      - name: 🐸 Setup node.js
+      - name: 🐸 Set up node.js
         uses: actions/setup-node@v3
         with:
           node-version: latest
@@ -266,5 +265,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: htmlcov
-          path: |
-            htmlcov/*
+          path: htmlcov/
