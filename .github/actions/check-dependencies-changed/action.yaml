@@ -18,6 +18,8 @@ runs:
     - name: check-diff
       shell: bash
       run: |
+        # Error handling and debuggability: errexit, nounset, xtrace, pipefail
+        set -e -u -x -o pipefail
         if git diff --quiet origin/main...HEAD -- \
           '.github/actions/check-dependencies-changed/action.yaml' \
           '.github/workflows/ci.yaml' \
