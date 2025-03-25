@@ -112,7 +112,7 @@ jobs:
       # Setup
       - name: 🛒 Checkout repo
         uses: actions/checkout@v4
-      - name: 🐍 Set up Ruff
+      - name: 🐩 Set up Ruff
         uses: astral-sh/ruff-action@v3
       # Format
       - name: 🧹 Check format (ruff)
