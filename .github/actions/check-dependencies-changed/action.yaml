@@ -19,7 +19,19 @@ runs:
       id: check-diff
       shell: bash
       run: |
+        # Check for changed dependencies
+
+        # Error handling and debuggability
         set -e -u -x -o pipefail
+
+        # Log which files are in the diff
+        echo "Changed dependencies:"
+        git diff --name-only origin/main...HEAD -- \
+          '.github/actions/check-dependencies-changed/action.yaml' \
+          '.github/workflows/ci.yaml' \
+          ${{ inputs.pathspec }}
+
+        # Populate the output
         if git diff --quiet origin/main...HEAD -- \
           '.github/actions/check-dependencies-changed/action.yaml' \
           '.github/workflows/ci.yaml' \
