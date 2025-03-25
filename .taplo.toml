@@ -1,0 +1,10 @@
+# Configuration file for Taplo TOML Toolkit.
+
+include = [
+  "**/*.toml",
+]
+
+[formatting]
+column_width = 127
+align_comments = false
+array_auto_collapse = false

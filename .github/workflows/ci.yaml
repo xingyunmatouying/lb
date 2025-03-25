@@ -5,6 +5,9 @@ on:
     branches: [main]
     types: [opened, reopened, synchronize]
 
+env:
+  PYTHON_VERSION: "3.11"
+
 jobs:
   # Determine which jobs need to be run
   determine-which-jobs:
@@ -13,6 +16,7 @@ jobs:
     outputs:
       check-style-jijna: ${{ steps.check-style-jinja.outputs.changed }}
       check-style-python: ${{ steps.check-style-python.outputs.changed }}
+      check-style-toml: ${{ steps.check-style-toml.outputs.changed }}
       check-types: ${{ steps.check-types.outputs.changed }}
       check-tests: ${{ steps.check-types.outputs.changed }}
       check-coverage: ${{ steps.check-tests.outputs.changed }}
@@ -22,6 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      # Determine which jobs need to be run based on which files have changed
       - name: 🐱‍👤 Consider check-style-jinja
         id: check-style-jinja
         uses: ./.github/actions/check-dependencies-changed
@@ -38,6 +43,12 @@ jobs:
             '**/*.py' \
             'requirements/dev.txt' \
             'pyproject.toml' \
+      - name: 👷 Consider check-style-toml
+        id: check-style-toml
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
+            '**/*.toml' \
       - name: ⌨️ Consider check-types
         id: check-types
         uses: ./.github/actions/check-dependencies-changed
@@ -77,7 +88,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -104,7 +115,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -117,6 +128,24 @@ jobs:
       - name: ✨ Check lint (ruff)
         run: |
           ruff check
+
+  # Check formatting (toml)
+  check-style-toml:
+    name: 👷 check-style-toml / 🐧 ubuntu
+    runs-on: ubuntu-latest
+    needs:
+      - determine-which-jobs
+    if: needs.determine-which-jobs.outputs.check-style-toml == 'true'
+    steps:
+      # Setup
+      - name: 🛒 Checkout repo
+        uses: actions/checkout@v4
+      - name: 🚿 Set up Taplo
+        uses: uncenter/setup-taplo@v1
+      # Format
+      - name: 🧹 Check format (Taplo)
+        run: |
+          taplo fmt --check
 
   # Run static type checking
   check-types:
@@ -135,13 +164,12 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements/leaderboard.txt
-      # Setup node.js
-      - name: 🐸 Setup node.js
+      - name: 🐸 Set up node.js
         uses: actions/setup-node@v3
         with:
           node-version: latest
@@ -168,9 +196,9 @@ jobs:
     strategy:
       matrix:
         include:
-          - { name: 🐧 ubuntu, os: ubuntu-latest, python-version: "3.11" }
-          - { name: 🖼️ windows, os: windows-latest, python-version: "3.11" }
-          - { name: 🍏 macos, os: macos-latest, python-version: "3.11" }
+          - { name: 🐧 ubuntu, os: ubuntu-latest }
+          - { name: 🖼️ windows, os: windows-latest }
+          - { name: 🍏 macos, os: macos-latest }
     steps:
       # Setup
       - name: 🛒 Checkout repo
@@ -178,7 +206,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -205,7 +233,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: 🛠️ Install dependencies (python)
         run: |
           python -m pip install --upgrade pip
@@ -240,5 +268,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: htmlcov
-          path: |
-            htmlcov/*
+          path: htmlcov/
