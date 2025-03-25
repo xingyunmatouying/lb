@@ -48,7 +48,7 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '*.toml' \
+            '**/*.toml' \
       - name: ⌨️ Consider check-types
         id: check-types
         uses: ./.github/actions/check-dependencies-changed

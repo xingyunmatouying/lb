@@ -1,8 +1,7 @@
 # Configuration file for Taplo TOML Toolkit.
 
 include = [
-  # All TOML files are in the project's root directory
-  "*.toml",
+  "**/*.toml",
 ]
 
 [formatting]
