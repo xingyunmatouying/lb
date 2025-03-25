@@ -19,76 +19,7 @@ max_attribute_length = 127
 max_blank_lines = 1
 
 
-# ruff
-[tool.ruff]
-# Using a src/tests layout.
-src = [
-  "src",
-  "tests",
-]
-# Nice and compact.
-indent-width = 2
-# The GitHub editor is 127 chars wide.
-line-length = 127
-
-[tool.ruff.format]
-# Enable reformatting of code snippets in docstrings.
-docstring-code-format = true
-# Explicitly declare double quotes as preferred.
-quote-style = "double"
-
-[tool.ruff.lint]
-select = [
-  "A", # flake8-builtins
-  "ANN", # flake8-annotations
-  "ASYNC", # flake8-async
-  "ARG", # flake8-unused-arguments
-  "B", # flake8-bugbear
-  "C4", # flake8-comprehensions
-  "D", # pydocstyle
-  "DTZ", # flake8-datetimez
-  "E", # pycodestyle error
-  "EM", # flake8-errmsg
-  "ERA", # eradicate
-  "F", # Pyflakes
-  "FURB", # refurb
-  "G", # flake8-logging-format
-  "I", # isort
-  "INP", # flake8-no-pep420
-  "ISC", # flake8-implicit-str-concat
-  "N", # pep8-naming
-  "PERF", # Perflint
-  "PIE", # flake8-pie
-  "PL", # Pylint
-  "PTH", # flake8-use-pathlib
-  "RET", # flake8-return
-  "RSE", # flake8-raise
-  "RUF", # Ruff-specific rules
-  "S", # flake8-bandit
-  "SIM", # flake8-simplify
-  "T20", # flake8-print
-  "TRY", # tryceratops
-  "UP", # pyupgrade
-  "W", # pycodestyle warning
-]
-ignore = [
-  "D203", # incorrect-blank-line-before-class (conflicts with "D211": blank-line-before-class)
-  "D213", # multi-line-summary-second-line (conflicts with "D212": multi-line-summary-first-line)
-]
-
-[tool.ruff.lint.per-file-ignores]
-"test_*.py" = [
-  "D102", # undocumented-public-method
-]
-
-[tool.ruff.lint.isort]
-combine-as-imports = true
-# If a class or a top-level function directly following imports, there will be two blank lines.
-# If global variables directly following imports, by default there will only be one blank line.
-# PEP 8 leaves it up to our discretion to decide what is best here.
-lines-after-imports = 2
-# First party imports appear as a separate section.
-known-first-party = ["src"]
+# Ruff configured in /ruff.toml
 
 
 # pyright
