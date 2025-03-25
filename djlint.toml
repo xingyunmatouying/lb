@@ -1,0 +1,12 @@
+# Configuration file for djLint formatter and linter for HTML templates.
+
+# Use jinja profile.
+profile = "jinja"
+# Use two spaces for indentation.
+indent = 2
+# The GitHub editor is 127 chars wide.
+max_line_length = 127
+# Don't let attributes undermine the max line length.
+max_attribute_length = 127
+# Allow blank lines.
+max_blank_lines = 1
