@@ -1,4 +1,4 @@
-# Configuration file for djLint formatter and linter for HTML templates.
+# Configuration file for djLint - formatter and linter for HTML templates.
 
 # Use jinja profile.
 profile = "jinja"

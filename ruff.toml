@@ -1,4 +1,4 @@
-# Configuration file for Ruff Python linter and code formatter.
+# Configuration file for Ruff - Python linter and code formatter.
 
 # Using a src/tests layout.
 src = [
