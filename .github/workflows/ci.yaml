@@ -18,8 +18,8 @@ jobs:
       check-style-python: ${{ steps.check-style-python.outputs.changed }}
       check-style-toml: ${{ steps.check-style-toml.outputs.changed }}
       check-types: ${{ steps.check-types.outputs.changed }}
-      check-tests: ${{ steps.check-types.outputs.changed }}
-      check-coverage: ${{ steps.check-tests.outputs.changed }}
+      run-tests: ${{ steps.check-types.outputs.changed }}
+      check-coverage: ${{ steps.run-tests.outputs.changed }}
     steps:
       # Setup
       - name: 🛒 Checkout repo
@@ -57,8 +57,8 @@ jobs:
             '**/*.py' \
             'requirements/leaderboard.txt' \
             'pyproject.toml' \
-      - name: 🧪 Consider check-tests
-        id: check-tests
+      - name: 🧪 Consider run-tests
+        id: run-tests
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
@@ -176,15 +176,15 @@ jobs:
           pyright --verbose
 
   # Run tests on mac, windows, and ubuntu
-  check-tests:
-    name: 🧪 check-tests / ${{ matrix.name }}
+  run-tests:
+    name: 🧪 run-tests / ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     needs:
       - determine-which-jobs
       - check-style-jinja
       - check-types
     if: |
-      needs.determine-which-jobs.outputs.check-tests == 'true' &&
+      needs.determine-which-jobs.outputs.run-tests == 'true' &&
       needs.check-style-jinja.result != 'failure' &&
       needs.check-types.result != 'failure'
     strategy:
@@ -210,16 +210,36 @@ jobs:
         run: |
           python -m unittest discover -v -s tests -p test_*.py
 
+  # Ensure that the tests did not fail
+  # This is done because it doesn't seem to be possible to have both:
+  # - a matrix job which is skippable
+  # - a branch protection rule requiring that matrix job
+  # This is because the name of the jobs depend on whether or not they were skipped
+  check-test-result:
+    name: 🩺 Check test result / 🐧 ubuntu
+    runs-on: ubuntu-latest
+    needs: run-tests
+    if: needs.run-tests.result != 'skipped'
+    steps:
+      - name: 🙄 Check result
+        run: |
+          if ${{ needs.run-tests.result == 'success' }}; then
+            echo "run-tests succeeded!"
+          else
+            echo "run-tests did not succeeded!"
+            exit 1
+          fi
+
   # Run coverage and generate artifacts
   check-coverage:
     name: 🔬 check-coverage / 🐧 ubuntu
     runs-on: ubuntu-latest
     needs:
       - determine-which-jobs
-      - check-tests
+      - run-tests
     if: |
       needs.determine-which-jobs.outputs.check-coverage == 'true' &&
-      needs.check-tests.result != 'failure'
+      needs.run-tests.result != 'failure'
     steps:
       # Setup
       - name: 🛒 Checkout repo
