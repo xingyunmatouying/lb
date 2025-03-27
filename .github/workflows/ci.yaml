@@ -28,6 +28,7 @@ jobs:
         with:
           fetch-depth: 0
       # Determine which jobs need to be run based on which files have changed
+      # linting and formatting (jinja)
       - name: 🐱‍👤 Determine check-style-jinja
         id: check-style-jinja
         uses: ./.github/actions/check-dependencies-changed
@@ -36,6 +37,7 @@ jobs:
             '**/*.jinja' \
             'requirements/style-jijna.txt' \
             'djlint.toml' \
+      # formatting (css, json)
       - name: 🧚 Determine check-style-prettier
         id: check-style-prettier
         uses: ./.github/actions/check-dependencies-changed
@@ -44,6 +46,7 @@ jobs:
             '**/*.css' \
             '**/*.json' \
             '.prettierignore' \
+      # linting and formatting (python)
       - name: 🤵 Determine check-style-python
         id: check-style-python
         uses: ./.github/actions/check-dependencies-changed
@@ -52,12 +55,14 @@ jobs:
             '**/*.py' \
             'requirements/style-python.txt' \
             'ruff.toml' \
+      # formatting (toml)
       - name: 👷 Determine check-style-toml
         id: check-style-toml
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
             '**/*.toml' \
+      # static type checking
       - name: ⌨️ Determine check-types
         id: check-types
         uses: ./.github/actions/check-dependencies-changed
@@ -66,6 +71,7 @@ jobs:
             '**/*.py' \
             'requirements/leaderboard.txt' \
             'pyproject.toml' \
+      # tests
       - name: 🧪 Determine run-tests
         id: run-tests
         uses: ./.github/actions/check-dependencies-changed
@@ -74,6 +80,7 @@ jobs:
             '**/*.jinja' \
             '**/*.py' \
             'requirements/leaderboard.txt' \
+      # coverage
       - name: 🔬 Determine check-coverage
         id: check-coverage
         uses: ./.github/actions/check-dependencies-changed
