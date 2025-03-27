@@ -1,5 +1,7 @@
 {
   // general
+  // Use eol=LF
+  "files.eol": "\n",
   // Don't format on save (enabled on a case by case basis)
   "editor.formatOnSave": false,
   // Trailing whitespace is trimmed on save for all files
