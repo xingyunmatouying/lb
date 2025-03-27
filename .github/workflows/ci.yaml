@@ -216,7 +216,7 @@ jobs:
   # - a branch protection rule requiring that matrix job
   # This is because the name of the jobs depend on whether or not they were skipped
   check-test-result:
-    name: 🩺 Check test result / 🐧 ubuntu
+    name: 🩺 check-test-result / 🐧 ubuntu
     runs-on: ubuntu-latest
     needs: run-tests
     if: needs.run-tests.result != 'skipped'
