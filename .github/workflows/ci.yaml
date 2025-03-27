@@ -131,7 +131,7 @@ jobs:
       # Format
       - name: 🧹 Check format (prettier)
         run: |
-          npx prettier --log-level debug --check .
+          npx prettier . --check --log-level debug
 
   # Check linting and formatting (python)
   check-style-python:
@@ -200,11 +200,11 @@ jobs:
           node-version: latest
       - name: 📦 Install dependencies (node.js)
         run: |
-          npm install -g pyright
+          npm install pyright
       # Type check
       - name: 🗿 Type check with pyright
         run: |
-          pyright --verbose
+          npx pyright --verbose
 
   # Run tests on mac, windows, and ubuntu
   run-tests:
