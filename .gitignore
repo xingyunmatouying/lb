@@ -4,9 +4,6 @@
 # Virtual environment
 .venv/
 
-# Node modules
-node_modules/
-
 # Artifacts from ruff
 .ruff_cache/
 
