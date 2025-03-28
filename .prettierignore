@@ -4,5 +4,7 @@
 !*.css
 # ... and json ...
 !*.json
+# ... and yaml ...
+!*.yaml
 # ... but make sure to check subdirectories (otherwise this doesn't work).
 !*/
