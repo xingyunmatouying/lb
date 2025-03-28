@@ -129,11 +129,11 @@ jobs:
           node-version: latest
       - name: 📦 Install dependencies (node.js)
         run: |
-          npm install prettier
+          npm install -g prettier
       # Format
       - name: 🧹 Check format (prettier)
         run: |
-          npx prettier . --check --log-level debug
+          prettier . --check --log-level debug
 
   # Check linting (css)
   check-style-css:
@@ -279,11 +279,11 @@ jobs:
           node-version: latest
       - name: 📦 Install dependencies (node.js)
         run: |
-          npm install pyright
+          npm install -g pyright
       # Type check
       - name: 🗿 Type check with pyright
         run: |
-          npx pyright --verbose
+          pyright --verbose
 
   # Run tests on mac, windows, and ubuntu
   run-tests:
