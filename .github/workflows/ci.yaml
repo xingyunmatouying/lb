@@ -182,11 +182,11 @@ jobs:
       # Format
       - name: 🧹 Check format (djlint)
         run: |
-          djlint templates -e jinja --check
+          djlint templates --extension jinja --check
       # Lint
       - name: ✨ Check lint (djlint)
         run: |
-          djlint templates -e jinja --lint
+          djlint templates --extension jinja --lint
 
   # Check linting (markdown)
   check-style-markdown:
@@ -319,7 +319,7 @@ jobs:
       # Run tests
       - name: ⚗️ Run unit tests
         run: |
-          python -m unittest discover -v -s tests -p test_*.py
+          python -m unittest discover --verbose --start-directory tests --pattern test_*.py
 
   # Ensure that the tests did not fail
   # This is done because it doesn't seem to be possible to have both:

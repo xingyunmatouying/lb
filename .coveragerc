@@ -2,7 +2,7 @@
 
 [run]
 branch = true
-command_line = -m unittest discover -v -s tests -p test_*.py
+command_line = -m unittest discover --verbose --start-directory tests --pattern test_*.py
 dynamic_context = test_function
 
 source =
