@@ -96,7 +96,7 @@ npm install -g pyright
 
 Run static type checking
 
-``` shell
+```shell
 pyright --verbose
 ```
 
