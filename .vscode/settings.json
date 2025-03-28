@@ -40,6 +40,9 @@
   // markdown
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.markdownlint": "explicit"
+    },
     "editor.formatOnSave": true
   },
   // python
