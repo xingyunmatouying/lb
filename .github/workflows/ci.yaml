@@ -155,8 +155,7 @@ jobs:
           node-version: latest
       - name: 📦 Install dependencies (node.js)
         run: |
-          npm -g install stylelint
-          npm -g install stylelint-config-standard
+          npm -g install stylelint stylelint-config-standard
       # Lint
       - name: ✨ Check lint (stylelint)
         run: |
