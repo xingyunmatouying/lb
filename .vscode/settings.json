@@ -39,7 +39,10 @@
   },
   // markdown
   "[markdown]": {
-    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.markdownlint": "explicit"
+    },
     "editor.formatOnSave": true
   },
   // python
@@ -59,10 +62,8 @@
   },
   // yaml
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.tabSize": 2
-  },
-  "yaml.format.enable": true,
-  "yaml.format.printWidth": 127
+  }
 }

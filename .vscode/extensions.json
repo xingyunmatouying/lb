@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    // css (and json)
+    // css (and json, md, yaml)
     "esbenp.prettier-vscode",
     // jinja
     "monosans.djlint",
@@ -14,6 +14,6 @@
     // toml
     "tamasfe.even-better-toml",
     // yaml
-    "redhat.vscode-yaml"
+    "github.vscode-github-actions"
   ]
 }

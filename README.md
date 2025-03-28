@@ -4,7 +4,8 @@ Automatically updating Lichess bot leaderboards.
 
 ## Overview
 
-This is a python script which queries the Lichess API for online bots. Using the online bot data, combined with data from prior runs, it outputs html files which contain leaderboards for all Lichess time controls and variants available to bots.
+This is a python script which queries the Lichess API for online bots. Using the online bot data, combined with data from prior
+runs, it outputs html files which contain leaderboards for all Lichess time controls and variants available to bots.
 
 ## Generating the leaderboards locally
 
@@ -50,7 +51,8 @@ This project was developed in VS Code. The repo contains several recommended ext
 
 ### CI
 
-The CI for this project includes several checks which are configured as GitHub actions. All of these can be performed locally, too.
+The CI for this project includes several checks which are configured as GitHub actions. All of these can be performed locally,
+too.
 
 #### **Setup**
 
@@ -96,7 +98,7 @@ npm install -g pyright
 
 Run static type checking
 
-``` shell
+```shell
 pyright --verbose
 ```
 
