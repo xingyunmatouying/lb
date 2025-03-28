@@ -1,5 +1,5 @@
 [project]
 name = "lichess-bot-leaderboard"
-version = "0.1.0"
-description = "A leaderboard for lichess bots"
+version = "0.2.0"
+description = "Automatically updating leaderboards for Lichess bots."
 requires-python = ">=3.11"
