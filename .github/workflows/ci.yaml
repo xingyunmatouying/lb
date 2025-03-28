@@ -92,7 +92,7 @@ jobs:
           pathspec: |-
             '**/*.py' \
             'requirements/leaderboard.txt' \
-            'pyproject.toml' \
+            'pyrightconfig.json' \
       # tests
       - name: 🧪 Determine run-tests
         id: run-tests
