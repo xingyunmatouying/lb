@@ -45,6 +45,7 @@ jobs:
           pathspec: |-
             '**/*.css' \
             '**/*.json' \
+            '**/*.jsonc' \
             '**/*.md' \
             '**/*.yaml' \
             '.prettierignore' \
