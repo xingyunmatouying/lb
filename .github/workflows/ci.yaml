@@ -203,7 +203,8 @@ jobs:
       # Setup
       - name: 🛒 Checkout repo
         uses: actions/checkout@v4
-      - name: 📜 Set up markdownlint
+      # Lint
+      - name: ✨ Check lint (markdownlint)
         uses: DavidAnson/markdownlint-cli2-action@v19
         with:
           globs: "**/*.md"
