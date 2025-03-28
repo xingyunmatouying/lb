@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    // css (and json, etc.)
+    // css (and json, md, yaml)
     "esbenp.prettier-vscode",
     // jinja
     "monosans.djlint",

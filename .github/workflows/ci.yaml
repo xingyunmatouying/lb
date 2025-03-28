@@ -37,7 +37,7 @@ jobs:
             '**/*.jinja' \
             'requirements/style-jijna.txt' \
             'djlint.toml' \
-      # formatting (css, json, yaml)
+      # formatting (css, json, md, yaml)
       - name: 🧚 Determine check-style-prettier
         id: check-style-prettier
         uses: ./.github/actions/check-dependencies-changed
@@ -45,6 +45,7 @@ jobs:
           pathspec: |-
             '**/*.css' \
             '**/*.json' \
+            '**/*.md' \
             '**/*.yaml' \
             '.prettierignore' \
       # linting and formatting (python)
@@ -119,7 +120,7 @@ jobs:
         run: |
           djlint templates -e jinja --lint
 
-  # Check formatting (css, json, yaml)
+  # Check formatting (css, json, md, yaml)
   check-style-prettier:
     name: 🧚 check-style-prettier / 🐧 ubuntu
     runs-on: ubuntu-latest
