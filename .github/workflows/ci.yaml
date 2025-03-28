@@ -135,7 +135,7 @@ jobs:
         run: |
           npx prettier . --check --log-level debug
 
-  # Check formatting (css, json, md, yaml)
+  # Check linting (css)
   check-style-css:
     name: 👨‍🎨 check-style-css / 🐧 ubuntu
     runs-on: ubuntu-latest
