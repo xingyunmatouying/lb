@@ -159,7 +159,7 @@ jobs:
       # Lint
       - name: ✨ Check lint (stylelint)
         run: |
-          stylelint **/*.css
+          stylelint **/*.css --ignore-path .gitignore --formatter verbose
 
   # Check linting and formatting (jinja)
   check-style-jinja:
