@@ -55,7 +55,7 @@ jobs:
             '**/*.py' \
             'requirements/style-python.txt' \
             'ruff.toml' \
-      # formatting (toml)
+      # linting and formatting (toml)
       - name: 👷 Determine check-style-toml
         id: check-style-toml
         uses: ./.github/actions/check-dependencies-changed
@@ -161,7 +161,7 @@ jobs:
         run: |
           ruff check
 
-  # Check formatting (toml)
+  # Check linting and formatting (toml)
   check-style-toml:
     name: 👷 check-style-toml / 🐧 ubuntu
     runs-on: ubuntu-latest
@@ -175,9 +175,13 @@ jobs:
       - name: 🚿 Set up Taplo
         uses: uncenter/setup-taplo@v1
       # Format
-      - name: 🧹 Check format (Taplo)
+      - name: 🧹 Check format (taplo)
         run: |
           taplo fmt --check
+      # Lint
+      - name: ✨ Check lint (taplo)
+        run: |
+          taplo check
 
   # Run static type checking
   check-types:
