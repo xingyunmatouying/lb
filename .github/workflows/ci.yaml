@@ -50,6 +50,7 @@ jobs:
             '**/*.md' \
             '**/*.yaml' \
             '.prettierignore' \
+            '.prettierrc.json' \
       # linting (markdown)
       - name: 👩‍💼 Determine check-style-markdown
         id: check-style-markdown
