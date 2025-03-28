@@ -280,8 +280,8 @@ jobs:
       - name: 📦 Install dependencies (node.js)
         run: |
           npm install -g pyright
-      # Type check
-      - name: 🗿 Type check with pyright
+      # Static type checking
+      - name: 🗿 Perform static type checking (pyright)
         run: |
           pyright --verbose
 
