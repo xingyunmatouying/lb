@@ -5,10 +5,6 @@ description = "A leaderboard for lichess bots"
 requires-python = ">=3.11"
 
 
-# djLint configured in /djlint.toml
-# Ruff configured in /ruff.toml
-
-
 # pyright
 [tool.pyright]
 pythonVersion = "3.11"
