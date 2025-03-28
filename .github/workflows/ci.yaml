@@ -57,6 +57,7 @@ jobs:
         with:
           pathspec: |-
             '**/*.md' \
+            '.markdownlint.jsonc' \
       # linting and formatting (python)
       - name: 🤵 Determine check-style-python
         id: check-style-python
