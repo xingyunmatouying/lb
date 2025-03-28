@@ -17,29 +17,3 @@ exclude = [
   "**/__pycache__",
   ".venv",
 ]
-
-
-# coverage
-[tool.coverage.run]
-branch = true
-command_line = "-m unittest discover -v -s tests -p test_*.py"
-dynamic_context = "test_function"
-source = [
-  "src",
-]
-omit = [
-  "**/__pycache__",
-  ".venv",
-]
-
-[tool.coverage.report]
-# Don't fail due to missing coverage
-fail_under = 0
-show_missing = true
-
-[tool.coverage.html]
-directory = "htmlcov"
-show_contexts = true
-
-[tool.coverage.xml]
-output = "coverage.xml"

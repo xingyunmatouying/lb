@@ -111,7 +111,7 @@ jobs:
             '**/*.jinja' \
             '**/*.py' \
             'requirements/leaderboard.txt' \
-            'pyproject.toml' \
+            '.coveragerc' \
 
   # Check formatting (css, json, md, yaml)
   check-style-prettier:
