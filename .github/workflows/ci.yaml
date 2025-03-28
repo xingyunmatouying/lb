@@ -326,10 +326,10 @@ jobs:
           pip install -r requirements/all.txt
       # Run tests with coverage
       - name: ☂️ Run unittest with coverage
-        run: |
+        run:
           coverage run
       # Coverage xml
-      - name: 📜 Generate coverage xml
+      - name: 📃 Generate coverage xml
         run: |
           coverage xml
         # Comment about code coverage on PRs
