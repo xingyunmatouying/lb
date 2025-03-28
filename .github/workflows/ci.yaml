@@ -14,8 +14,8 @@ jobs:
     name: 🔮 determine-which-jobs / 🐧 ubuntu
     runs-on: ubuntu-latest
     outputs:
-      check-style-jijna: ${{ steps.check-style-jinja.outputs.changed }}
       check-style-prettier: ${{ steps.check-style-prettier.outputs.changed }}
+      check-style-jijna: ${{ steps.check-style-jinja.outputs.changed }}
       check-style-markdown: ${{ steps.check-style-markdown.outputs.changed }}
       check-style-python: ${{ steps.check-style-python.outputs.changed }}
       check-style-toml: ${{ steps.check-style-toml.outputs.changed }}
@@ -29,15 +29,6 @@ jobs:
         with:
           fetch-depth: 0
       # Determine which jobs need to be run based on which files have changed
-      # linting and formatting (jinja)
-      - name: 🐱‍👤 Determine check-style-jinja
-        id: check-style-jinja
-        uses: ./.github/actions/check-dependencies-changed
-        with:
-          pathspec: |-
-            '**/*.jinja' \
-            'requirements/style-jijna.txt' \
-            'djlint.toml' \
       # formatting (css, json, md, yaml)
       - name: 🧚 Determine check-style-prettier
         id: check-style-prettier
@@ -51,6 +42,15 @@ jobs:
             '**/*.yaml' \
             '.prettierignore' \
             '.prettierrc.json' \
+      # linting and formatting (jinja)
+      - name: 🐱‍👤 Determine check-style-jinja
+        id: check-style-jinja
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
+            '**/*.jinja' \
+            'requirements/style-jijna.txt' \
+            'djlint.toml' \
       # linting (markdown)
       - name: 👩‍💼 Determine check-style-markdown
         id: check-style-markdown
@@ -104,6 +104,28 @@ jobs:
             'requirements/leaderboard.txt' \
             'pyproject.toml' \
 
+  # Check formatting (css, json, md, yaml)
+  check-style-prettier:
+    name: 🧚 check-style-prettier / 🐧 ubuntu
+    runs-on: ubuntu-latest
+    needs: determine-which-jobs
+    if: needs.determine-which-jobs.outputs.check-style-prettier == 'true'
+    steps:
+      # Setup
+      - name: 🛒 Checkout repo
+        uses: actions/checkout@v4
+      - name: 🐸 Set up node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: 📦 Install dependencies (node.js)
+        run: |
+          npm install prettier
+      # Format
+      - name: 🧹 Check format (prettier)
+        run: |
+          npx prettier . --check --log-level debug
+
   # Check linting and formatting (jinja)
   check-style-jinja:
     name: 🐱‍👤 check-style-jinja / 🐧 ubuntu
@@ -130,28 +152,6 @@ jobs:
       - name: ✨ Check lint (djlint)
         run: |
           djlint templates -e jinja --lint
-
-  # Check formatting (css, json, md, yaml)
-  check-style-prettier:
-    name: 🧚 check-style-prettier / 🐧 ubuntu
-    runs-on: ubuntu-latest
-    needs: determine-which-jobs
-    if: needs.determine-which-jobs.outputs.check-style-prettier == 'true'
-    steps:
-      # Setup
-      - name: 🛒 Checkout repo
-        uses: actions/checkout@v4
-      - name: 🐸 Set up node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: latest
-      - name: 📦 Install dependencies (node.js)
-        run: |
-          npm install prettier
-      # Format
-      - name: 🧹 Check format (prettier)
-        run: |
-          npx prettier . --check --log-level debug
 
   # Check linting (markdown)
   check-style-markdown:
