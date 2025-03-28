@@ -1,6 +1,6 @@
 # Lichess Bot Leaderboard
 
-Automatically updating Lichess bot leaderboards.
+Automatically updating leaderboards for Lichess bots.
 
 ## Overview
 

@@ -2,6 +2,7 @@
   "recommendations": [
     // css (and json, md, yaml)
     "esbenp.prettier-vscode",
+    "stylelint.vscode-stylelint",
     // jinja
     "monosans.djlint",
     "samuelcolvin.jinjahtml",

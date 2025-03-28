@@ -1,6 +1,6 @@
 /* Main container and default properties */
 body {
-  background-color: rgb(232, 232, 232);
+  background-color: rgb(232 232 232);
   font-family: sans-serif;
   margin: 0;
   padding: 0;
@@ -9,7 +9,7 @@ body {
 /* The header & footer share some styling */
 header,
 footer {
-  background-color: rgb(50, 50, 50);
+  background-color: rgb(50 50 50);
   color: white;
   text-align: center;
   width: 100%;
@@ -32,6 +32,13 @@ footer {
   font-size: 0.8em;
 }
 
+/* Footer links */
+footer a {
+  color: rgb(0 127 255);
+  /* No underline */
+  text-decoration: none;
+}
+
 /* Header nav links look like buttons */
 nav a {
   color: white;
@@ -47,14 +54,7 @@ nav a {
 /* Header nav links have a different background for the active page and for hovering */
 nav a.active,
 nav a:hover {
-  background-color: rgb(85, 85, 85);
-}
-
-/* Footer links */
-footer a {
-  color: rgb(0, 127, 255);
-  /* No underline */
-  text-decoration: none;
+  background-color: rgb(85 85 85);
 }
 
 /* Footer links get the underline back on hover */
@@ -71,7 +71,7 @@ main {
   padding: 20px;
   border-radius: 5px;
   /* Look slightly 3d */
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 5px rgba(0 0 0 / 10%);
 }
 
 /* Leaderboard table */
@@ -85,19 +85,19 @@ table {
 /* Table header and table data share some styling */
 th,
 td {
-  border: 1px solid rgb(200, 200, 200);
+  border: 1px solid rgb(200 200 200);
   padding: 8px;
   text-align: left;
 }
 
 /* Emphasize the table header row with a different background color */
 th {
-  background-color: rgb(232, 232, 232);
+  background-color: rgb(232 232 232);
 }
 
 /* Alternate colors in table rows */
 tr:nth-child(even) {
-  background-color: rgb(242, 242, 242);
+  background-color: rgb(242 242 242);
 }
 
 /* Positive delta */
