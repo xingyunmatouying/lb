@@ -50,6 +50,7 @@ jobs:
         with:
           pathspec: |-
             '**/*.css' \
+            '.gitignore' \
             '.stylelintrc.json' \
       # linting and formatting (jinja)
       - name: 🐱‍👤 Determine check-style-jinja
