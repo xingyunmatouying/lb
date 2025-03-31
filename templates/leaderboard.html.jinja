@@ -4,31 +4,31 @@
   <table>
     <thead>
       <tr>
-        <th>#</th>
-        <th>Δ</th>
-        <th>Name</th>
-        <th>⚑</th>
-        <th>Rating</th>
-        <th>Δ</th>
-        <th># Games</th>
-        <th>Created</th>
-        <th>Last Seen</th>
+        <th class="col-rank">#</th>
+        <th class="col-delta-rank">Δ</th>
+        <th class="col-name">Name</th>
+        <th class="col-flag">⚑</th>
+        <th class="col-rating">Rating</th>
+        <th class="col-delta-rating">Δ</th>
+        <th class="col-games">Games</th>
+        <th class="col-created">Created</th>
+        <th class="col-last-seen">Last Seen</th>
       </tr>
     </thead>
     <tbody>
       {%- for row in leaderboard_rows %}
         <tr>
-          <td>{{ row.rank }}</td>
-          <td {% if row.delta_rank.is_positive %}class="delta-pos"{% elif row.delta_rank.is_negative %}class="delta-neg"{% endif -%}>
+          <td class="col-rank">{{ row.rank }}</td>
+          <td class="col-delta-rank {% if row.delta_rank.is_positive %}delta-pos{% elif row.delta_rank.is_negative %}delta-neg{% endif -%}">
             {{ row.delta_rank_str }}
           </td>
-          <td>{{ row.username }}</td>
-          <td>{{ row.flag }}</td>
-          <td>{{ row.rating }}</td>
-          <td>{{ row.delta_rating }}</td>
-          <td>{{ row.games }}</td>
-          <td>{{ row.created_date }}</td>
-          <td>{{ row.last_seen_date }}</td>
+          <td class="col-name">{{ row.username }}</td>
+          <td class="col-flag">{{ row.flag }}</td>
+          <td class="col-rating">{{ row.rating }}</td>
+          <td class="col-delta-rating">{{ row.delta_rating }}</td>
+          <td class="col-games">{{ row.games }}</td>
+          <td class="col-created">{{ row.created_date }}</td>
+          <td class="col-last-seen">{{ row.last_seen_date }}</td>
         </tr>
       {%- endfor %}
     </tbody>
