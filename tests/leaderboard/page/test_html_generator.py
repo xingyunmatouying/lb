@@ -5,7 +5,22 @@ import unittest
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.leaderboard_row import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
-from src.leaderboard.page.html_generator import HtmlGenerator
+from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta
+
+
+class TestLeaderboardDelta(unittest.TestCase):
+  """Tests for LeaderboardDelta."""
+
+  def test_for_delta_rank(self) -> None:
+    self.assertEqual(LeaderboardDelta.for_delta_rank(1, False), LeaderboardDelta("↑1", "delta-pos"))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(-1, False), LeaderboardDelta("↓1", "delta-neg"))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(0, False), LeaderboardDelta("", ""))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(0, True), LeaderboardDelta("🆕", ""))
+
+  def for_delta_rating(self) -> None:
+    self.assertEqual(LeaderboardDelta.for_delta_rating(1), LeaderboardDelta("(+1)", "delta-pos"))
+    self.assertEqual(LeaderboardDelta.for_delta_rating(-1), LeaderboardDelta("(-1)", "delta-neg"))
+    self.assertEqual(LeaderboardDelta.for_delta_rating(0), LeaderboardDelta("", ""))
 
 
 class TestHtmlGenerator(unittest.TestCase):
