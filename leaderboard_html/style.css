@@ -32,11 +32,14 @@ footer {
   font-size: 0.8em;
 }
 
+/* No underline for any links by default */
+a {
+  text-decoration: none;
+}
+
 /* Header nav links look like buttons */
 nav a {
   color: white;
-  /* No underline */
-  text-decoration: none;
   /* Fade in and out */
   transition: background-color 0.3s;
   margin: 0 5px;
@@ -47,15 +50,11 @@ nav a {
 /* Footer links */
 footer a {
   color: rgb(0 127 255);
-  /* No underline */
-  text-decoration: none;
 }
 
 /* Name column links */
 .col-name a {
   color: black;
-  /* No underline */
-  text-decoration: none;
 }
 
 /* Header nav links have a different background for the active page and for hovering */
