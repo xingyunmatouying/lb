@@ -30,8 +30,8 @@ class LeaderboardGenerator:
     self.log_writer.info("Generating leaderboard...")
 
     # Generate leaderboard data
-    leaderboard_data_generator = DataGenerator(self.file_system, self.lichess_client, self.time_provider)
-    ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
+    data_generator = DataGenerator(self.file_system, self.lichess_client, self.time_provider)
+    ranked_rows_by_perf_type = data_generator.generate_leaderboard_data()
 
     # Save the leaderboard data
     for perf_type, rows in ranked_rows_by_perf_type.items():
