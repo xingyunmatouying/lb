@@ -27,10 +27,9 @@ class LeaderboardGenerator:
     """Generate the leaderboards."""
     # Start timer
     start_time = time.time()
-
     self.log_writer.info("Generating leaderboard...")
 
-    # Generate leaderboard
+    # Generate leaderboard data
     leaderboard_data_generator = DataGenerator(self.file_system, self.lichess_client, self.time_provider)
     ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
 
@@ -38,10 +37,11 @@ class LeaderboardGenerator:
     for perf_type, rows in ranked_rows_by_perf_type.items():
       self.file_system.save_file_lines(file_paths.data_path(perf_type), [row.to_json() for row in rows])
 
+    # Generate leaderboard html
     html_generator = HtmlGenerator(self.time_provider)
     html_by_name = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
 
-    # save the leaderboard html
+    # Save the leaderboard html
     for name, html in html_by_name.items():
       self.file_system.save_file_lines(file_paths.html_path(name), [html])
 
