@@ -86,8 +86,10 @@ table {
   table-layout: fixed;
   width: 1000px;
   margin: 20px auto;
-  /* No double borders */
-  border-collapse: collapse;
+  border-collapse: separate;
+  border: 1px solid rgb(232 232 232);
+  border-radius: 5px;
+  border-spacing: 0;
 }
 
 /* Table header and table data share some styling */
