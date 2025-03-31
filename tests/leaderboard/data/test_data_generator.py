@@ -16,6 +16,7 @@ from src.leaderboard.data import data_generator
 from src.leaderboard.data.data_generator import DataGenerator
 from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import CurrentBotInfoOnlyUpdate, LeaderboardUpdate
+from src.leaderboard.fs import file_paths
 from src.leaderboard.li.bot_user import PerfType
 
 
@@ -117,9 +118,6 @@ def remove_whitespace(whitespace_str: str) -> str:
 class TestGenerator(unittest.TestCase):
   """Tests for generator functions."""
 
-  def test_get_leaderboard_data_file_name(self) -> None:
-    self.assertEqual(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), "leaderboard_data/blitz.ndjson")
-
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
     previous_rows_by_perf_type = data_generator.load_all_previous_rows(file_system)
@@ -130,8 +128,8 @@ class TestGenerator(unittest.TestCase):
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
     blitz_leaderboard = [BOT_2_ROW_BLITZ.to_json(), BOT_1_ROW_BLITZ.to_json()]
-    file_system.save_file_lines(data_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_leaderboard)
-    file_system.save_file_lines(data_generator.get_leaderboard_data_file_name(PerfType.BLITZ), blitz_leaderboard)
+    file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_leaderboard)
+    file_system.save_file_lines(file_paths.data_path(PerfType.BLITZ), blitz_leaderboard)
     previous_rows_by_perf_type = data_generator.load_all_previous_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
@@ -220,7 +218,7 @@ class TestDataGenerator(unittest.TestCase):
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
     bullet_ndjson = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
-    file_system.save_file_lines(data_generator.get_leaderboard_data_file_name(PerfType.BULLET), bullet_ndjson)
+    file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_ndjson)
 
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
