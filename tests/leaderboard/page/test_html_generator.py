@@ -54,3 +54,17 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
     self.assertIn("↓3", bullet_html)
     self.assertIn('class="col-delta-rank delta-neg"', bullet_html)
+
+  def test_generate_positive_delta_rating(self) -> None:
+    html_generator = LeaderboardHtmlGenerator(FixedTimeProvider(0))
+    ranked_rows_by_perf_type = {PerfType.BULLET: [LeaderboardRow.from_json('{"delta_rating": 3}')]}
+    bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
+    self.assertIn("(+3)", bullet_html)
+    self.assertIn('class="col-delta-rating delta-pos"', bullet_html)
+
+  def test_generate_negative_delta_rating(self) -> None:
+    html_generator = LeaderboardHtmlGenerator(FixedTimeProvider(0))
+    ranked_rows_by_perf_type = {PerfType.BULLET: [LeaderboardRow.from_json('{"delta_rating": -3}')]}
+    bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
+    self.assertIn("(-3)", bullet_html)
+    self.assertIn('class="col-delta-rating delta-neg"', bullet_html)

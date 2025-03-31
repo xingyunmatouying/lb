@@ -41,12 +41,20 @@ class LeaderboardDelta:
     """Construct a delta from an int."""
     return LeaderboardDelta(delta > 0, delta < 0, abs(delta))
 
-  def to_string(self) -> str:
-    """Return ↑..., ↓..., or blank."""
+  def to_arrow_string(self) -> str:
+    """Return ↑n, ↓n, or blank."""
     if self.is_positive:
       return f"↑{self.value_abs}"
     if self.is_negative:
       return f"↓{self.value_abs}"
+    return ""
+
+  def to_paren_string(self) -> str:
+    """Return (+n), (-n), or blank."""
+    if self.is_positive:
+      return f"(+{self.value_abs})"
+    if self.is_negative:
+      return f"(-{self.value_abs})"
     return ""
 
 
@@ -60,7 +68,8 @@ class HtmlLeaderboardRow:
   username: str
   flag: str
   rating: int
-  delta_rating: int
+  delta_rating: LeaderboardDelta
+  delta_rating_str: str
   games: int
   created_date: str
   last_seen_date: str
@@ -69,7 +78,9 @@ class HtmlLeaderboardRow:
   def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     delta_rank = LeaderboardDelta.from_delta(row.delta_rank)
-    delta_rank_str = "🆕" if row.is_new else delta_rank.to_string()
+    delta_rank_str = "🆕" if row.is_new else delta_rank.to_arrow_string()
+    delta_rating = LeaderboardDelta.from_delta(row.delta_rating)
+    delta_rating_str = delta_rating.to_paren_string()
     return HtmlLeaderboardRow(
       row.rank,
       delta_rank,
@@ -77,7 +88,8 @@ class HtmlLeaderboardRow:
       row.bot_info.profile.username,
       row.bot_info.profile.flag,
       row.bot_info.perf.rating,
-      row.delta_rating,
+      delta_rating,
+      delta_rating_str,
       row.bot_info.perf.games,
       date_formatter.format_yyyy_mm_dd(row.bot_info.profile.created_time),
       date_formatter.format_yyyy_mm_dd(row.bot_info.last_seen_time),

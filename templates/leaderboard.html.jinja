@@ -25,7 +25,9 @@
           <td class="col-name">{{ row.username }}</td>
           <td class="col-flag">{{ row.flag }}</td>
           <td class="col-rating">{{ row.rating }}</td>
-          <td class="col-delta-rating">{{ row.delta_rating }}</td>
+          <td class="col-delta-rating {% if row.delta_rating.is_positive %}delta-pos{% elif row.delta_rating.is_negative %}delta-neg{% endif -%}">
+            {{ row.delta_rating_str }}
+          </td>
           <td class="col-games">{{ row.games }}</td>
           <td class="col-created">{{ row.created_date }}</td>
           <td class="col-last-seen">{{ row.last_seen_date }}</td>
