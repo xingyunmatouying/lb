@@ -20,7 +20,9 @@
         <tr>
           <td class="col-rank">{{ row.rank }}</td>
           <td class="col-delta-rank {{ row.delta_rank.html_class }}">{{ row.delta_rank.formatted_value }}</td>
-          <td class="col-name">{{ row.username }}</td>
+          <td class="col-name">
+            <a href="https://lichess.org/@/{{ row.username }}" target="_blank" rel="noopener noreferrer">{{ row.username }}</a>
+          </td>
           <td class="col-flag">{{ row.flag }}</td>
           <td class="col-rating">{{ row.rating }}</td>
           <td class="col-delta-rating {{ row.delta_rating.html_class }}">{{ row.delta_rating.formatted_value }}</td>

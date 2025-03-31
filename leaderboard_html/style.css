@@ -51,14 +51,22 @@ nav a {
   border-radius: 5px;
 }
 
+/* Name column links */
+.col-name a {
+  color: black;
+  /* No underline */
+  text-decoration: none;
+}
+
 /* Header nav links have a different background for the active page and for hovering */
 nav a.active,
 nav a:hover {
   background-color: rgb(85 85 85);
 }
 
-/* Footer links get the underline back on hover */
-footer a:hover {
+/* Links which get the underline back on hover */
+footer a:hover,
+.col-name a:hover {
   text-decoration: underline;
 }
 

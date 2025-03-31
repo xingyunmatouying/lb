@@ -27,13 +27,15 @@ class TestHtmlGenerator(unittest.TestCase):
     html_generator = LeaderboardHtmlGenerator(FixedTimeProvider(0))
     ranked_rows_by_perf_type = {
       PerfType.BULLET: [
-        LeaderboardRow.from_json("""{"bot_info": {"profile": {"username": "Bot-2"}}}"""),
         LeaderboardRow.from_json("""{"bot_info": {"profile": {"username": "Bot-1"}}}"""),
+        LeaderboardRow.from_json("""{"bot_info": {"profile": {"username": "Bot-2"}}}"""),
       ]
     }
     bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
-    self.assertIn("Bot-2", bullet_html)
     self.assertIn("Bot-1", bullet_html)
+    self.assertIn("https://lichess.org/@/Bot-1", bullet_html)
+    self.assertIn("Bot-2", bullet_html)
+    self.assertIn("https://lichess.org/@/Bot-2", bullet_html)
 
   def test_generate_new_bot(self) -> None:
     html_generator = LeaderboardHtmlGenerator(FixedTimeProvider(0))
