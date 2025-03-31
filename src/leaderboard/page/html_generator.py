@@ -30,32 +30,30 @@ class MainFrame:
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardDelta:
-  """Conveniences which make it easier to style the delta columns."""
+  """Convenience class for styling delta columns."""
 
-  is_positive: bool
-  is_negative: bool
-  value_abs: int
+  formatted_value: str
+  html_class: str
 
   @classmethod
-  def from_delta(cls, delta: int) -> "LeaderboardDelta":
-    """Construct a delta from an int."""
-    return LeaderboardDelta(delta > 0, delta < 0, abs(delta))
+  def for_delta_rank(cls, delta: int, is_new: bool) -> "LeaderboardDelta":
+    """Return ↑n, ↓n, "new", or blank."""
+    if delta > 0:
+      return LeaderboardDelta(f"↑{abs(delta)}", "delta-pos")
+    if delta < 0:
+      return LeaderboardDelta(f"↓{abs(delta)}", "delta-neg")
+    if is_new:
+      return LeaderboardDelta("🆕", "")
+    return LeaderboardDelta("", "")
 
-  def to_arrow_string(self) -> str:
-    """Return ↑n, ↓n, or blank."""
-    if self.is_positive:
-      return f"↑{self.value_abs}"
-    if self.is_negative:
-      return f"↓{self.value_abs}"
-    return ""
-
-  def to_paren_string(self) -> str:
+  @classmethod
+  def for_delta_rating(cls, delta: int) -> "LeaderboardDelta":
     """Return (+n), (-n), or blank."""
-    if self.is_positive:
-      return f"(+{self.value_abs})"
-    if self.is_negative:
-      return f"(-{self.value_abs})"
-    return ""
+    if delta > 0:
+      return LeaderboardDelta(f"(+{abs(delta)})", "delta-pos")
+    if delta < 0:
+      return LeaderboardDelta(f"(-{abs(delta)})", "delta-neg")
+    return LeaderboardDelta("", "")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -64,12 +62,10 @@ class HtmlLeaderboardRow:
 
   rank: int
   delta_rank: LeaderboardDelta
-  delta_rank_str: str
   username: str
   flag: str
   rating: int
   delta_rating: LeaderboardDelta
-  delta_rating_str: str
   games: int
   created_date: str
   last_seen_date: str
@@ -77,19 +73,13 @@ class HtmlLeaderboardRow:
   @classmethod
   def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
-    delta_rank = LeaderboardDelta.from_delta(row.delta_rank)
-    delta_rank_str = "🆕" if row.is_new else delta_rank.to_arrow_string()
-    delta_rating = LeaderboardDelta.from_delta(row.delta_rating)
-    delta_rating_str = delta_rating.to_paren_string()
     return HtmlLeaderboardRow(
       row.rank,
-      delta_rank,
-      delta_rank_str,
+      LeaderboardDelta.for_delta_rank(row.delta_rank, row.is_new),
       row.bot_info.profile.username,
       row.bot_info.profile.flag,
       row.bot_info.perf.rating,
-      delta_rating,
-      delta_rating_str,
+      LeaderboardDelta.for_delta_rating(row.delta_rating),
       row.bot_info.perf.games,
       date_formatter.format_yyyy_mm_dd(row.bot_info.profile.created_time),
       date_formatter.format_yyyy_mm_dd(row.bot_info.last_seen_time),

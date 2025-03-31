@@ -19,15 +19,11 @@
       {%- for row in leaderboard_rows %}
         <tr>
           <td class="col-rank">{{ row.rank }}</td>
-          <td class="col-delta-rank {% if row.delta_rank.is_positive %}delta-pos{% elif row.delta_rank.is_negative %}delta-neg{% endif -%}">
-            {{ row.delta_rank_str }}
-          </td>
+          <td class="col-delta-rank {{ row.delta_rank.html_class }}">{{ row.delta_rank.formatted_value }}</td>
           <td class="col-name">{{ row.username }}</td>
           <td class="col-flag">{{ row.flag }}</td>
           <td class="col-rating">{{ row.rating }}</td>
-          <td class="col-delta-rating {% if row.delta_rating.is_positive %}delta-pos{% elif row.delta_rating.is_negative %}delta-neg{% endif -%}">
-            {{ row.delta_rating_str }}
-          </td>
+          <td class="col-delta-rating {{ row.delta_rating.html_class }}">{{ row.delta_rating.formatted_value }}</td>
           <td class="col-games">{{ row.games }}</td>
           <td class="col-created">{{ row.created_date }}</td>
           <td class="col-last-seen">{{ row.last_seen_date }}</td>
