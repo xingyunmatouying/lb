@@ -1,6 +1,6 @@
 """Bot user and related dataclasses.
 
-These dataclasses include functions for parsing their corresponding lichess json representations.
+These dataclasses include methods for parsing their corresponding lichess json representations.
 """
 
 import dataclasses

@@ -6,7 +6,7 @@ from src.leaderboard.chrono import date_formatter
 
 
 class TestDateFormatter(unittest.TestCase):
-  """Tests for date_formatter methods."""
+  """Tests for date_formatter functions."""
 
   def test_format_yyyy_mm_dd(self) -> None:
     self.assertEqual(date_formatter.format_yyyy_mm_dd(1290415680), "2010-11-22")

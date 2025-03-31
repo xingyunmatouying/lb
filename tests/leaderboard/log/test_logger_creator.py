@@ -7,7 +7,7 @@ from src.leaderboard.log import logger_creator
 
 
 class TestLoggerCreator(unittest.TestCase):
-  """Tests for logger_creator methods."""
+  """Tests for logger_creator functions."""
 
   def test_create_logger(self) -> None:
     logger = logger_creator.create_logger(__name__)
