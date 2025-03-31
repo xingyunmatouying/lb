@@ -76,9 +76,15 @@ main {
   /* large top and bottom margin to be clear of the header and footer */
   margin: 60px auto;
   padding: 20px;
+  padding-top: 10px;
   border-radius: 5px;
   /* Look slightly 3d */
   box-shadow: 0 5px 5px rgba(0 0 0 / 10%);
+}
+
+h1 {
+  text-align: center;
+  padding-bottom: 10px;
 }
 
 /* Leaderboard table */

@@ -32,6 +32,7 @@ class TestHtmlGenerator(unittest.TestCase):
       ]
     }
     bullet_html = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)["bullet"]
+    self.assertIn("<h1>Bullet</h1>", bullet_html)
     self.assertIn("Bot-1", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-1", bullet_html)
     self.assertIn("Bot-2", bullet_html)
