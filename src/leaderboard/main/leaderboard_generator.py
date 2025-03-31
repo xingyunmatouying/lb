@@ -8,7 +8,7 @@ from src.leaderboard.fs import file_paths
 from src.leaderboard.fs.file_system import FileSystem
 from src.leaderboard.li.lichess_client import LichessClient
 from src.leaderboard.log.log_writer import LogWriter
-from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
+from src.leaderboard.page.html_generator import HtmlGenerator
 
 
 class LeaderboardGenerator:
@@ -38,8 +38,8 @@ class LeaderboardGenerator:
     for perf_type, rows in ranked_rows_by_perf_type.items():
       self.file_system.save_file_lines(file_paths.data_path(perf_type), [row.to_json() for row in rows])
 
-    leaderboard_html_generator = LeaderboardHtmlGenerator(self.time_provider)
-    html_by_name = leaderboard_html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
+    html_generator = HtmlGenerator(self.time_provider)
+    html_by_name = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
 
     # save the leaderboard html
     for name, html in html_by_name.items():

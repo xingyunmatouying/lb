@@ -100,7 +100,7 @@ def create_nav_links(active_perf_type: PerfType | None) -> list[NavLink]:
   return nav_links
 
 
-class LeaderboardHtmlGenerator:
+class HtmlGenerator:
   """Generator for html."""
 
   def __init__(self, time_provider: TimeProvider) -> None:
