@@ -2,15 +2,6 @@
 
 import unittest
 
-from leaderboard.chrono.epoch_seconds import (
-  DATE_2021_04_01,
-  DATE_2022_04_01,
-  DATE_2023_04_01,
-  DATE_2024_04_01,
-  DATE_2025_04_01,
-)
-from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
-from leaderboard.li.fake_lichess_client import FakeLichessClient
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data import data_generator as data_generator_functions
 from src.leaderboard.data.data_generator import DataGenerator
@@ -18,6 +9,15 @@ from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, Leaderboar
 from src.leaderboard.data.leaderboard_update import CurrentBotInfoOnlyUpdate, LeaderboardUpdate
 from src.leaderboard.fs import file_paths
 from src.leaderboard.li.bot_user import PerfType
+from tests.leaderboard.chrono.epoch_seconds import (
+  DATE_2021_04_01,
+  DATE_2022_04_01,
+  DATE_2023_04_01,
+  DATE_2024_04_01,
+  DATE_2025_04_01,
+)
+from tests.leaderboard.fs.in_memory_file_system import InMemoryFileSystem
+from tests.leaderboard.li.fake_lichess_client import FakeLichessClient
 
 
 # Bullet leaderboard BotInfos

@@ -2,7 +2,6 @@
 
 import unittest
 
-from leaderboard.chrono.epoch_seconds import DATE_2021_04_01, DATE_2024_01_01, DATE_2025_04_01
 from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import (
   CurrentBotInfoOnlyUpdate,
@@ -10,6 +9,7 @@ from src.leaderboard.data.leaderboard_update import (
   LeaderboardUpdate,
   PreviousRowOnlyUpdate,
 )
+from tests.leaderboard.chrono.epoch_seconds import DATE_2021_04_01, DATE_2024_01_01, DATE_2025_04_01
 
 
 def create_bot_info(username: str, rating: int, games: int, created_time: int) -> BotInfo:
