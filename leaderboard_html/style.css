@@ -144,11 +144,27 @@ td.delta-neg {
   width: 32%;
 }
 
-/* Prepend BOT before bot's names */
-td.col-name::before {
-  content: "BOT";
+/* Shared attributes for online status */
+span.bot-online,
+span.bot-offline {
+  display: inline-block;
+  text-align: right;
+  width: 5%;
+}
+
+/* Emphasize the bot's online status */
+span.bot-online {
+  color: green;
+}
+
+/* Deemphasize the bot's online status */
+span.bot-offline {
+  color: lightgray;
+}
+
+/* Emphasize "BOT" before bot's names */
+span.bot-title {
   color: magenta;
-  margin-right: 5px;
 }
 
 /* Flag */

@@ -5,7 +5,7 @@ import unittest
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.leaderboard_row import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
-from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta
+from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta, OnlineStatus
 
 
 class TestLeaderboardDelta(unittest.TestCase):
@@ -21,6 +21,14 @@ class TestLeaderboardDelta(unittest.TestCase):
     self.assertEqual(LeaderboardDelta.for_delta_rating(1), LeaderboardDelta("(+1)", "delta-pos"))
     self.assertEqual(LeaderboardDelta.for_delta_rating(-1), LeaderboardDelta("(-1)", "delta-neg"))
     self.assertEqual(LeaderboardDelta.for_delta_rating(0), LeaderboardDelta("", ""))
+
+
+class TestOnlineStatus(unittest.TestCase):
+  """Tests for OnlineStatus."""
+
+  def test_create_from(self) -> None:
+    self.assertEqual(OnlineStatus.create_from(True, True), OnlineStatus("★", "bot-online"))
+    self.assertEqual(OnlineStatus.create_from(False, False), OnlineStatus("●", "bot-offline"))
 
 
 class TestHtmlGenerator(unittest.TestCase):

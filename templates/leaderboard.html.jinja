@@ -21,6 +21,8 @@
           <td class="col-rank">{{ row.rank }}</td>
           <td class="col-delta-rank {{ row.delta_rank.html_class }}">{{ row.delta_rank.formatted_value }}</td>
           <td class="col-name">
+            <span class="{{ row.online_status.html_class }}">{{ row.online_status.indicator_icon }}</span>
+            <span class="bot-title">BOT</span>
             <a href="https://lichess.org/@/{{ row.username }}" target="_blank" rel="noopener noreferrer">{{ row.username }}</a>
           </td>
           <td class="col-flag">{{ row.flag }}</td>
