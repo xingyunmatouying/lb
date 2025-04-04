@@ -5,14 +5,10 @@ from collections import defaultdict
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.leaderboard_row import BotInfo, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import LeaderboardUpdate
+from src.leaderboard.fs import file_paths
 from src.leaderboard.fs.file_system import FileSystem
 from src.leaderboard.li.bot_user import BotUser, PerfType
 from src.leaderboard.li.lichess_client import LichessClient
-
-
-def get_leaderboard_data_file_name(perf_type: PerfType) -> str:
-  """Return the data file name for a PerfType."""
-  return f"leaderboard_data/{perf_type.to_string()}.ndjson"
 
 
 def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
@@ -22,7 +18,7 @@ def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[Leade
   """
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
-    ndjson = file_system.load_file_lines(get_leaderboard_data_file_name(perf_type))
+    ndjson = file_system.load_file_lines(file_paths.data_path(perf_type))
     previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_json(json_line) for json_line in ndjson]
   return previous_rows_by_perf_type
 

@@ -2,7 +2,7 @@
 
 import unittest
 
-from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
+from tests.leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 
 
 FILE_NAME = "test"

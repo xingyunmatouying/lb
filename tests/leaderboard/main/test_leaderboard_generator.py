@@ -2,13 +2,13 @@
 
 import unittest
 
-from leaderboard.fs.in_memory_file_system import InMemoryFileSystem
-from leaderboard.li.fake_lichess_client import FakeLichessClient
-from leaderboard.log.fake_log_writer import FakeLogWriter
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
-from src.leaderboard.data import data_generator
+from src.leaderboard.fs import file_paths
 from src.leaderboard.li.bot_user import PerfType
 from src.leaderboard.main.leaderboard_generator import LeaderboardGenerator
+from tests.leaderboard.fs.in_memory_file_system import InMemoryFileSystem
+from tests.leaderboard.li.fake_lichess_client import FakeLichessClient
+from tests.leaderboard.log.fake_log_writer import FakeLogWriter
 
 
 class TestLeaderboardGenerator(unittest.TestCase):
@@ -25,8 +25,8 @@ class TestLeaderboardGenerator(unittest.TestCase):
     leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, time_provider, log_writer)
     leaderboard_generator.generate_leaderboards()
 
-    bullet_data = file_system.load_file_lines(data_generator.get_leaderboard_data_file_name(PerfType.BULLET))
+    bullet_data = file_system.load_file_lines(file_paths.data_path(PerfType.BULLET))
     self.assertIn("Bot-1", bullet_data[0])
 
-    bullet_html = file_system.load_file_lines(f"leaderboard_html/{PerfType.BULLET.to_string()}.html")
+    bullet_html = file_system.load_file_lines(file_paths.html_path(PerfType.BULLET.to_string()))
     self.assertIn("Bot-1", bullet_html[0])

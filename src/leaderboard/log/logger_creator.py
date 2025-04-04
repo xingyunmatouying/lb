@@ -1,4 +1,4 @@
-"""Provide a method for creating a logger."""
+"""Module containing a function for creating a logger."""
 
 import logging
 

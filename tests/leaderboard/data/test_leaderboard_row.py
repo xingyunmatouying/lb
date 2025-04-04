@@ -2,9 +2,9 @@
 
 import unittest
 
-from leaderboard.chrono.epoch_seconds import DATE_2024_01_01, DATE_2024_04_01, DATE_2025_04_01
 from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
 from src.leaderboard.li.bot_user import BotUser, Perf, PerfType
+from tests.leaderboard.chrono.epoch_seconds import DATE_2024_01_01, DATE_2024_04_01, DATE_2025_04_01
 
 
 EMPTY_BOT_PROFILE = BotProfile("", "", "", 0, False, False)

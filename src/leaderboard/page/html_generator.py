@@ -4,7 +4,7 @@ import dataclasses
 
 from jinja2 import Environment, FileSystemLoader
 
-from src.leaderboard.chrono import date_formatter
+from src.leaderboard.chrono import date_formatter, duration_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.leaderboard_row import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
@@ -30,24 +30,30 @@ class MainFrame:
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardDelta:
-  """Conveniences which make it easier to style the delta columns."""
+  """Convenience class for styling delta columns."""
 
-  is_positive: bool
-  is_negative: bool
-  value_abs: int
+  formatted_value: str
+  html_class: str
 
   @classmethod
-  def from_delta(cls, delta: int) -> "LeaderboardDelta":
-    """Construct a delta from an int."""
-    return LeaderboardDelta(delta > 0, delta < 0, abs(delta))
+  def for_delta_rank(cls, delta: int, is_new: bool) -> "LeaderboardDelta":
+    """Return ↑n, ↓n, "new", or blank."""
+    if delta > 0:
+      return LeaderboardDelta(f"↑{abs(delta)}", "delta-pos")
+    if delta < 0:
+      return LeaderboardDelta(f"↓{abs(delta)}", "delta-neg")
+    if is_new:
+      return LeaderboardDelta("🆕", "")
+    return LeaderboardDelta("", "")
 
-  def to_string(self) -> str:
-    """Return ↑..., ↓..., or blank."""
-    if self.is_positive:
-      return f"↑{self.value_abs}"
-    if self.is_negative:
-      return f"↓{self.value_abs}"
-    return ""
+  @classmethod
+  def for_delta_rating(cls, delta: int) -> "LeaderboardDelta":
+    """Return (+n), (-n), or blank."""
+    if delta > 0:
+      return LeaderboardDelta(f"(+{abs(delta)})", "delta-pos")
+    if delta < 0:
+      return LeaderboardDelta(f"(-{abs(delta)})", "delta-neg")
+    return LeaderboardDelta("", "")
 
 
 @dataclasses.dataclass(frozen=True)
@@ -56,30 +62,26 @@ class HtmlLeaderboardRow:
 
   rank: int
   delta_rank: LeaderboardDelta
-  delta_rank_str: str
   username: str
   flag: str
   rating: int
-  delta_rating: int
+  delta_rating: LeaderboardDelta
   games: int
-  created_date: str
+  age: str
   last_seen_date: str
 
   @classmethod
-  def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
+  def from_leaderboard_row(cls, row: LeaderboardRow, current_time: int) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
-    delta_rank = LeaderboardDelta.from_delta(row.delta_rank)
-    delta_rank_str = "🆕" if row.is_new else delta_rank.to_string()
     return HtmlLeaderboardRow(
       row.rank,
-      delta_rank,
-      delta_rank_str,
+      LeaderboardDelta.for_delta_rank(row.delta_rank, row.is_new),
       row.bot_info.profile.username,
       row.bot_info.profile.flag,
       row.bot_info.perf.rating,
-      row.delta_rating,
+      LeaderboardDelta.for_delta_rating(row.delta_rating),
       row.bot_info.perf.games,
-      date_formatter.format_yyyy_mm_dd(row.bot_info.profile.created_time),
+      duration_formatter.format_age(row.bot_info.profile.created_time, current_time),
       date_formatter.format_yyyy_mm_dd(row.bot_info.last_seen_time),
     )
 
@@ -98,7 +100,7 @@ def create_nav_links(active_perf_type: PerfType | None) -> list[NavLink]:
   return nav_links
 
 
-class LeaderboardHtmlGenerator:
+class HtmlGenerator:
   """Generator for html."""
 
   def __init__(self, time_provider: TimeProvider) -> None:
@@ -108,7 +110,8 @@ class LeaderboardHtmlGenerator:
 
   def generate_leaderboard_html(self, ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]) -> dict[str, str]:
     """Generate index and leaderboard html."""
-    last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(self.time_provider.get_current_time())
+    current_time = self.time_provider.get_current_time()
+    last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)
     html_by_name: dict[str, str] = {}
     # Create index html
     index_template = self.jinja_environment.get_template("index.html.jinja")
@@ -122,7 +125,7 @@ class LeaderboardHtmlGenerator:
       leaderboard_template = self.jinja_environment.get_template("leaderboard.html.jinja")
       leaderboard_html = leaderboard_template.render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
-        leaderboard_rows=[HtmlLeaderboardRow.from_leaderboard_row(row) for row in rows],
+        leaderboard_rows=[HtmlLeaderboardRow.from_leaderboard_row(row, current_time) for row in rows],
       )
       html_by_name[perf_type.to_string()] = leaderboard_html
     # Return file name to html contents map

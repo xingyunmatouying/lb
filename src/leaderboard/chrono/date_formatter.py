@@ -1,4 +1,4 @@
-"""Methods and constants related to formatting dates."""
+"""Functions and constants related to formatting dates."""
 
 import datetime
 

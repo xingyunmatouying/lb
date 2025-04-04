@@ -3,12 +3,12 @@
 import time
 
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data import data_generator
 from src.leaderboard.data.data_generator import DataGenerator
+from src.leaderboard.fs import file_paths
 from src.leaderboard.fs.file_system import FileSystem
 from src.leaderboard.li.lichess_client import LichessClient
 from src.leaderboard.log.log_writer import LogWriter
-from src.leaderboard.page.html_generator import LeaderboardHtmlGenerator
+from src.leaderboard.page.html_generator import HtmlGenerator
 
 
 class LeaderboardGenerator:
@@ -27,25 +27,23 @@ class LeaderboardGenerator:
     """Generate the leaderboards."""
     # Start timer
     start_time = time.time()
-
     self.log_writer.info("Generating leaderboard...")
 
-    # Generate leaderboard
-    leaderboard_data_generator = DataGenerator(self.file_system, self.lichess_client, self.time_provider)
-    ranked_rows_by_perf_type = leaderboard_data_generator.generate_leaderboard_data()
+    # Generate leaderboard data
+    data_generator = DataGenerator(self.file_system, self.lichess_client, self.time_provider)
+    ranked_rows_by_perf_type = data_generator.generate_leaderboard_data()
 
     # Save the leaderboard data
     for perf_type, rows in ranked_rows_by_perf_type.items():
-      self.file_system.save_file_lines(
-        data_generator.get_leaderboard_data_file_name(perf_type), [row.to_json() for row in rows]
-      )
+      self.file_system.save_file_lines(file_paths.data_path(perf_type), [row.to_json() for row in rows])
 
-    leaderboard_html_generator = LeaderboardHtmlGenerator(self.time_provider)
-    html_by_name = leaderboard_html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
+    # Generate leaderboard html
+    html_generator = HtmlGenerator(self.time_provider)
+    html_by_name = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
 
-    # save the leaderboard html
+    # Save the leaderboard html
     for name, html in html_by_name.items():
-      self.file_system.save_file_lines(f"leaderboard_html/{name}.html", [html])
+      self.file_system.save_file_lines(file_paths.html_path(name), [html])
 
     # Print time elapsed
     time_elapsed = time.time() - start_time

@@ -32,23 +32,29 @@ footer {
   font-size: 0.8em;
 }
 
-/* Footer links */
-footer a {
-  color: rgb(0 127 255);
-  /* No underline */
+/* No underline for any links by default */
+a {
   text-decoration: none;
 }
 
 /* Header nav links look like buttons */
 nav a {
   color: white;
-  /* No underline */
-  text-decoration: none;
   /* Fade in and out */
   transition: background-color 0.3s;
   margin: 0 5px;
   padding: 10px 20px;
   border-radius: 5px;
+}
+
+/* Footer links */
+footer a {
+  color: rgb(0 127 255);
+}
+
+/* Name column links */
+.col-name a {
+  color: black;
 }
 
 /* Header nav links have a different background for the active page and for hovering */
@@ -57,8 +63,9 @@ nav a:hover {
   background-color: rgb(85 85 85);
 }
 
-/* Footer links get the underline back on hover */
-footer a:hover {
+/* Links which get the underline back on hover */
+footer a:hover,
+.col-name a:hover {
   text-decoration: underline;
 }
 
@@ -69,24 +76,33 @@ main {
   /* large top and bottom margin to be clear of the header and footer */
   margin: 60px auto;
   padding: 20px;
+  padding-top: 10px;
   border-radius: 5px;
   /* Look slightly 3d */
   box-shadow: 0 5px 5px rgba(0 0 0 / 10%);
 }
 
+h1 {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
 /* Leaderboard table */
 table {
-  width: 100%;
-  margin: 20px 0;
-  /* No double borders */
-  border-collapse: collapse;
+  table-layout: fixed;
+  width: 1000px;
+  margin: 20px auto;
+  border-collapse: separate;
+  border: 1px solid rgb(232 232 232);
+  border-radius: 5px;
+  border-spacing: 0;
 }
 
 /* Table header and table data share some styling */
 th,
 td {
-  border: 1px solid rgb(200 200 200);
-  padding: 8px;
+  border: 1px solid rgb(200 200 200 / 10%);
+  padding: 8px 12px;
   text-align: left;
 }
 
@@ -100,6 +116,19 @@ tr:nth-child(even) {
   background-color: rgb(242 242 242);
 }
 
+/* Rank */
+.col-rank {
+  width: 3%;
+  text-align: right;
+  padding-right: 4px;
+}
+
+/* Rank delta */
+.col-delta-rank {
+  width: 6%;
+  padding-left: 4px;
+}
+
 /* Positive delta */
 td.delta-pos {
   color: green;
@@ -108,4 +137,50 @@ td.delta-pos {
 /* Negative delta */
 td.delta-neg {
   color: red;
+}
+
+/* Name */
+.col-name {
+  width: 32%;
+}
+
+/* Prepend BOT before bot's names */
+td.col-name::before {
+  content: "BOT";
+  color: magenta;
+  margin-right: 5px;
+}
+
+/* Flag */
+.col-flag {
+  width: 10%;
+}
+
+/* Rating */
+.col-rating {
+  width: 7%;
+  text-align: right;
+  padding-right: 4px;
+}
+
+/* Rating delta */
+.col-delta-rating {
+  width: 11%;
+  padding-left: 4px;
+}
+
+/* Games */
+.col-games {
+  width: 11%;
+}
+
+/* Created */
+.col-age {
+  text-align: right;
+  width: 10%;
+}
+
+/* Last Seen */
+.col-last-seen {
+  width: 12%;
 }
