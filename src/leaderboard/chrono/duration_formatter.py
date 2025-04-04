@@ -37,7 +37,7 @@ def format_age(start_seconds: int, end_seconds: int) -> str:
     return "<1mo"
 
   if age_months == 0 and start_datetime.day == end_datetime.day:
-    return f"🎂 {age_years}y 🎂"
+    return f"{age_years}y 🎂"
 
   age_years_str = f"{age_years}y " if age_years else ""
   return f"{age_years_str}{age_months}mo"

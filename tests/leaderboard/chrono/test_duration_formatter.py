@@ -25,4 +25,4 @@ class TestDurationFormatter(unittest.TestCase):
     self.assertEqual(duration_formatter.format_age(DATE_2025_04_01, DATE_2025_03_02), "<1mo")
 
   def test_format_age_birthday(self) -> None:
-    self.assertEqual(duration_formatter.format_age(DATE_2024_03_02, DATE_2025_03_02), "🎂 1y 🎂")
+    self.assertEqual(duration_formatter.format_age(DATE_2024_03_02, DATE_2025_03_02), "1y 🎂")
