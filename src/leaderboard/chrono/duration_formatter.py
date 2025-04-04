@@ -3,18 +3,20 @@
 import datetime
 
 
+def get_truncated_datetime(seconds: int) -> datetime.datetime:
+  """Convert epoch seconds to a datetime truncated to the day."""
+  seconds_datetime = datetime.datetime.fromtimestamp(seconds, tz=datetime.UTC)
+  return datetime.datetime(seconds_datetime.year, seconds_datetime.month, seconds_datetime.day, tzinfo=datetime.UTC)
+
+
 def format_age(start_seconds: int, end_seconds: int) -> str:
   """Calculate age in years and months and return as a readable string."""
   # Be permissive of start and end being switched
   if start_seconds > end_seconds:
     start_seconds, end_seconds = end_seconds, start_seconds
 
-  start_datetime = datetime.datetime.fromtimestamp(start_seconds, tz=datetime.UTC)
-  end_datetime = datetime.datetime.fromtimestamp(end_seconds, tz=datetime.UTC)
-
-  # Truncate to the day for simplicity
-  start_datetime = datetime.datetime(start_datetime.year, start_datetime.month, start_datetime.day, tzinfo=datetime.UTC)
-  end_datetime = datetime.datetime(end_datetime.year, end_datetime.month, end_datetime.day, tzinfo=datetime.UTC)
+  start_datetime = get_truncated_datetime(start_seconds)
+  end_datetime = get_truncated_datetime(end_seconds)
 
   # Find the age in years and months
   age_years = end_datetime.year - start_datetime.year
