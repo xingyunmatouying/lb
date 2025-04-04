@@ -57,11 +57,27 @@ class LeaderboardDelta:
 
 
 @dataclasses.dataclass(frozen=True)
+class OnlineStatus:
+  """Convenience class displaying whether the bot is online and if they are a patron."""
+
+  indicator_icon: str
+  html_class: str
+
+  @classmethod
+  def create_from(cls, is_online: bool, is_patron: bool) -> "OnlineStatus":
+    """Create an OnlineStatus based on whether or not the bot is online and a patron."""
+    html_class = "bot-online" if is_online else "bot-offline"
+    indicator_icon = "★" if is_patron else "●"
+    return OnlineStatus(indicator_icon, html_class)
+
+
+@dataclasses.dataclass(frozen=True)
 class HtmlLeaderboardRow:
   """The data required to render a leaderboard row in html."""
 
   rank: int
   delta_rank: LeaderboardDelta
+  online_status: OnlineStatus
   username: str
   flag: str
   rating: int
@@ -76,6 +92,7 @@ class HtmlLeaderboardRow:
     return HtmlLeaderboardRow(
       row.rank,
       LeaderboardDelta.for_delta_rank(row.delta_rank, row.is_new),
+      OnlineStatus.create_from(row.is_online, row.bot_info.profile.patron),
       row.bot_info.profile.username,
       row.bot_info.profile.flag,
       row.bot_info.perf.rating,
