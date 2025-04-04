@@ -4,7 +4,7 @@ import dataclasses
 
 from jinja2 import Environment, FileSystemLoader
 
-from src.leaderboard.chrono import date_formatter
+from src.leaderboard.chrono import date_formatter, duration_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.leaderboard_row import LeaderboardRow
 from src.leaderboard.li.bot_user import PerfType
@@ -67,11 +67,11 @@ class HtmlLeaderboardRow:
   rating: int
   delta_rating: LeaderboardDelta
   games: int
-  created_date: str
+  age: str
   last_seen_date: str
 
   @classmethod
-  def from_leaderboard_row(cls, row: LeaderboardRow) -> "HtmlLeaderboardRow":
+  def from_leaderboard_row(cls, row: LeaderboardRow, current_time: int) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
       row.rank,
@@ -81,7 +81,7 @@ class HtmlLeaderboardRow:
       row.bot_info.perf.rating,
       LeaderboardDelta.for_delta_rating(row.delta_rating),
       row.bot_info.perf.games,
-      date_formatter.format_yyyy_mm_dd(row.bot_info.profile.created_time),
+      duration_formatter.format_age(row.bot_info.profile.created_time, current_time),
       date_formatter.format_yyyy_mm_dd(row.bot_info.last_seen_time),
     )
 
@@ -110,7 +110,8 @@ class HtmlGenerator:
 
   def generate_leaderboard_html(self, ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]) -> dict[str, str]:
     """Generate index and leaderboard html."""
-    last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(self.time_provider.get_current_time())
+    current_time = self.time_provider.get_current_time()
+    last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)
     html_by_name: dict[str, str] = {}
     # Create index html
     index_template = self.jinja_environment.get_template("index.html.jinja")
@@ -124,7 +125,7 @@ class HtmlGenerator:
       leaderboard_template = self.jinja_environment.get_template("leaderboard.html.jinja")
       leaderboard_html = leaderboard_template.render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
-        leaderboard_rows=[HtmlLeaderboardRow.from_leaderboard_row(row) for row in rows],
+        leaderboard_rows=[HtmlLeaderboardRow.from_leaderboard_row(row, current_time) for row in rows],
       )
       html_by_name[perf_type.to_string()] = leaderboard_html
     # Return file name to html contents map

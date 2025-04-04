@@ -11,7 +11,7 @@
         <th class="col-rating">Rating</th>
         <th class="col-delta-rating">Δ</th>
         <th class="col-games">Games</th>
-        <th class="col-created">Created</th>
+        <th class="col-age">Age</th>
         <th class="col-last-seen">Last Seen</th>
       </tr>
     </thead>
@@ -27,7 +27,7 @@
           <td class="col-rating">{{ row.rating }}</td>
           <td class="col-delta-rating {{ row.delta_rating.html_class }}">{{ row.delta_rating.formatted_value }}</td>
           <td class="col-games">{{ row.games }}</td>
-          <td class="col-created">{{ row.created_date }}</td>
+          <td class="col-age">{{ row.age }}</td>
           <td class="col-last-seen">{{ row.last_seen_date }}</td>
         </tr>
       {%- endfor %}

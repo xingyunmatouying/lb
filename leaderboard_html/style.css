@@ -175,11 +175,12 @@ td.col-name::before {
 }
 
 /* Created */
-.col-created {
-  width: 11%;
+.col-age {
+  text-align: right;
+  width: 10%;
 }
 
 /* Last Seen */
 .col-last-seen {
-  width: 11%;
+  width: 12%;
 }
