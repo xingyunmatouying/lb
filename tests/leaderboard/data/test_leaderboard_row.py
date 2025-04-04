@@ -3,7 +3,8 @@
 import unittest
 
 from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
-from src.leaderboard.li.bot_user import BotUser, Perf, PerfType
+from src.leaderboard.li.bot_user import BotUser, Perf
+from src.leaderboard.li.pert_type import PerfType
 from tests.leaderboard.chrono.epoch_seconds import DATE_2024_01_01, DATE_2024_04_01, DATE_2025_04_01
 
 

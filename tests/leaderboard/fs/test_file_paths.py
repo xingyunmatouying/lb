@@ -3,7 +3,7 @@
 import unittest
 
 from src.leaderboard.fs import file_paths
-from src.leaderboard.li.bot_user import PerfType
+from src.leaderboard.li.pert_type import PerfType
 
 
 class TestFileFilePaths(unittest.TestCase):

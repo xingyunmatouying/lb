@@ -8,7 +8,7 @@ from src.leaderboard.data.data_generator import DataGenerator
 from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import CurrentBotInfoOnlyUpdate, LeaderboardUpdate
 from src.leaderboard.fs import file_paths
-from src.leaderboard.li.bot_user import PerfType
+from src.leaderboard.li.pert_type import PerfType
 from tests.leaderboard.chrono.epoch_seconds import (
   DATE_2021_04_01,
   DATE_2022_04_01,

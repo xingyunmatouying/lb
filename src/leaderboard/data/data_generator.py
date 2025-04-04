@@ -7,8 +7,9 @@ from src.leaderboard.data.leaderboard_row import BotInfo, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import LeaderboardUpdate
 from src.leaderboard.fs import file_paths
 from src.leaderboard.fs.file_system import FileSystem
-from src.leaderboard.li.bot_user import BotUser, PerfType
+from src.leaderboard.li.bot_user import BotUser
 from src.leaderboard.li.lichess_client import LichessClient
+from src.leaderboard.li.pert_type import PerfType
 
 
 def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:

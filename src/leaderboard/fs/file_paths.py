@@ -1,6 +1,6 @@
 """Module containing functions to get leaderboard file paths."""
 
-from src.leaderboard.li.bot_user import PerfType
+from src.leaderboard.li.pert_type import PerfType
 
 
 def data_path(perf_type: PerfType) -> str:
