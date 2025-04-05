@@ -4,6 +4,7 @@ import dataclasses
 import json
 from typing import Any
 
+from src.leaderboard.data import default_remover
 from src.leaderboard.li.bot_user import BotUser, Perf
 
 
@@ -142,6 +143,8 @@ class LeaderboardRow:
     )
 
   def to_json(self) -> str:
-    """Convert the leaderboard row to."""
-    self_as_dict = dataclasses.asdict(self)
-    return json.dumps(self_as_dict)
+    """Convert the leaderboard row to json.
+
+    Values will only be set if they are not equal to their default values.
+    """
+    return json.dumps(default_remover.to_dict_without_defaults(dataclasses.asdict(self)))
