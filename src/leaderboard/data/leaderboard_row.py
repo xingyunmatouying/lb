@@ -95,7 +95,7 @@ class BotInfo:
 
   @classmethod
   def from_json_dict(cls, json_dict: dict[str, Any]) -> "BotInfo":
-    """Create a BotInfo from json."""
+    """Create a BotInfo from a json dict."""
     return BotInfo(
       BotProfile.from_json_dict(json_dict.get("profile", {})),
       LeaderboardPerf.from_json_dict(json_dict.get("perf", {})),
