@@ -13,7 +13,7 @@ from src.leaderboard.li.pert_type import PerfType
 
 
 def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
-  """Load the previous leaderboards.
+  """Load the previous leaderboard data.
 
   Returns a lists of leaderboard rows grouped by perf type.
   """
