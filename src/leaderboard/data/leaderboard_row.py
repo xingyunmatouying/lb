@@ -36,8 +36,8 @@ class BotProfile:
     )
 
   @classmethod
-  def from_json(cls, json_dict: dict[str, Any]) -> "BotProfile":
-    """Create a BotProfile from json."""
+  def from_json_dict(cls, json_dict: dict[str, Any]) -> "BotProfile":
+    """Create a BotProfile from a json dict."""
     return BotProfile(
       json_dict.get("username", ""),
       json_dict.get("flair", ""),
@@ -70,8 +70,8 @@ class LeaderboardPerf:
     return LeaderboardPerf(perf.rating, perf.rd, perf.prog, perf.games)
 
   @classmethod
-  def from_json(cls, json_dict: dict[str, Any]) -> "LeaderboardPerf":
-    """Create a LeaderboardPerf from json."""
+  def from_json_dict(cls, json_dict: dict[str, Any]) -> "LeaderboardPerf":
+    """Create a LeaderboardPerf from a json dict."""
     return LeaderboardPerf(
       json_dict.get("rating", 0), json_dict.get("rd", 0), json_dict.get("prog", 0), json_dict.get("games", 0)
     )
@@ -94,11 +94,11 @@ class BotInfo:
     return BotInfo(BotProfile.from_bot_user(bot_user), LeaderboardPerf.from_perf(perf), last_seen_time)
 
   @classmethod
-  def from_json(cls, json_dict: dict[str, Any]) -> "BotInfo":
+  def from_json_dict(cls, json_dict: dict[str, Any]) -> "BotInfo":
     """Create a BotInfo from json."""
     return BotInfo(
-      BotProfile.from_json(json_dict.get("profile", {})),
-      LeaderboardPerf.from_json(json_dict.get("perf", {})),
+      BotProfile.from_json_dict(json_dict.get("profile", {})),
+      LeaderboardPerf.from_json_dict(json_dict.get("perf", {})),
       json_dict.get("last_seen_time", 0),
     )
 
@@ -132,7 +132,7 @@ class LeaderboardRow:
     """Create a LeaderboardRow from json."""
     json_dict = json.loads(json_str)
     return LeaderboardRow(
-      BotInfo.from_json(json_dict.get("bot_info", {})),
+      BotInfo.from_json_dict(json_dict.get("bot_info", {})),
       json_dict.get("rank", 0),
       json_dict.get("delta_rank", 0),
       json_dict.get("delta_rating", 0),

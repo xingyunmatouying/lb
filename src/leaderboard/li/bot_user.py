@@ -34,7 +34,7 @@ class Perf:
   prov: bool
 
   @classmethod
-  def from_json(cls, perf_type_key: str, perf_json: dict[str, Any]) -> "Perf":
+  def from_json_dict(cls, perf_type_key: str, perf_json: dict[str, Any]) -> "Perf":
     """Create a Perf based on a json key and value."""
     perf_type = PerfType.from_json(perf_type_key)
     games = perf_json.get("games", 0)
@@ -82,6 +82,6 @@ class BotUser:
 
     perfs: list[Perf] = []
     for perf_type_key, perf_json in json_dict.get("perfs", []).items():
-      perfs.append(Perf.from_json(perf_type_key, perf_json))
+      perfs.append(Perf.from_json_dict(perf_type_key, perf_json))
 
     return BotUser(username, flair, flag, created_at, patron, tos_violation, perfs)

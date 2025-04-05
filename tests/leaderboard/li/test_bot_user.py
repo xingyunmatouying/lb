@@ -38,10 +38,10 @@ BOT_USER_JSON = """
 class TestPerf(unittest.TestCase):
   """Tests for Perf."""
 
-  def test_from_json(self) -> None:
+  def test_from_json_dict(self) -> None:
     json_key = "bullet"
     json_value = {"games": 15, "rating": 2800, "rd": 200, "prog": 700, "prov": True}
-    self.assertEqual(Perf.from_json(json_key, json_value), Perf(PerfType.BULLET, 15, 2800, 200, 700, True))
+    self.assertEqual(Perf.from_json_dict(json_key, json_value), Perf(PerfType.BULLET, 15, 2800, 200, 700, True))
 
 
 class TestBotUser(unittest.TestCase):
