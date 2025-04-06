@@ -23,16 +23,24 @@ class BotProfile:
   flag: str
   # The time the bot was created (seconds since epoch)
   created_time: int
+  # The time the bot was last seen (seconds since epoch)
+  last_seen_time: int
   # If the bot is a patron
   patron: bool
   # If the bot has violated the terms of service
   tos_violation: bool
 
   @classmethod
-  def from_bot_user(cls, bot_user: BotUser) -> "BotProfile":
+  def from_bot_user(cls, bot_user: BotUser, last_seen_time: int) -> "BotProfile":
     """Create a BotProfile from a BotUser."""
     return BotProfile(
-      bot_user.username, bot_user.flair, bot_user.flag, bot_user.created_at, bot_user.patron, bot_user.tos_violation
+      bot_user.username,
+      bot_user.flair,
+      bot_user.flag,
+      bot_user.created_at,
+      last_seen_time,
+      bot_user.patron,
+      bot_user.tos_violation,
     )
 
   @classmethod
@@ -43,6 +51,7 @@ class BotProfile:
       json_dict.get("flair", ""),
       json_dict.get("flag", ""),
       json_dict.get("created_time", 0),
+      json_dict.get("last_seen_time", 0),
       json_dict.get("patron", False),
       json_dict.get("tos_violation", False),
     )
@@ -85,21 +94,17 @@ class BotInfo:
   profile: BotProfile
   # Information related to a bot's performance for a particular PerfType.
   perf: LeaderboardPerf
-  # The time the bot was last seen (seconds since epoch)
-  last_seen_time: int
 
   @classmethod
   def create_bot_info(cls, bot_user: BotUser, perf: Perf, last_seen_time: int) -> "BotInfo":
     """Create a BotInfo from information returned by the lichess API."""
-    return BotInfo(BotProfile.from_bot_user(bot_user), LeaderboardPerf.from_perf(perf), last_seen_time)
+    return BotInfo(BotProfile.from_bot_user(bot_user, last_seen_time), LeaderboardPerf.from_perf(perf))
 
   @classmethod
   def from_json_dict(cls, json_dict: dict[str, Any]) -> "BotInfo":
     """Create a BotInfo from a json dict."""
     return BotInfo(
-      BotProfile.from_json_dict(json_dict.get("profile", {})),
-      LeaderboardPerf.from_json_dict(json_dict.get("perf", {})),
-      json_dict.get("last_seen_time", 0),
+      BotProfile.from_json_dict(json_dict.get("profile", {})), LeaderboardPerf.from_json_dict(json_dict.get("perf", {}))
     )
 
 

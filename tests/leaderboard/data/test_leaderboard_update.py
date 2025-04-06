@@ -15,7 +15,7 @@ from tests.leaderboard.chrono.epoch_seconds import DATE_2021_04_01, DATE_2024_01
 def create_bot_info(username: str, rating: int, games: int, created_time: int) -> BotInfo:
   """Create a BotInfo with several default values set."""
   return BotInfo(
-    BotProfile(username, "", "", created_time, False, False), LeaderboardPerf(rating, 0, 0, games), DATE_2025_04_01
+    BotProfile(username, "", "", created_time, DATE_2025_04_01, False, False), LeaderboardPerf(rating, 0, 0, games)
   )
 
 

@@ -22,24 +22,24 @@ from tests.leaderboard.li.fake_lichess_client import FakeLichessClient
 
 # Bullet leaderboard BotInfos
 BOT_1_INFO_BULLET = BotInfo(
-  BotProfile("Bot-1", "", "", DATE_2021_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000), DATE_2025_04_01
+  BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000)
 )
 BOT_2_INFO_BULLET = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(2900, 0, 0, 900), DATE_2025_04_01
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2900, 0, 0, 900)
 )
 BOT_3_INFO_BULLET = BotInfo(
-  BotProfile("Bot-3", "", "", DATE_2023_04_01, False, False), LeaderboardPerf(2900, 0, 0, 800), DATE_2025_04_01
+  BotProfile("Bot-3", "", "", DATE_2023_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2900, 0, 0, 800)
 )
 BOT_4_INFO_BULLET = BotInfo(
-  BotProfile("Bot-4", "", "", DATE_2024_04_01, False, False), LeaderboardPerf(2800, 0, 0, 700), DATE_2025_04_01
+  BotProfile("Bot-4", "", "", DATE_2024_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2800, 0, 0, 700)
 )
 
 # Blitz leaderboard BotInfos
 BOT_1_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-1", "", "", DATE_2021_04_01, False, False), LeaderboardPerf(2500, 0, 0, 50), DATE_2025_04_01
+  BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2500, 0, 0, 50)
 )
 BOT_2_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(2600, 0, 0, 200), DATE_2025_04_01
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2600, 0, 0, 200)
 )
 
 # Bullet LeaderboardRows
@@ -93,17 +93,17 @@ BOT_2_CURRENT_JSON = """
 
 # Leaderboard Perfs matching the above json
 BOT_1_CURRENT_INFO_BULLET = BotInfo(
-  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, True, False), LeaderboardPerf(2950, 42, -50, 1100), DATE_2025_04_01
+  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False), LeaderboardPerf(2950, 42, -50, 1100)
 )
 BOT_2_CURRENT_INFO_BULLET = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000), DATE_2025_04_01
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000)
 )
 
 BOT_1_CURRENT_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, True, False), LeaderboardPerf(2550, 0, 0, 100), DATE_2025_04_01
+  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False), LeaderboardPerf(2550, 0, 0, 100)
 )
 BOT_2_CURRENT_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, False, False), LeaderboardPerf(2500, 0, 0, 300), DATE_2025_04_01
+  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2500, 0, 0, 300)
 )
 
 
@@ -160,7 +160,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
 
   def test_create_updates_no_tos_violation(self) -> None:
     bot_with_tos_violation = BotInfo(
-      BotProfile("Bot", "", "", DATE_2022_04_01, False, True), LeaderboardPerf(2500, 0, 0, 300), DATE_2025_04_01
+      BotProfile("Bot", "", "", DATE_2022_04_01, DATE_2025_04_01, False, True), LeaderboardPerf(2500, 0, 0, 300)
     )
     updates = data_generator_functions.create_updates([], [bot_with_tos_violation])
     self.assertCountEqual(updates, [])
