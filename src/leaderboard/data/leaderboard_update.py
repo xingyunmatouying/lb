@@ -3,7 +3,7 @@
 import abc
 import dataclasses
 
-from src.leaderboard.data.leaderboard_row import BotInfo, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import BotInfo, LeaderboardRow, RankInfo
 
 
 class LeaderboardUpdate(abc.ABC):
@@ -59,13 +59,14 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
-    delta_rank = self.row.rank - rank
+    delta_rank = self.row.rank_info.rank - rank
     delta_rating = 0
-    peak_rank = min(self.row.rank, rank)
-    peak_rating = self.row.peak_rating
+    peak_rank = min(self.row.rank_info.rank, rank)
+    peak_rating = self.row.rank_info.peak_rating
     is_new = False
     is_online = False
-    return LeaderboardRow(self.row.bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    return LeaderboardRow(self.row.bot_info, rank_info)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -93,7 +94,8 @@ class CurrentBotInfoOnlyUpdate(LeaderboardUpdate):
     peak_rating = self.bot_info.perf.rating
     is_new = True
     is_online = True
-    return LeaderboardRow(self.bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    return LeaderboardRow(self.bot_info, rank_info)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -116,11 +118,12 @@ class FullUpdate(LeaderboardUpdate):
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
     # Moving up in the leaderboard should count as a positive delta (3 -> 1 yields +2)
-    delta_rank = self.previous_row.rank - rank
+    delta_rank = self.previous_row.rank_info.rank - rank
     delta_rating = self.current_bot_info.perf.rating - self.previous_row.bot_info.perf.rating
     # Higher ranking, lower rank number
-    peak_rank = min(self.previous_row.rank, rank)
+    peak_rank = min(self.previous_row.rank_info.rank, rank)
     peak_rating = max(self.previous_row.bot_info.perf.rating, self.current_bot_info.perf.rating)
     is_new = False
     is_online = True
-    return LeaderboardRow(self.current_bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    return LeaderboardRow(self.current_bot_info, rank_info)

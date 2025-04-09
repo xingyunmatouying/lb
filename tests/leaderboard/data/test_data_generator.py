@@ -5,7 +5,14 @@ import unittest
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data import data_generator as data_generator_functions
 from src.leaderboard.data.data_generator import DataGenerator
-from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import (
+  BotInfo,
+  BotProfile,
+  LeaderboardPerf,
+  LeaderboardRow,
+  LeaderboardRowLite,
+  RankInfo,
+)
 from src.leaderboard.data.leaderboard_update import CurrentBotInfoOnlyUpdate, LeaderboardUpdate
 from src.leaderboard.fs import file_paths
 from src.leaderboard.li.pert_type import PerfType
@@ -20,35 +27,32 @@ from tests.leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from tests.leaderboard.li.fake_lichess_client import FakeLichessClient
 
 
-# Bullet leaderboard BotInfos
-BOT_1_INFO_BULLET = BotInfo(
-  BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000)
-)
-BOT_2_INFO_BULLET = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2900, 0, 0, 900)
-)
-BOT_3_INFO_BULLET = BotInfo(
-  BotProfile("Bot-3", "", "", DATE_2023_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2900, 0, 0, 800)
-)
-BOT_4_INFO_BULLET = BotInfo(
-  BotProfile("Bot-4", "", "", DATE_2024_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2800, 0, 0, 700)
-)
+BOT_1_PROFILE = BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2025_04_01, False, False)
+BOT_2_PROFILE = BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False)
 
-# Blitz leaderboard BotInfos
-BOT_1_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2500, 0, 0, 50)
-)
-BOT_2_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2600, 0, 0, 200)
-)
+# Bullet leaderboard data
+BOT_1_PERF_BULLET = LeaderboardPerf(3000, 0, 0, 1000)
+BOT_2_PERF_BULLET = LeaderboardPerf(2900, 0, 0, 900)
+BOT_3_PERF_BULLET = LeaderboardPerf(2900, 0, 0, 800)
+BOT_4_PERF_BULLET = LeaderboardPerf(2800, 0, 0, 700)
 
-# Bullet LeaderboardRows
-BOT_1_ROW_BULLET = LeaderboardRow(BOT_1_INFO_BULLET, 1, 0, 0, 1, 3001, False, True)
-BOT_2_ROW_BULLET = LeaderboardRow(BOT_2_INFO_BULLET, 2, 1, -100, 1, 3000, False, True)
+BOT_1_INFO_BULLET = BotInfo(BOT_1_PROFILE, BOT_1_PERF_BULLET)
+BOT_2_INFO_BULLET = BotInfo(BOT_2_PROFILE, BOT_2_PERF_BULLET)
+BOT_3_INFO_BULLET = BotInfo(BotProfile("Bot-3", "", "", DATE_2023_04_01, DATE_2025_04_01, False, False), BOT_3_PERF_BULLET)
+BOT_4_INFO_BULLET = BotInfo(BotProfile("Bot-4", "", "", DATE_2024_04_01, DATE_2025_04_01, False, False), BOT_4_PERF_BULLET)
 
-# Blitz LeaderboardRows
-BOT_2_ROW_BLITZ = LeaderboardRow(BOT_1_INFO_BLITZ, 1, 1, 100, 1, 2600, False, True)
-BOT_1_ROW_BLITZ = LeaderboardRow(BOT_2_INFO_BLITZ, 2, -1, -150, 1, 2650, False, True)
+BOT_1_ROW_BULLET = LeaderboardRowLite("Bot-1", BOT_1_PERF_BULLET, RankInfo(1, 0, 0, 1, 3001, False, True))
+BOT_2_ROW_BULLET = LeaderboardRowLite("Bot-2", BOT_2_PERF_BULLET, RankInfo(2, 1, -100, 1, 3000, False, True))
+
+# Blitz leaderboard data
+BOT_1_PERF_BLITZ = LeaderboardPerf(2500, 0, 0, 50)
+BOT_2_PERF_BLITZ = LeaderboardPerf(2600, 0, 0, 200)
+
+BOT_1_INFO_BLITZ = BotInfo(BOT_1_PROFILE, BOT_1_PERF_BLITZ)
+BOT_2_INFO_BLITZ = BotInfo(BOT_2_PROFILE, BOT_2_PERF_BLITZ)
+
+BOT_2_ROW_BLITZ = LeaderboardRowLite("Bot-1", BOT_1_PERF_BLITZ, RankInfo(1, 1, 100, 1, 2600, False, True))
+BOT_1_ROW_BLITZ = LeaderboardRowLite("Bot-2", BOT_2_PERF_BLITZ, RankInfo(2, -1, -150, 1, 2650, False, True))
 
 # Response for get online bots
 BOT_1_CURRENT_JSON = """
@@ -92,19 +96,17 @@ BOT_2_CURRENT_JSON = """
 """
 
 # Leaderboard Perfs matching the above json
-BOT_1_CURRENT_INFO_BULLET = BotInfo(
-  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False), LeaderboardPerf(2950, 42, -50, 1100)
-)
-BOT_2_CURRENT_INFO_BULLET = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(3000, 0, 0, 1000)
-)
+BOT_1_CURRENT_PROFILE = BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False)
+BOT_2_CURRENT_PROFILE = BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False)
 
-BOT_1_CURRENT_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False), LeaderboardPerf(2550, 0, 0, 100)
-)
-BOT_2_CURRENT_INFO_BLITZ = BotInfo(
-  BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(2500, 0, 0, 300)
-)
+BOT_1_CURRENT_PERF_BULLET = LeaderboardPerf(2950, 42, -50, 1100)
+BOT_2_CURRENT_PERF_BULLET = LeaderboardPerf(3000, 0, 0, 1000)
+
+BOT_1_CURRENT_INFO_BULLET = BotInfo(BOT_1_CURRENT_PROFILE, BOT_1_CURRENT_PERF_BULLET)
+BOT_2_CURRENT_INFO_BULLET = BotInfo(BOT_2_CURRENT_PROFILE, BOT_2_CURRENT_PERF_BULLET)
+
+BOT_1_CURRENT_INFO_BLITZ = BotInfo(BOT_1_CURRENT_PROFILE, LeaderboardPerf(2550, 0, 0, 100))
+BOT_2_CURRENT_INFO_BLITZ = BotInfo(BOT_2_CURRENT_PROFILE, LeaderboardPerf(2500, 0, 0, 300))
 
 
 def remove_whitespace(whitespace_str: str) -> str:
@@ -120,7 +122,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
 
   def test_load_all_previous_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
-    previous_rows_by_perf_type = data_generator_functions.load_all_previous_rows(file_system)
+    previous_rows_by_perf_type = data_generator_functions.load_all_previous_rows(file_system, {})
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertTrue(all(rows == [] for rows in previous_rows_by_perf_type.values()))
 
@@ -130,10 +132,17 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     blitz_leaderboard = [BOT_2_ROW_BLITZ.to_json(), BOT_1_ROW_BLITZ.to_json()]
     file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_leaderboard)
     file_system.save_file_lines(file_paths.data_path(PerfType.BLITZ), blitz_leaderboard)
-    previous_rows_by_perf_type = data_generator_functions.load_all_previous_rows(file_system)
+    bot_profiles_by_name = {"Bot-1": BOT_1_PROFILE, "Bot-2": BOT_2_PROFILE}
+    previous_rows_by_perf_type = data_generator_functions.load_all_previous_rows(file_system, bot_profiles_by_name)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
-    self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
-    self.assertListEqual(previous_rows_by_perf_type[PerfType.BLITZ], [BOT_2_ROW_BLITZ, BOT_1_ROW_BLITZ])
+    self.assertListEqual(
+      previous_rows_by_perf_type[PerfType.BULLET],
+      [BOT_1_ROW_BULLET.to_leaderboard_row(BOT_1_PROFILE), BOT_2_ROW_BULLET.to_leaderboard_row(BOT_2_PROFILE)],
+    )
+    self.assertListEqual(
+      previous_rows_by_perf_type[PerfType.BLITZ],
+      [BOT_2_ROW_BLITZ.to_leaderboard_row(BOT_1_PROFILE), BOT_1_ROW_BLITZ.to_leaderboard_row(BOT_2_PROFILE)],
+    )
 
   def test_get_all_current_bot_infos(self) -> None:
     lichess_client = FakeLichessClient()
@@ -173,9 +182,9 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_INFO_BULLET, 1, 0, 0, 1, 3000, True, True),
-      LeaderboardRow(BOT_2_INFO_BULLET, 2, 0, 0, 2, 2900, True, True),
-      LeaderboardRow(BOT_4_INFO_BULLET, 3, 0, 0, 3, 2800, True, True),
+      LeaderboardRow(BOT_1_INFO_BULLET, RankInfo(1, 0, 0, 1, 3000, True, True)),
+      LeaderboardRow(BOT_2_INFO_BULLET, RankInfo(2, 0, 0, 2, 2900, True, True)),
+      LeaderboardRow(BOT_4_INFO_BULLET, RankInfo(3, 0, 0, 3, 2800, True, True)),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -188,10 +197,10 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_INFO_BULLET, 1, 0, 0, 1, 3000, True, True),
-      LeaderboardRow(BOT_2_INFO_BULLET, 2, 0, 0, 2, 2900, True, True),
-      LeaderboardRow(BOT_3_INFO_BULLET, 2, 0, 0, 2, 2900, True, True),
-      LeaderboardRow(BOT_4_INFO_BULLET, 4, 0, 0, 4, 2800, True, True),
+      LeaderboardRow(BOT_1_INFO_BULLET, RankInfo(1, 0, 0, 1, 3000, True, True)),
+      LeaderboardRow(BOT_2_INFO_BULLET, RankInfo(2, 0, 0, 2, 2900, True, True)),
+      LeaderboardRow(BOT_3_INFO_BULLET, RankInfo(2, 0, 0, 2, 2900, True, True)),
+      LeaderboardRow(BOT_4_INFO_BULLET, RankInfo(4, 0, 0, 4, 2800, True, True)),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -204,10 +213,10 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates)
     expected_leaderboard_rows = [
-      LeaderboardRow(BOT_1_INFO_BULLET, 1, 0, 0, 1, 3000, True, True),
-      LeaderboardRow(BOT_1_INFO_BULLET, 1, 0, 0, 1, 3000, True, True),
-      LeaderboardRow(BOT_1_INFO_BULLET, 1, 0, 0, 1, 3000, True, True),
-      LeaderboardRow(BOT_4_INFO_BULLET, 4, 0, 0, 4, 2800, True, True),
+      LeaderboardRow(BOT_1_INFO_BULLET, RankInfo(1, 0, 0, 1, 3000, True, True)),
+      LeaderboardRow(BOT_1_INFO_BULLET, RankInfo(1, 0, 0, 1, 3000, True, True)),
+      LeaderboardRow(BOT_1_INFO_BULLET, RankInfo(1, 0, 0, 1, 3000, True, True)),
+      LeaderboardRow(BOT_4_INFO_BULLET, RankInfo(4, 0, 0, 4, 2800, True, True)),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -217,8 +226,12 @@ class TestDataGenerator(unittest.TestCase):
 
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
+
     bullet_ndjson = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
     file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_ndjson)
+
+    bot_profiles_json = [BOT_1_PROFILE.to_json(), BOT_2_PROFILE.to_json()]
+    file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles_json)
 
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
@@ -226,10 +239,13 @@ class TestDataGenerator(unittest.TestCase):
     time_provider = FixedTimeProvider(DATE_2025_04_01)
 
     data_generator = DataGenerator(file_system, lichess_client, time_provider)
-    bullet_ranked_rows = data_generator.generate_leaderboard_data()[PerfType.BULLET]
+    generate_data_result = data_generator.generate_leaderboard_data()
 
     expected_ranked_rows = [
-      LeaderboardRow(BOT_2_CURRENT_INFO_BULLET, 1, 1, 100, 1, 3000, False, True),
-      LeaderboardRow(BOT_1_CURRENT_INFO_BULLET, 2, -1, -50, 1, 3000, False, True),
+      LeaderboardRowLite("Bot-1", BOT_1_CURRENT_PERF_BULLET, RankInfo(2, -1, -50, 1, 3000, False, True)),
+      LeaderboardRowLite("Bot-2", BOT_2_CURRENT_PERF_BULLET, RankInfo(1, 1, 100, 1, 3000, False, True)),
     ]
-    self.assertListEqual(bullet_ranked_rows, expected_ranked_rows)
+    self.assertListEqual(generate_data_result.get_ranked_rows_sorted()[PerfType.BULLET], expected_ranked_rows)
+
+    expected_bot_profiles = {"Bot-1": BOT_1_CURRENT_PROFILE, "Bot-2": BOT_2_CURRENT_PROFILE}
+    self.assertEqual(generate_data_result.get_bot_profiles_sorted(), expected_bot_profiles)

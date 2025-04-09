@@ -1,9 +1,10 @@
 """The main logic for generating the leaderboard data."""
 
+import dataclasses
 from collections import defaultdict
 
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data.leaderboard_row import BotInfo, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardRow, LeaderboardRowLite
 from src.leaderboard.data.leaderboard_update import LeaderboardUpdate
 from src.leaderboard.fs import file_paths
 from src.leaderboard.fs.file_system import FileSystem
@@ -12,7 +13,16 @@ from src.leaderboard.li.lichess_client import LichessClient
 from src.leaderboard.li.pert_type import PerfType
 
 
-def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
+def load_bot_profiles(file_system: FileSystem) -> dict[str, BotProfile]:
+  """Load the known bot profiles."""
+  ndjson = file_system.load_file_lines(file_paths.bot_profiles_path())
+  bot_profiles = [BotProfile.from_json(json_line) for json_line in ndjson]
+  return {bot_profile.username: bot_profile for bot_profile in bot_profiles}
+
+
+def load_all_previous_rows(
+  file_system: FileSystem, bot_profiles_by_name: dict[str, BotProfile]
+) -> dict[PerfType, list[LeaderboardRow]]:
   """Load the previous leaderboard data.
 
   Returns a lists of leaderboard rows grouped by perf type.
@@ -20,7 +30,12 @@ def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[Leade
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
     ndjson = file_system.load_file_lines(file_paths.data_path(perf_type))
-    previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_json(json_line) for json_line in ndjson]
+    leaderboard_rows: list[LeaderboardRow] = []
+    for json_line in ndjson:
+      leaderboard_row_lite = LeaderboardRowLite.from_json(json_line)
+      # It should always be the case that the profile exists
+      leaderboard_rows.append(leaderboard_row_lite.to_leaderboard_row(bot_profiles_by_name[leaderboard_row_lite.username]))
+    previous_rows_by_perf_type[perf_type] = leaderboard_rows
   return previous_rows_by_perf_type
 
 
@@ -32,6 +47,7 @@ def get_all_current_bot_infos(lichess_client: LichessClient, time_provider: Time
   current_time = time_provider.get_current_time()
   current_infos_by_perf_type: dict[PerfType, list[BotInfo]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
+    # TODO: no need to duplicate the BotUser for each perf type
     bot_user = BotUser.from_json(bot_json)
     for perf in bot_user.perfs:
       # Don't include provisional ratings (this ends up being redundant if taking rd into account)
@@ -79,6 +95,41 @@ def create_ranked_rows(updates: list[LeaderboardUpdate]) -> list[LeaderboardRow]
   return new_rows
 
 
+@dataclasses.dataclass(frozen=True)
+class GenerateDataResult:
+  """The result of generating the leaderboard data.
+
+  This is a pair of:
+  - a dict from name to BotProfile
+  - lists of LeaderboardRowLite grouped by PerfType
+  """
+
+  bot_profiles_by_name: dict[str, BotProfile]
+  ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRowLite]]
+
+  @classmethod
+  def create_result(
+    cls, bot_profiles_by_name: dict[str, BotProfile], ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]
+  ) -> "GenerateDataResult":
+    """Create a data result with the data provided."""
+    # TODO need correct bot profiles - can get from ranked rows
+    ranked_rows_lite_by_perf_type = {
+      perf_type: [row.to_leaderboard_row_lite() for row in rows] for perf_type, rows in ranked_rows_by_perf_type.items()
+    }
+    return GenerateDataResult(bot_profiles_by_name, ranked_rows_lite_by_perf_type)
+
+  def get_bot_profiles_sorted(self) -> dict[str, BotProfile]:
+    """Return the bot profiles dict sorted by name."""
+    return dict(sorted(self.bot_profiles_by_name.items(), key=lambda item: item[0].lower()))
+
+  def get_ranked_rows_sorted(self) -> dict[PerfType, list[LeaderboardRowLite]]:
+    """Return the ranked rows by perf type with the ranked rows sorted by name."""
+    sorted_ranked_rows: dict[PerfType, list[LeaderboardRowLite]] = {}
+    for perf_type, ranked_rows in self.ranked_rows_by_perf_type.items():
+      sorted_ranked_rows[perf_type] = sorted(ranked_rows, key=lambda row: row.username.lower())
+    return sorted_ranked_rows
+
+
 class DataGenerator:
   """Generator of leaderboard data.
 
@@ -91,16 +142,22 @@ class DataGenerator:
     self.lichess_client: LichessClient = lichess_client
     self.time_provider: TimeProvider = time_provider
 
-  def generate_leaderboard_data(self) -> dict[PerfType, list[LeaderboardRow]]:
+  def generate_leaderboard_data(self) -> GenerateDataResult:
     """Generate and save all leaderboard data."""
-    # Load the existing leaderboards
-    previous_rows_by_perf_type = load_all_previous_rows(self.file_system)
+    # Load the existing leaderboard data
+    bot_profiles_by_name = load_bot_profiles(self.file_system)
+    previous_rows_by_perf_type = load_all_previous_rows(self.file_system, bot_profiles_by_name)
     # Get the current online bot info
     current_infos_by_perf_type = get_all_current_bot_infos(self.lichess_client, self.time_provider)
+    # Update the bot profiles
+    for bot_infos in current_infos_by_perf_type.values():
+      for bot_info in bot_infos:
+        bot_profiles_by_name[bot_info.profile.username] = bot_info.profile
     # Combine the data and create update objects for all of the leaderboards
     updates_by_perf_type = {
       perf_type: create_updates(previous_rows_by_perf_type.get(perf_type, []), current_infos_by_perf_type.get(perf_type, []))
       for perf_type in PerfType.all_except_unknown()
     }
     # Create and return the leaderboards with rank information
-    return {perf_type: create_ranked_rows(updates) for perf_type, updates in updates_by_perf_type.items()}
+    ranked_rows_by_perf_type = {perf_type: create_ranked_rows(updates) for perf_type, updates in updates_by_perf_type.items()}
+    return GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)

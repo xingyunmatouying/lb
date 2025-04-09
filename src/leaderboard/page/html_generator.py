@@ -6,7 +6,8 @@ from jinja2 import Environment, FileSystemLoader
 
 from src.leaderboard.chrono import date_formatter, duration_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data.leaderboard_row import LeaderboardRow
+from src.leaderboard.data.data_generator import GenerateDataResult
+from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRowLite
 from src.leaderboard.li.pert_type import PerfType
 
 
@@ -87,19 +88,19 @@ class HtmlLeaderboardRow:
   last_seen_date: str
 
   @classmethod
-  def from_leaderboard_row(cls, row: LeaderboardRow, current_time: int) -> "HtmlLeaderboardRow":
+  def from_leaderboard_row(cls, row: LeaderboardRowLite, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
-      row.rank,
-      LeaderboardDelta.for_delta_rank(row.delta_rank, row.is_new),
-      OnlineStatus.create_from(row.is_online, row.bot_info.profile.patron),
-      row.bot_info.profile.username,
-      row.bot_info.profile.flag,
-      row.bot_info.perf.rating,
-      LeaderboardDelta.for_delta_rating(row.delta_rating),
-      row.bot_info.perf.games,
-      duration_formatter.format_age(row.bot_info.profile.created_time, current_time),
-      date_formatter.format_yyyy_mm_dd(row.bot_info.profile.last_seen_time),
+      row.rank_info.rank,
+      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, row.rank_info.is_new),
+      OnlineStatus.create_from(row.rank_info.is_online, profile.patron),
+      profile.username,
+      profile.flag,
+      row.perf.rating,
+      LeaderboardDelta.for_delta_rating(row.rank_info.delta_rating),
+      row.perf.games,
+      duration_formatter.format_age(profile.created_time, current_time),
+      date_formatter.format_yyyy_mm_dd(profile.last_seen_time),
     )
 
 
@@ -125,7 +126,7 @@ class HtmlGenerator:
     self.time_provider = time_provider
     self.jinja_environment = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
 
-  def generate_leaderboard_html(self, ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]) -> dict[str, str]:
+  def generate_leaderboard_html(self, leaderboard_data: GenerateDataResult) -> dict[str, str]:
     """Generate index and leaderboard html."""
     current_time = self.time_provider.get_current_time()
     last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)
@@ -138,11 +139,13 @@ class HtmlGenerator:
     html_by_name["index"] = index_html
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
-      rows = ranked_rows_by_perf_type.get(perf_type, [])
       leaderboard_template = self.jinja_environment.get_template("leaderboard.html.jinja")
       leaderboard_html = leaderboard_template.render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
-        leaderboard_rows=[HtmlLeaderboardRow.from_leaderboard_row(row, current_time) for row in rows],
+        leaderboard_rows=[
+          HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.username], current_time)
+          for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
+        ],
       )
       html_by_name[perf_type.to_string()] = leaderboard_html
     # Return file name to html contents map

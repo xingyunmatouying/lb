@@ -2,10 +2,10 @@
 
 import unittest
 
-from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import BotInfo, BotProfile, LeaderboardPerf, LeaderboardRowLite, RankInfo
 from src.leaderboard.li.bot_user import BotUser, Perf
 from src.leaderboard.li.pert_type import PerfType
-from tests.leaderboard.chrono.epoch_seconds import DATE_2024_01_01, DATE_2024_04_01, DATE_2025_04_01
+from tests.leaderboard.chrono.epoch_seconds import DATE_2024_01_01, DATE_2025_04_01
 
 
 EMPTY_BOT_PROFILE = BotProfile("", "", "", 0, 0, False, False)
@@ -77,36 +77,30 @@ class TestBotInfo(unittest.TestCase):
     self.assertEqual(BotInfo.from_json_dict({}), BotInfo(EMPTY_BOT_PROFILE, EMPTY_LEADERBOARD_PERF))
 
 
-class TestLeaderboardRow(unittest.TestCase):
-  """Tests for LeaderboardRow."""
+class TestLeaderboardRowLite(unittest.TestCase):
+  """Tests for LeaderboardRowLite."""
 
   def test_from_json(self) -> None:
     leaderboard_row_json = """
       {
-        "bot_info": {
-          "profile": {
-            "username": "Bot1",
-            "last_seen_time": 1743500000
-          },
-          "perf": {
-            "rating": 1500
-          }
+        "username": "Bot1",
+        "perf": {
+          "rating": 1500
         },
-        "rank": 4,
-        "delta_rank": 1,
-        "delta_rating": 50,
-        "peak_rank": 3,
-        "peak_rating": 1600,
-        "is_online": true
+        "rank_info": {
+          "rank": 4,
+          "delta_rank": 1,
+          "delta_rating": 50,
+          "peak_rank": 3,
+          "peak_rating": 1600,
+          "is_online": true
+        }
       }
       """
-    expected_bot_info = BotInfo(BotProfile("Bot1", "", "", 0, DATE_2025_04_01, False, False), LeaderboardPerf(1500, 0, 0, 0))
-    expected_leaderboard_row = LeaderboardRow(expected_bot_info, 4, 1, 50, 3, 1600, False, True)
-    self.assertEqual(LeaderboardRow.from_json(leaderboard_row_json), expected_leaderboard_row)
+    expected_perf = LeaderboardPerf(1500, 0, 0, 0)
+    expected_leaderboard_row = LeaderboardRowLite("Bot1", expected_perf, RankInfo(4, 1, 50, 3, 1600, False, True))
+    self.assertEqual(LeaderboardRowLite.from_json(leaderboard_row_json), expected_leaderboard_row)
 
   def test_to_json_round_trip(self) -> None:
-    bot_info = BotInfo(
-      BotProfile("Bot1", "flair", "EU", DATE_2024_04_01, DATE_2025_04_01, False, False), LeaderboardPerf(1500, 12, 34, 100)
-    )
-    leaderboard_row = LeaderboardRow(bot_info, 4, 1, 50, 3, 1600, True, False)
-    self.assertEqual(LeaderboardRow.from_json(leaderboard_row.to_json()), leaderboard_row)
+    leaderboard_row = LeaderboardRowLite("Bot1", LeaderboardPerf(1500, 12, 34, 100), RankInfo(4, 1, 50, 3, 1600, True, False))
+    self.assertEqual(LeaderboardRowLite.from_json(leaderboard_row.to_json()), leaderboard_row)

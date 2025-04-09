@@ -44,6 +44,11 @@ class BotProfile:
     )
 
   @classmethod
+  def from_json(cls, json_str: str) -> "BotProfile":
+    """Create a BotProfile from json."""
+    return BotProfile.from_json_dict(json.loads(json_str))
+
+  @classmethod
   def from_json_dict(cls, json_dict: dict[str, Any]) -> "BotProfile":
     """Create a BotProfile from a json dict."""
     return BotProfile(
@@ -55,6 +60,13 @@ class BotProfile:
       json_dict.get("patron", False),
       json_dict.get("tos_violation", False),
     )
+
+  def to_json(self) -> str:
+    """Convert the BotProfile to json.
+
+    Values will only be set if they are not equal to their default values.
+    """
+    return json.dumps(default_remover.to_dict_without_defaults(dataclasses.asdict(self)))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -88,7 +100,10 @@ class LeaderboardPerf:
 
 @dataclasses.dataclass(frozen=True)
 class BotInfo:
-  """Information about the bot which may appear on the leaderboard."""
+  """Information about the bot which may appear on the leaderboard.
+
+  This class is useful for translating what is returned by lichess into a leaderboard row.
+  """
 
   # Information related to the bot's profile.
   profile: BotProfile
@@ -109,15 +124,9 @@ class BotInfo:
 
 
 @dataclasses.dataclass(frozen=True)
-class LeaderboardRow:
-  """A row in the leaderboard: rank, name, rating, etc...
+class RankInfo:
+  """Information related to the bot's rank in the leaderboard row."""
 
-  This class includes a BotInfo as well as additional details which are calculated.
-  """
-
-  # Information about the bot returned by the lichess API
-  bot_info: BotInfo
-  # The bot's position within the leaderboard
   rank: int
   # How much their rank has changed since the last time the leaderboard was generated
   delta_rank: int
@@ -133,11 +142,9 @@ class LeaderboardRow:
   is_online: bool
 
   @classmethod
-  def from_json(cls, json_str: str) -> "LeaderboardRow":
-    """Create a LeaderboardRow from json."""
-    json_dict = json.loads(json_str)
-    return LeaderboardRow(
-      BotInfo.from_json_dict(json_dict.get("bot_info", {})),
+  def from_json_dict(cls, json_dict: dict[str, Any]) -> "RankInfo":
+    """Create a RankInfo from a json dict."""
+    return RankInfo(
       json_dict.get("rank", 0),
       json_dict.get("delta_rank", 0),
       json_dict.get("delta_rating", 0),
@@ -146,6 +153,46 @@ class LeaderboardRow:
       json_dict.get("is_new", False),
       json_dict.get("is_online", False),
     )
+
+
+@dataclasses.dataclass(frozen=True)
+class LeaderboardRow:
+  """A row in the leaderboard: rank, name, rating, etc..."""
+
+  # Information about the bot returned by the lichess API
+  bot_info: BotInfo
+  # Information related to the bot's rank in the leaderboard row
+  rank_info: RankInfo
+
+  def to_leaderboard_row_lite(self) -> "LeaderboardRowLite":
+    """Convert to a LeaderboardRowLite."""
+    return LeaderboardRowLite(self.bot_info.profile.username, self.bot_info.perf, self.rank_info)
+
+
+@dataclasses.dataclass(frozen=True)
+class LeaderboardRowLite:
+  """Data that is specific to a row on a particular leaderboard."""
+
+  # The bot's username
+  username: str
+  # Information related to a bot's performance for a particular PerfType.
+  perf: LeaderboardPerf
+  # Information related to the bot's rank in the leaderboard row
+  rank_info: RankInfo
+
+  @classmethod
+  def from_json(cls, json_str: str) -> "LeaderboardRowLite":
+    """Create a LeaderboardRow from json."""
+    json_dict = json.loads(json_str)
+    return LeaderboardRowLite(
+      json_dict.get("username", ""),
+      LeaderboardPerf.from_json_dict(json_dict.get("perf", {})),
+      RankInfo.from_json_dict(json_dict.get("rank_info", {})),
+    )
+
+  def to_leaderboard_row(self, bot_profile: BotProfile) -> LeaderboardRow:
+    """With the addition of a BotProfile, Convert to a LeaderboardRow."""
+    return LeaderboardRow(BotInfo(bot_profile, self.perf), self.rank_info)
 
   def to_json(self) -> str:
     """Convert the leaderboard row to json.
