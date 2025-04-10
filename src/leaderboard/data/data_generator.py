@@ -112,7 +112,6 @@ class GenerateDataResult:
     cls, bot_profiles_by_name: dict[str, BotProfile], ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]
   ) -> "GenerateDataResult":
     """Create a data result with the data provided."""
-    # TODO need correct bot profiles - can get from ranked rows
     ranked_rows_lite_by_perf_type = {
       perf_type: [row.to_leaderboard_row_lite() for row in rows] for perf_type, rows in ranked_rows_by_perf_type.items()
     }
