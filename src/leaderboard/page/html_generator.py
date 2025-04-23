@@ -7,7 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 from src.leaderboard.chrono import date_formatter, duration_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.data_generator import GenerateDataResult
-from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRowLite
+from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
 
 
@@ -88,12 +88,12 @@ class HtmlLeaderboardRow:
   last_seen_date: str
 
   @classmethod
-  def from_leaderboard_row(cls, row: LeaderboardRowLite, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
+  def from_leaderboard_row(cls, row: LeaderboardRow, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
       row.rank_info.rank,
-      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, row.rank_info.is_new),
-      OnlineStatus.create_from(row.rank_info.is_online, profile.patron),
+      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.is_new),
+      OnlineStatus.create_from(profile.is_online, profile.patron),
       profile.username,
       profile.flag,
       row.perf.rating,

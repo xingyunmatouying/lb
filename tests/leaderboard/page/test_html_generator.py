@@ -4,7 +4,7 @@ import unittest
 
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import GenerateDataResult
-from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRowLite
+from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
 from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta, OnlineStatus
 
@@ -52,10 +52,7 @@ class TestHtmlGenerator(unittest.TestCase):
     bot_2_profile = BotProfile.from_json('{"username": "Bot-2"}')
     bot_profiles_by_name = {"Bot-1": bot_1_profile, "Bot-2": bot_2_profile}
     ranked_rows_by_perf_type = {
-      PerfType.BULLET: [
-        LeaderboardRowLite.from_json('{"username": "Bot-1"}').to_leaderboard_row(bot_1_profile),
-        LeaderboardRowLite.from_json('{"username": "Bot-2"}').to_leaderboard_row(bot_2_profile),
-      ]
+      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1"}'), LeaderboardRow.from_json('{"username": "Bot-2"}')]
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
@@ -68,13 +65,9 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("https://lichess.org/@/Bot-2", bullet_html)
 
   def test_generate_new_bot(self) -> None:
-    bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
+    bot_1_profile = BotProfile("Bot-1", "", "", 0, 0, False, False, True, True)
     bot_profiles_by_name = {"Bot-1": bot_1_profile}
-    ranked_rows_by_perf_type = {
-      PerfType.BULLET: [
-        LeaderboardRowLite.from_json('{"username": "Bot-1", "rank_info": {"is_new": true}}').to_leaderboard_row(bot_1_profile),
-      ]
-    }
+    ranked_rows_by_perf_type = {PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1"}')]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
       GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
@@ -85,11 +78,7 @@ class TestHtmlGenerator(unittest.TestCase):
     bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
     bot_profiles_by_name = {"Bot-1": bot_1_profile}
     ranked_rows_by_perf_type = {
-      PerfType.BULLET: [
-        LeaderboardRowLite.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": 3}}').to_leaderboard_row(
-          bot_1_profile
-        ),
-      ]
+      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": 3}}')]
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
@@ -102,11 +91,7 @@ class TestHtmlGenerator(unittest.TestCase):
     bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
     bot_profiles_by_name = {"Bot-1": bot_1_profile}
     ranked_rows_by_perf_type = {
-      PerfType.BULLET: [
-        LeaderboardRowLite.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": -3}}').to_leaderboard_row(
-          bot_1_profile
-        ),
-      ]
+      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": -3}}')]
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
@@ -119,11 +104,7 @@ class TestHtmlGenerator(unittest.TestCase):
     bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
     bot_profiles_by_name = {"Bot-1": bot_1_profile}
     ranked_rows_by_perf_type = {
-      PerfType.BULLET: [
-        LeaderboardRowLite.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": 3}}').to_leaderboard_row(
-          bot_1_profile
-        ),
-      ]
+      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": 3}}')]
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
@@ -136,11 +117,7 @@ class TestHtmlGenerator(unittest.TestCase):
     bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
     bot_profiles_by_name = {"Bot-1": bot_1_profile}
     ranked_rows_by_perf_type = {
-      PerfType.BULLET: [
-        LeaderboardRowLite.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": -3}}').to_leaderboard_row(
-          bot_1_profile
-        ),
-      ]
+      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": -3}}')]
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
