@@ -37,11 +37,8 @@ BOT_1_ROW_BULLET = LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0
 BOT_2_ROW_BULLET = LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 1, -100, 1, 3000))
 
 # Blitz leaderboard data
-BOT_1_PERF_BLITZ = BotPerf("Bot-1", LeaderboardPerf(2500, 0, 0, 50))
-BOT_2_PERF_BLITZ = BotPerf("Bot-1", LeaderboardPerf(2600, 0, 0, 200))
-
-BOT_2_ROW_BLITZ = LeaderboardRow("Bot-1", BOT_1_PERF_BLITZ.perf, RankInfo(1, 1, 100, 1, 2600))
-BOT_1_ROW_BLITZ = LeaderboardRow("Bot-2", BOT_1_PERF_BLITZ.perf, RankInfo(2, -1, -150, 1, 2650))
+BOT_2_ROW_BLITZ = LeaderboardRow("Bot-1", LeaderboardPerf(2500, 0, 0, 50), RankInfo(1, 1, 100, 1, 2600))
+BOT_1_ROW_BLITZ = LeaderboardRow("Bot-2", LeaderboardPerf(2600, 0, 0, 200), RankInfo(2, -1, -150, 1, 2650))
 
 # Response for get online bots
 BOT_1_CURRENT_JSON = """
