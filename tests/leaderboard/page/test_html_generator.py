@@ -48,9 +48,10 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("2025-04-01 05:00:00 UTC", index_html)
 
   def test_generate_bullet(self) -> None:
-    bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
-    bot_2_profile = BotProfile.from_json('{"username": "Bot-2"}')
-    bot_profiles_by_name = {"Bot-1": bot_1_profile, "Bot-2": bot_2_profile}
+    bot_profiles_by_name = {
+      "Bot-1": BotProfile.from_json('{"username": "Bot-1"}'),
+      "Bot-2": BotProfile.from_json('{"username": "Bot-2"}'),
+    }
     ranked_rows_by_perf_type = {
       PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1"}'), LeaderboardRow.from_json('{"username": "Bot-2"}')]
     }
@@ -65,8 +66,7 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("https://lichess.org/@/Bot-2", bullet_html)
 
   def test_generate_new_bot(self) -> None:
-    bot_1_profile = BotProfile("Bot-1", "", "", 0, 0, False, False, True, True)
-    bot_profiles_by_name = {"Bot-1": bot_1_profile}
+    bot_profiles_by_name = {"Bot-1": BotProfile("Bot-1", "", "", 0, 0, False, False, True, True)}
     ranked_rows_by_perf_type = {PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1"}')]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
@@ -75,8 +75,7 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("🆕", bullet_html)
 
   def test_generate_positive_delta_rank(self) -> None:
-    bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
-    bot_profiles_by_name = {"Bot-1": bot_1_profile}
+    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
     ranked_rows_by_perf_type = {
       PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": 3}}')]
     }
@@ -88,8 +87,7 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn('class="col-delta-rank delta-pos"', bullet_html)
 
   def test_generate_negative_delta_rank(self) -> None:
-    bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
-    bot_profiles_by_name = {"Bot-1": bot_1_profile}
+    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
     ranked_rows_by_perf_type = {
       PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": -3}}')]
     }
@@ -101,8 +99,7 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn('class="col-delta-rank delta-neg"', bullet_html)
 
   def test_generate_positive_delta_rating(self) -> None:
-    bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
-    bot_profiles_by_name = {"Bot-1": bot_1_profile}
+    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
     ranked_rows_by_perf_type = {
       PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": 3}}')]
     }
@@ -114,8 +111,7 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn('class="col-delta-rating delta-pos"', bullet_html)
 
   def test_generate_negative_delta_rating(self) -> None:
-    bot_1_profile = BotProfile.from_json('{"username": "Bot-1"}')
-    bot_profiles_by_name = {"Bot-1": bot_1_profile}
+    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
     ranked_rows_by_perf_type = {
       PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": -3}}')]
     }
