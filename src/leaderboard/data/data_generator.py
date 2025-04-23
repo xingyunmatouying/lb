@@ -20,11 +20,8 @@ def load_bot_profiles(file_system: FileSystem) -> dict[str, BotProfile]:
   return {bot_profile.username: bot_profile for bot_profile in bot_profiles}
 
 
-def load_all_previous_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
-  """Load the previous leaderboard data.
-
-  Returns a lists of leaderboard rows grouped by perf type.
-  """
+def load_leaderboard_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
+  """Load the previous leaderboard rows and return lists of leaderboard rows grouped by perf type."""
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
     ndjson = file_system.load_file_lines(file_paths.data_path(perf_type))
@@ -157,7 +154,7 @@ class DataGenerator:
     """Generate and save all leaderboard data."""
     # Load the existing leaderboard data
     bot_profiles_by_name = load_bot_profiles(self.file_system)
-    previous_rows_by_perf_type = load_all_previous_rows(self.file_system)
+    previous_rows_by_perf_type = load_leaderboard_rows(self.file_system)
     # Get the current online bot info
     online_bot_info = get_online_bot_info(self.lichess_client, self.time_provider)
     # Update the bot profiles

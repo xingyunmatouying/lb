@@ -115,19 +115,19 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     }
     self.assertDictEqual(data_generator_functions.load_bot_profiles(file_system), expected_bot_profiles)
 
-  def test_load_all_previous_rows_empty(self) -> None:
+  def test_load_leaderboard_rows_empty(self) -> None:
     file_system = InMemoryFileSystem()
-    previous_rows_by_perf_type = data_generator_functions.load_all_previous_rows(file_system)
+    previous_rows_by_perf_type = data_generator_functions.load_leaderboard_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertTrue(all(rows == [] for rows in previous_rows_by_perf_type.values()))
 
-  def test_load_all_previous_rows(self) -> None:
+  def test_load_leaderboard_rows(self) -> None:
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
     blitz_leaderboard = [BOT_2_ROW_BLITZ.to_json(), BOT_1_ROW_BLITZ.to_json()]
     file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_leaderboard)
     file_system.save_file_lines(file_paths.data_path(PerfType.BLITZ), blitz_leaderboard)
-    previous_rows_by_perf_type = data_generator_functions.load_all_previous_rows(file_system)
+    previous_rows_by_perf_type = data_generator_functions.load_leaderboard_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BLITZ], [BOT_2_ROW_BLITZ, BOT_1_ROW_BLITZ])
