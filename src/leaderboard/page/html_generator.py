@@ -6,7 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 
 from src.leaderboard.chrono import date_formatter, duration_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data.data_generator import GenerateDataResult
+from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
 
@@ -126,7 +126,7 @@ class HtmlGenerator:
     self.time_provider = time_provider
     self.jinja_environment = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
 
-  def generate_leaderboard_html(self, leaderboard_data: GenerateDataResult) -> dict[str, str]:
+  def generate_leaderboard_html(self, leaderboard_data: LeaderboardDataResult) -> dict[str, str]:
     """Generate index and leaderboard html."""
     current_time = self.time_provider.get_current_time()
     last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)

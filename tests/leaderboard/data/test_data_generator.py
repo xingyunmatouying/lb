@@ -236,16 +236,16 @@ class TestDataGenerator(unittest.TestCase):
     time_provider = FixedTimeProvider(DATE_2025_04_01)
 
     data_generator = DataGenerator(file_system, lichess_client, time_provider)
-    generate_data_result = data_generator.generate_leaderboard_data()
+    leaderboard_data = data_generator.generate_leaderboard_data()
 
     expected_ranked_rows = [
       LeaderboardRow("Bot-1", BOT_1_CURRENT_PERF_BULLET.perf, RankInfo(2, -1, -50, 1, 3000)),
       LeaderboardRow("Bot-2", BOT_2_CURRENT_PERF_BULLET.perf, RankInfo(1, 1, 100, 1, 3000)),
     ]
-    self.assertListEqual(generate_data_result.get_ranked_rows_sorted()[PerfType.BULLET], expected_ranked_rows)
+    self.assertListEqual(leaderboard_data.get_ranked_rows_sorted()[PerfType.BULLET], expected_ranked_rows)
 
     expected_bot_profiles = {
       "Bot-1": BOT_1_CURRENT_PROFILE.create_updated_copy_for_for_merge(),
       "Bot-2": BOT_2_CURRENT_PROFILE.create_updated_copy_for_for_merge(),
     }
-    self.assertEqual(generate_data_result.get_bot_profiles_sorted(), expected_bot_profiles)
+    self.assertEqual(leaderboard_data.get_bot_profiles_sorted(), expected_bot_profiles)

@@ -3,7 +3,7 @@
 import unittest
 
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
-from src.leaderboard.data.data_generator import GenerateDataResult
+from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
 from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta, OnlineStatus
@@ -37,13 +37,13 @@ class TestHtmlGenerator(unittest.TestCase):
 
   def test_generate_index(self) -> None:
     html_generator = HtmlGenerator(FixedTimeProvider(0))
-    index_html = html_generator.generate_leaderboard_html(GenerateDataResult.create_result({}, {}))["index"]
+    index_html = html_generator.generate_leaderboard_html(LeaderboardDataResult.create_result({}, {}))["index"]
     self.assertIn('<a href="index.html" class="active">Home</a>', index_html)
 
   def test_generate_last_updated(self) -> None:
     time_provider = FixedTimeProvider(1743483600)
     html_generator = HtmlGenerator(time_provider)
-    index_html = html_generator.generate_leaderboard_html(GenerateDataResult.create_result({}, {}))["index"]
+    index_html = html_generator.generate_leaderboard_html(LeaderboardDataResult.create_result({}, {}))["index"]
     self.assertIn("Last Updated:", index_html)
     self.assertIn("2025-04-01 05:00:00 UTC", index_html)
 
@@ -57,7 +57,7 @@ class TestHtmlGenerator(unittest.TestCase):
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("<h1>Bullet</h1>", bullet_html)
     self.assertIn("Bot-1", bullet_html)
@@ -70,7 +70,7 @@ class TestHtmlGenerator(unittest.TestCase):
     ranked_rows_by_perf_type = {PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1"}')]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("🆕", bullet_html)
 
@@ -81,7 +81,7 @@ class TestHtmlGenerator(unittest.TestCase):
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("↑3", bullet_html)
     self.assertIn('class="col-delta-rank delta-pos"', bullet_html)
@@ -93,7 +93,7 @@ class TestHtmlGenerator(unittest.TestCase):
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("↓3", bullet_html)
     self.assertIn('class="col-delta-rank delta-neg"', bullet_html)
@@ -105,7 +105,7 @@ class TestHtmlGenerator(unittest.TestCase):
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("(+3)", bullet_html)
     self.assertIn('class="col-delta-rating delta-pos"', bullet_html)
@@ -117,7 +117,7 @@ class TestHtmlGenerator(unittest.TestCase):
     }
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      GenerateDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("(-3)", bullet_html)
     self.assertIn('class="col-delta-rating delta-neg"', bullet_html)

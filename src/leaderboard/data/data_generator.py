@@ -108,7 +108,7 @@ def create_ranked_rows(updates: list[LeaderboardUpdate], bot_profiles_by_name: d
 
 
 @dataclasses.dataclass(frozen=True)
-class GenerateDataResult:
+class LeaderboardDataResult:
   """The result of generating the leaderboard data.
 
   This is a pair of:
@@ -122,9 +122,9 @@ class GenerateDataResult:
   @classmethod
   def create_result(
     cls, bot_profiles_by_name: dict[str, BotProfile], ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]
-  ) -> "GenerateDataResult":
+  ) -> "LeaderboardDataResult":
     """Create a data result with the data provided."""
-    return GenerateDataResult(bot_profiles_by_name, ranked_rows_by_perf_type)
+    return LeaderboardDataResult(bot_profiles_by_name, ranked_rows_by_perf_type)
 
   def get_bot_profiles_sorted(self) -> dict[str, BotProfile]:
     """Return the bot profiles dict sorted by name."""
@@ -150,7 +150,7 @@ class DataGenerator:
     self.lichess_client: LichessClient = lichess_client
     self.time_provider: TimeProvider = time_provider
 
-  def generate_leaderboard_data(self) -> GenerateDataResult:
+  def generate_leaderboard_data(self) -> LeaderboardDataResult:
     """Generate and save all leaderboard data."""
     # Load the existing leaderboard data
     bot_profiles_by_name = load_bot_profiles(self.file_system)
@@ -170,4 +170,4 @@ class DataGenerator:
     ranked_rows_by_perf_type = {
       perf_type: create_ranked_rows(updates, updated_bot_profiles) for perf_type, updates in updates_by_perf_type.items()
     }
-    return GenerateDataResult.create_result(updated_bot_profiles, ranked_rows_by_perf_type)
+    return LeaderboardDataResult.create_result(updated_bot_profiles, ranked_rows_by_perf_type)
