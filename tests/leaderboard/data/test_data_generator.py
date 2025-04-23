@@ -25,6 +25,8 @@ BOT_2_PROFILE = BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, Fa
 BOT_3_PROFILE = BotProfile("Bot-3", "", "", DATE_2023_04_01, DATE_2025_04_01, False, False, False, True)
 BOT_4_PROFILE = BotProfile("Bot-4", "", "", DATE_2024_04_01, DATE_2025_04_01, False, False, False, True)
 
+BOT_PROFILES_BY_NAME = {"Bot-1": BOT_1_PROFILE, "Bot-2": BOT_2_PROFILE, "Bot-3": BOT_3_PROFILE, "Bot-4": BOT_4_PROFILE}
+
 # Bullet leaderboard data
 BOT_1_PERF_BULLET = BotPerf("Bot-1", LeaderboardPerf(3000, 0, 0, 1000))
 BOT_2_PERF_BULLET = BotPerf("Bot-2", LeaderboardPerf(2900, 0, 0, 900))
@@ -174,8 +176,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
       CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
       CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET),
     ]
-    bot_profiles_by_name = {"Bot-1": BOT_1_PROFILE, "Bot-2": BOT_2_PROFILE, "Bot-4": BOT_4_PROFILE}
-    leaderboard_rows = data_generator_functions.create_ranked_rows(updates, bot_profiles_by_name)
+    leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME)
     expected_leaderboard_rows = [
       LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
       LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 0, 0, 2, 2900)),
@@ -190,8 +191,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
       CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET),
       CurrentBotPerfOnlyUpdate(BOT_3_PERF_BULLET),
     ]
-    bot_profiles_by_name = {"Bot-1": BOT_1_PROFILE, "Bot-2": BOT_2_PROFILE, "Bot-3": BOT_3_PROFILE, "Bot-4": BOT_4_PROFILE}
-    leaderboard_rows = data_generator_functions.create_ranked_rows(updates, bot_profiles_by_name)
+    leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME)
     expected_leaderboard_rows = [
       LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
       LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 0, 0, 2, 2900)),
@@ -207,8 +207,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
       CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
       CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
     ]
-    bot_profiles_by_name = {"Bot-1": BOT_1_PROFILE, "Bot-2": BOT_2_PROFILE, "Bot-3": BOT_3_PROFILE, "Bot-4": BOT_4_PROFILE}
-    leaderboard_rows = data_generator_functions.create_ranked_rows(updates, bot_profiles_by_name)
+    leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME)
     expected_leaderboard_rows = [
       LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
       LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
