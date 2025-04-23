@@ -20,6 +20,7 @@ from tests.leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from tests.leaderboard.li.fake_lichess_client import FakeLichessClient
 
 
+# Bot profiles
 BOT_1_PROFILE = BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2025_04_01, False, False, False, True)
 BOT_2_PROFILE = BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False, False, True)
 BOT_3_PROFILE = BotProfile("Bot-3", "", "", DATE_2023_04_01, DATE_2025_04_01, False, False, False, True)
