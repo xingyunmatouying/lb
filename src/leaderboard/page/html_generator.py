@@ -99,8 +99,8 @@ class HtmlLeaderboardRow:
       row.perf.rating,
       LeaderboardDelta.for_delta_rating(row.rank_info.delta_rating),
       row.perf.games,
-      duration_formatter.format_age(profile.created_time, current_time),
-      date_formatter.format_yyyy_mm_dd(profile.last_seen_time),
+      duration_formatter.format_age(profile.created, current_time),
+      date_formatter.format_yyyy_mm_dd(profile.last_seen),
     )
 
 

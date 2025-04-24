@@ -87,7 +87,7 @@ def create_ranked_rows(
   new_rows: list[LeaderboardRow] = []
   # Primary sort: by rating descending, Secondary sort: created time ascending
   sorted_update_list = sorted(
-    updates, key=lambda update: (-update.get_rating(), bot_profiles_by_name[update.get_name()].created_time)
+    updates, key=lambda update: (-update.get_rating(), bot_profiles_by_name[update.get_name()].created)
   )
   # The first in the list will be ranked #1
   rank = 0

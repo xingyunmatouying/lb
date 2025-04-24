@@ -22,9 +22,9 @@ class BotProfile:
   # The bot's country flag
   flag: str
   # The time the bot was created (seconds since epoch)
-  created_time: int
+  created: int
   # The time the bot was last seen (seconds since epoch)
-  last_seen_time: int
+  last_seen: int
   # If the bot is a patron
   patron: bool
   # If the bot has violated the terms of service
@@ -35,7 +35,7 @@ class BotProfile:
   is_online: bool
 
   @classmethod
-  def from_bot_user(cls, bot_user: BotUser, last_seen_time: int) -> "BotProfile":
+  def from_bot_user(cls, bot_user: BotUser, last_seen: int) -> "BotProfile":
     """Create a BotProfile from a BotUser.
 
     The bot will be assumed to be new and to be online.
@@ -45,7 +45,7 @@ class BotProfile:
       bot_user.flair,
       bot_user.flag,
       bot_user.created_at,
-      last_seen_time,
+      last_seen,
       bot_user.patron,
       bot_user.tos_violation,
       # Assume the bot is new - this simplifies updates
@@ -72,8 +72,8 @@ class BotProfile:
       json_dict.get("name", ""),
       json_dict.get("flair", ""),
       json_dict.get("flag", ""),
-      json_dict.get("created_time", 0),
-      json_dict.get("last_seen_time", 0),
+      json_dict.get("created", 0),
+      json_dict.get("last_seen", 0),
       json_dict.get("patron", False),
       json_dict.get("tos_violation", False),
       # If we are loading from json the bot is not new
@@ -91,8 +91,8 @@ class BotProfile:
       self.name,
       self.flair,
       self.flag,
-      self.created_time,
-      self.last_seen_time,
+      self.created,
+      self.last_seen,
       self.patron,
       self.tos_violation,
       False,
@@ -101,7 +101,7 @@ class BotProfile:
 
   def is_eligible(self, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
-    seen_in_last_two_weeks = current_time - self.last_seen_time <= 60 * 60 * 24 * 14
+    seen_in_last_two_weeks = current_time - self.last_seen <= 60 * 60 * 24 * 14
     return not self.tos_violation and seen_in_last_two_weeks
 
   def to_json(self) -> str:
