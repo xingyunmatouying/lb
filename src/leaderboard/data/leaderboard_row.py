@@ -35,7 +35,7 @@ class BotProfile:
   online: bool
 
   @classmethod
-  def from_bot_user(cls, bot_user: BotUser, last_seen: int) -> "BotProfile":
+  def from_bot_user(cls, bot_user: BotUser) -> "BotProfile":
     """Create a BotProfile from a BotUser.
 
     The bot will be assumed to be new and to be online.
@@ -45,7 +45,7 @@ class BotProfile:
       bot_user.flair,
       bot_user.flag,
       bot_user.created_at,
-      last_seen,
+      bot_user.seen_at,
       bot_user.patron,
       bot_user.tos_violation,
       # Assume the bot is new - this simplifies updates

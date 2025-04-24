@@ -13,9 +13,9 @@ class TestBotProfile(unittest.TestCase):
   """Tests for BotProfile."""
 
   def test_from_perf(self) -> None:
-    bot_user = BotUser("Bot1", "flair", "flag", DATE_2024_01_01, True, True, [])
+    bot_user = BotUser("Bot1", "flair", "flag", DATE_2024_01_01, DATE_2025_04_01, True, True, [])
     self.assertEqual(
-      BotProfile.from_bot_user(bot_user, DATE_2025_04_01),
+      BotProfile.from_bot_user(bot_user),
       BotProfile("Bot1", "flair", "flag", DATE_2024_01_01, DATE_2025_04_01, True, True, True, True),
     )
 

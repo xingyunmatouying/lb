@@ -50,6 +50,7 @@ BOT_1_CURRENT_JSON = """
     "flag": "_earth"
   },
   "createdAt": 1712000000000,
+  "seenAt": 1743500000000,
   "patron": true,
   "perfs": {
     "bullet": {
@@ -69,6 +70,7 @@ BOT_2_CURRENT_JSON = """
 {
   "username": "Bot-2",
   "createdAt": 1648800000000,
+  "seenAt": 1743500000000,
   "perfs": {
     "bullet": {
         "games": 1000,
@@ -135,7 +137,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
   def test_get_online_bot_info(self) -> None:
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
-    bot_info = data_generator_functions.get_online_bot_info(lichess_client, DATE_2025_04_01)
+    bot_info = data_generator_functions.get_online_bot_info(lichess_client)
     self.assertDictEqual(bot_info.bot_profiles_by_name, {"Bot-1": BOT_1_CURRENT_PROFILE, "Bot-2": BOT_2_CURRENT_PROFILE})
     self.assertEqual(len(bot_info.bot_perfs_by_perf_type), 2)
     self.assertListEqual(

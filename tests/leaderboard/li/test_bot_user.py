@@ -14,7 +14,8 @@ BOT_USER_JSON = """
   "profile": {
     "flag": "_earth"
   },
-  "createdAt": 0,
+  "createdAt": 1000000000000,
+  "seenAt": 2000000000000,
   "patron": true,
   "perfs": {
     "bullet": {
@@ -57,7 +58,8 @@ class TestBotUser(unittest.TestCase):
     self.assertEqual(bot_user.username, "Test_Username")
     self.assertEqual(bot_user.flair, "symbol")
     self.assertEqual(bot_user.flag, "_earth")
-    self.assertEqual(bot_user.created_at, 0)
+    self.assertEqual(bot_user.created_at, 1000000000)
+    self.assertEqual(bot_user.seen_at, 2000000000)
     self.assertTrue(bot_user.patron)
     self.assertFalse(bot_user.tos_violation)
     self.assertListEqual(bot_user.perfs, expected_perfs)
