@@ -24,10 +24,11 @@ class TestLeaderboardDelta(unittest.TestCase):
   """Tests for LeaderboardDelta."""
 
   def test_for_delta_rank(self) -> None:
-    self.assertEqual(LeaderboardDelta.for_delta_rank(1, False), LeaderboardDelta("↑1", "delta-pos"))
-    self.assertEqual(LeaderboardDelta.for_delta_rank(-1, False), LeaderboardDelta("↓1", "delta-neg"))
-    self.assertEqual(LeaderboardDelta.for_delta_rank(0, False), LeaderboardDelta("", ""))
-    self.assertEqual(LeaderboardDelta.for_delta_rank(0, True), LeaderboardDelta("🆕", ""))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(2, -2, True), LeaderboardDelta("🆕", ""))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(2, -2, False), LeaderboardDelta("🔙", ""))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(2, 1, False), LeaderboardDelta("↑1", "delta-pos"))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(2, -1, False), LeaderboardDelta("↓1", "delta-neg"))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(2, 0, False), LeaderboardDelta("", ""))
 
   def for_delta_rating(self) -> None:
     self.assertEqual(LeaderboardDelta.for_delta_rating(1), LeaderboardDelta("(+1)", "delta-pos"))

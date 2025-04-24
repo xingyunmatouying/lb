@@ -37,14 +37,18 @@ class LeaderboardDelta:
   html_class: str
 
   @classmethod
-  def for_delta_rank(cls, delta: int, new: bool) -> "LeaderboardDelta":
+  def for_delta_rank(cls, rank: int, delta: int, new: bool) -> "LeaderboardDelta":
     """Return ↑n, ↓n, "new", or blank."""
+    if new:
+      return LeaderboardDelta("🆕", "")
+    if rank == -delta:
+      # In this case a bot previously was ineligible (rank zero) and now they are eligible again.
+      # This ends up also triggering for some cases where it is the bot's first time appearing on the leaderboard.
+      return LeaderboardDelta("🔙", "")
     if delta > 0:
       return LeaderboardDelta(f"↑{abs(delta)}", "delta-pos")
     if delta < 0:
       return LeaderboardDelta(f"↓{abs(delta)}", "delta-neg")
-    if new:
-      return LeaderboardDelta("🆕", "")
     return LeaderboardDelta("", "")
 
   @classmethod
@@ -92,7 +96,7 @@ class HtmlLeaderboardRow:
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
       row.rank_info.rank,
-      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.new),
+      LeaderboardDelta.for_delta_rank(row.rank_info.rank, row.rank_info.delta_rank, profile.new),
       OnlineStatus.create_from(profile.online, profile.patron),
       profile.name,
       profile.flag,
