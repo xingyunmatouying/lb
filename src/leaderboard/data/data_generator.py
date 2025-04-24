@@ -40,9 +40,8 @@ class BotInfoResult:
   bot_perfs_by_perf_type: dict[PerfType, list[BotPerf]]
 
 
-def get_online_bot_info(lichess_client: LichessClient, time_provider: TimeProvider) -> BotInfoResult:
+def get_online_bot_info(lichess_client: LichessClient, current_time: int) -> BotInfoResult:
   """Load all of the current online bots and return the information used to generate the leaderboard."""
-  current_time = time_provider.get_current_time()
   bot_profiles_by_name: dict[str, BotProfile] = {}
   bot_perfs_by_perf_type: dict[PerfType, list[BotPerf]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
@@ -82,7 +81,7 @@ def create_updates(previous_rows: list[LeaderboardRow], current_bot_perfs: list[
 
 
 def create_ranked_rows(
-  time_provider: TimeProvider, updates: list[LeaderboardUpdate], bot_profiles_by_name: dict[str, BotProfile]
+  updates: list[LeaderboardUpdate], bot_profiles_by_name: dict[str, BotProfile], current_time: int
 ) -> list[LeaderboardRow]:
   """Create the leaderboard rows for each perf type based on a list of updates."""
   new_rows: list[LeaderboardRow] = []
@@ -98,7 +97,7 @@ def create_ranked_rows(
   for update in sorted_update_list:
     # Rank equals zero signals that the bot should not be included on the leaderboard
     rank_to_set = 0
-    bot_profile_eligible = bot_profiles_by_name[update.get_username()].is_eligible(time_provider.get_current_time())
+    bot_profile_eligible = bot_profiles_by_name[update.get_username()].is_eligible(current_time)
     if bot_profile_eligible and update.is_eligible():
       if update.get_rating() == previous_rating:
         same_rank_count += 1
@@ -161,7 +160,7 @@ class DataGenerator:
     bot_profiles_by_name = load_bot_profiles(self.file_system)
     previous_rows_by_perf_type = load_leaderboard_rows(self.file_system)
     # Get the current online bot info
-    online_bot_info = get_online_bot_info(self.lichess_client, self.time_provider)
+    online_bot_info = get_online_bot_info(self.lichess_client, self.time_provider.get_current_time())
     # Update the bot profiles
     updated_bot_profiles = merge_bot_profiles(bot_profiles_by_name, online_bot_info.bot_profiles_by_name)
     # Combine the data and create update objects for all of the leaderboards
@@ -173,7 +172,7 @@ class DataGenerator:
     }
     # Create and return the leaderboards with rank information
     ranked_rows_by_perf_type = {
-      perf_type: create_ranked_rows(self.time_provider, updates, updated_bot_profiles)
+      perf_type: create_ranked_rows(updates, updated_bot_profiles, self.time_provider.get_current_time())
       for perf_type, updates in updates_by_perf_type.items()
     }
     return LeaderboardDataResult.create_result(updated_bot_profiles, ranked_rows_by_perf_type)
