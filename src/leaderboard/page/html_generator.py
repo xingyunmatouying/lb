@@ -145,6 +145,8 @@ class HtmlGenerator:
         leaderboard_rows=[
           HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.username], current_time)
           for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
+          # The rank is set to zero when the bot is not eligible for the leaderboard
+          if row.rank_info.rank
         ],
       )
       html_by_name[perf_type.to_string()] = leaderboard_html

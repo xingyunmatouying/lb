@@ -99,6 +99,11 @@ class BotProfile:
       True,
     )
 
+  def is_eligible(self, current_time: int) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    seen_in_last_two_weeks = current_time - self.last_seen_time <= 60 * 60 * 24 * 14
+    return not self.tos_violation and seen_in_last_two_weeks
+
   def to_json(self) -> str:
     """Convert the BotProfile to json.
 
@@ -122,17 +127,23 @@ class LeaderboardPerf:
   prog: int
   # The number of games the bot has played
   games: int
+  # If the bot's rating is provisional
+  prov: bool
 
   @classmethod
   def from_perf(cls, perf: Perf) -> "LeaderboardPerf":
     """Create a LeaderboardPerf from a Perf."""
-    return LeaderboardPerf(perf.rating, perf.rd, perf.prog, perf.games)
+    return LeaderboardPerf(perf.rating, perf.rd, perf.prog, perf.games, perf.prov)
 
   @classmethod
   def from_json_dict(cls, json_dict: dict[str, Any]) -> "LeaderboardPerf":
     """Create a LeaderboardPerf from a json dict."""
     return LeaderboardPerf(
-      json_dict.get("rating", 0), json_dict.get("rd", 0), json_dict.get("prog", 0), json_dict.get("games", 0)
+      json_dict.get("rating", 0),
+      json_dict.get("rd", 0),
+      json_dict.get("prog", 0),
+      json_dict.get("games", 0),
+      json_dict.get("prov", False),
     )
 
 
@@ -149,6 +160,7 @@ class RankInfo:
   """Information related to the bot's rank in the leaderboard row."""
 
   # The bot's rank on the leaderboard
+  # If rank is zero the bot should not be included on the leaderboard
   rank: int
   # How much their rank has changed since the last time the leaderboard was generated
   delta_rank: int

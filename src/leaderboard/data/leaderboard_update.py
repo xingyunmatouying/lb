@@ -20,6 +20,11 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @abc.abstractmethod
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    ...
+
+  @abc.abstractmethod
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
     ...
@@ -39,6 +44,11 @@ class LeaderboardUpdate(abc.ABC):
     error_msg = "At least one of previous_row or current_bot_perf must be set."
     raise ValueError(error_msg)
 
+  @classmethod
+  def check_is_eligible(cls, prov: bool) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return not prov
+
 
 @dataclasses.dataclass(frozen=True)
 class PreviousRowOnlyUpdate(LeaderboardUpdate):
@@ -56,6 +66,10 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
   def get_rating(self) -> int:
     """Return the bot's rating."""
     return self.row.perf.rating
+
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return LeaderboardUpdate.check_is_eligible(self.row.perf.prov)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
@@ -84,6 +98,10 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
     """Return the bot's rating."""
     return self.bot_perf.perf.rating
 
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return LeaderboardUpdate.check_is_eligible(self.bot_perf.perf.prov)
+
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
     delta_rank = 0
@@ -109,6 +127,10 @@ class FullUpdate(LeaderboardUpdate):
     """Return the bot's rating."""
     # Use the current rating
     return self.current_bot_perf.perf.rating
+
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return LeaderboardUpdate.check_is_eligible(self.current_bot_perf.perf.prov)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""

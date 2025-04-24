@@ -49,9 +49,7 @@ def get_online_bot_info(lichess_client: LichessClient, time_provider: TimeProvid
     bot_user = BotUser.from_json(bot_json)
     bot_profiles_by_name[bot_user.username] = BotProfile.from_bot_user(bot_user, current_time)
     for perf in bot_user.perfs:
-      # Don't include provisional ratings (this ends up being redundant if taking rd into account)
-      if not perf.prov:
-        bot_perfs_by_perf_type[perf.perf_type].append(BotPerf(bot_user.username, LeaderboardPerf.from_perf(perf)))
+      bot_perfs_by_perf_type[perf.perf_type].append(BotPerf(bot_user.username, LeaderboardPerf.from_perf(perf)))
   return BotInfoResult(bot_profiles_by_name, bot_perfs_by_perf_type)
 
 
@@ -83,7 +81,9 @@ def create_updates(previous_rows: list[LeaderboardRow], current_bot_perfs: list[
   return updates
 
 
-def create_ranked_rows(updates: list[LeaderboardUpdate], bot_profiles_by_name: dict[str, BotProfile]) -> list[LeaderboardRow]:
+def create_ranked_rows(
+  time_provider: TimeProvider, updates: list[LeaderboardUpdate], bot_profiles_by_name: dict[str, BotProfile]
+) -> list[LeaderboardRow]:
   """Create the leaderboard rows for each perf type based on a list of updates."""
   new_rows: list[LeaderboardRow] = []
   # Primary sort: by rating descending, Secondary sort: created time ascending
@@ -96,13 +96,18 @@ def create_ranked_rows(updates: list[LeaderboardUpdate], bot_profiles_by_name: d
   same_rank_count = 0
   previous_rating = 0
   for update in sorted_update_list:
-    if update.get_rating() == previous_rating:
-      same_rank_count += 1
-    else:
-      rank += same_rank_count
-      rank += 1
-      same_rank_count = 0
-    new_rows.append(update.to_leaderboard_row(rank))
+    # Rank equals zero signals that the bot should not be included on the leaderboard
+    rank_to_set = 0
+    bot_profile_eligible = bot_profiles_by_name[update.get_username()].is_eligible(time_provider.get_current_time())
+    if bot_profile_eligible and update.is_eligible():
+      if update.get_rating() == previous_rating:
+        same_rank_count += 1
+      else:
+        rank += same_rank_count
+        rank += 1
+        same_rank_count = 0
+      rank_to_set = rank
+    new_rows.append(update.to_leaderboard_row(rank_to_set))
     previous_rating = update.get_rating()
   return new_rows
 
@@ -168,6 +173,7 @@ class DataGenerator:
     }
     # Create and return the leaderboards with rank information
     ranked_rows_by_perf_type = {
-      perf_type: create_ranked_rows(updates, updated_bot_profiles) for perf_type, updates in updates_by_perf_type.items()
+      perf_type: create_ranked_rows(self.time_provider, updates, updated_bot_profiles)
+      for perf_type, updates in updates_by_perf_type.items()
     }
     return LeaderboardDataResult.create_result(updated_bot_profiles, ranked_rows_by_perf_type)

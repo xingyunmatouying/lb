@@ -5,6 +5,7 @@ import unittest
 from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.bot_user import BotUser, Perf
 from src.leaderboard.li.pert_type import PerfType
+from tests.leaderboard.chrono import epoch_seconds
 from tests.leaderboard.chrono.epoch_seconds import DATE_2024_01_01, DATE_2025_04_01
 
 
@@ -38,6 +39,15 @@ class TestBotProfile(unittest.TestCase):
     self.assertEqual(updated_copy.is_new, False)
     self.assertEqual(updated_copy.is_online, True)
 
+  def test_is_eligible_last_seen(self) -> None:
+    bot_profile = BotProfile("", "", "", 0, epoch_seconds.from_date(2025, 4, 1), False, False, True, True)
+    self.assertEqual(bot_profile.is_eligible(epoch_seconds.from_date(2025, 4, 15)), True)
+    self.assertEqual(bot_profile.is_eligible(epoch_seconds.from_date(2025, 4, 15) + 1), False)
+
+  def test_is_eligible_tos_violation(self) -> None:
+    bot_profile = BotProfile("", "", "", 0, DATE_2025_04_01, False, True, True, True)
+    self.assertEqual(bot_profile.is_eligible(DATE_2025_04_01), False)
+
   def test_from_json_dict_default(self) -> None:
     self.assertEqual(BotProfile.from_json_dict({}), BotProfile("", "", "", 0, 0, False, False, False, False))
 
@@ -46,15 +56,15 @@ class TestLeaderboardPerf(unittest.TestCase):
   """Tests for LeaderboardPerf."""
 
   def test_from_perf(self) -> None:
-    perf = Perf(PerfType.BULLET, 100, 1450, 25, -10, False)
-    self.assertEqual(LeaderboardPerf.from_perf(perf), LeaderboardPerf(1450, 25, -10, 100))
+    perf = Perf(PerfType.BULLET, 100, 1450, 25, -10, True)
+    self.assertEqual(LeaderboardPerf.from_perf(perf), LeaderboardPerf(1450, 25, -10, 100, True))
 
   def test_from_json_dict(self) -> None:
-    json_dict = {"rating": 1450, "rd": 25, "prog": -10, "games": 100}
-    self.assertEqual(LeaderboardPerf.from_json_dict(json_dict), LeaderboardPerf(1450, 25, -10, 100))
+    json_dict = {"rating": 1450, "rd": 25, "prog": -10, "games": 100, "prov": True}
+    self.assertEqual(LeaderboardPerf.from_json_dict(json_dict), LeaderboardPerf(1450, 25, -10, 100, True))
 
   def test_from_json_dict_default(self) -> None:
-    self.assertEqual(LeaderboardPerf.from_json_dict({}), LeaderboardPerf(0, 0, 0, 0))
+    self.assertEqual(LeaderboardPerf.from_json_dict({}), LeaderboardPerf(0, 0, 0, 0, False))
 
 
 class TestLeaderboardRow(unittest.TestCase):
@@ -76,10 +86,10 @@ class TestLeaderboardRow(unittest.TestCase):
         }
       }
       """
-    expected_perf = LeaderboardPerf(1500, 0, 0, 0)
+    expected_perf = LeaderboardPerf(1500, 0, 0, 0, False)
     expected_leaderboard_row = LeaderboardRow("Bot1", expected_perf, RankInfo(4, 1, 50, 3, 1600))
     self.assertEqual(LeaderboardRow.from_json(leaderboard_row_json), expected_leaderboard_row)
 
   def test_to_json_round_trip(self) -> None:
-    leaderboard_row = LeaderboardRow("Bot1", LeaderboardPerf(1500, 12, 34, 100), RankInfo(4, 1, 50, 3, 1600))
+    leaderboard_row = LeaderboardRow("Bot1", LeaderboardPerf(1500, 12, 34, 100, True), RankInfo(4, 1, 50, 3, 1600))
     self.assertEqual(LeaderboardRow.from_json(leaderboard_row.to_json()), leaderboard_row)

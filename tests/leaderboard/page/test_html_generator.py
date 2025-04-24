@@ -70,6 +70,14 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("Bot-2", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-2", bullet_html)
 
+  def test_generate_no_ineligible(self) -> None:
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", rank=0)]}
+    html_generator = HtmlGenerator(FixedTimeProvider(0))
+    bullet_html = html_generator.generate_leaderboard_html(
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
+    )["bullet"]
+    self.assertNotIn("Bot-1", bullet_html)
+
   def test_generate_new_bot(self) -> None:
     bot_profiles_by_name = {"Bot-1": BotProfile("Bot-1", "", "", 0, 0, False, False, True, True)}
     ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1")]}

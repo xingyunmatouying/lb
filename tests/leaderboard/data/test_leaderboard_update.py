@@ -13,11 +13,15 @@ from src.leaderboard.data.leaderboard_update import (
 
 def create_bot_perf(username: str, rating: int, games: int) -> BotPerf:
   """Create a BotPerf with several default values set."""
-  return BotPerf(username, LeaderboardPerf(rating, 0, 0, games))
+  return BotPerf(username, LeaderboardPerf(rating, 0, 0, games, False))
 
 
 class TestLeaderboardUpdate(unittest.TestCase):
   """Tests for LeaderboardUpdate and subclasses."""
+
+  def test_check_is_eligible(self) -> None:
+    self.assertEqual(LeaderboardUpdate.check_is_eligible(False), True)
+    self.assertEqual(LeaderboardUpdate.check_is_eligible(True), False)
 
   def test_from_previous_row_and_current_bot_perf(self) -> None:
     bot_perf = create_bot_perf("Bot 1", 1800, 400)
@@ -33,6 +37,7 @@ class TestLeaderboardUpdate(unittest.TestCase):
     update = PreviousRowOnlyUpdate(previous_row)
     self.assertEqual(update.get_rating(), 1500)
     self.assertEqual(update.get_username(), "Bot 1")
+    self.assertEqual(update.is_eligible(), True)
     self.assertEqual(update.to_leaderboard_row(2), LeaderboardRow("Bot 1", previous_bot_perf.perf, RankInfo(2, 3, 0, 2, 1500)))
 
   def test_bot_perf_only_update(self) -> None:
@@ -40,6 +45,7 @@ class TestLeaderboardUpdate(unittest.TestCase):
     update = CurrentBotPerfOnlyUpdate(previous_bot_perf)
     self.assertEqual(update.get_rating(), 1500)
     self.assertEqual(update.get_username(), "Bot 1")
+    self.assertEqual(update.is_eligible(), True)
     self.assertEqual(update.to_leaderboard_row(2), LeaderboardRow("Bot 1", previous_bot_perf.perf, RankInfo(2, 0, 0, 2, 1500)))
 
   def test_full_update(self) -> None:
@@ -49,6 +55,7 @@ class TestLeaderboardUpdate(unittest.TestCase):
     update = FullUpdate(previous_row, current_bot_perf)
     self.assertEqual(update.get_rating(), 1600)
     self.assertEqual(update.get_username(), "Bot 1")
+    self.assertEqual(update.is_eligible(), True)
     self.assertEqual(
       update.to_leaderboard_row(1), LeaderboardRow("Bot 1", current_bot_perf.perf, RankInfo(1, 4, 100, 1, 1600))
     )
