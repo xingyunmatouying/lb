@@ -110,7 +110,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     file_system = InMemoryFileSystem()
     bot_profiles = [BOT_1_CURRENT_PROFILE.to_json(), BOT_2_CURRENT_PROFILE.to_json()]
     file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles)
-    # When loading the bot profiles is_new and online are set to false
+    # When loading the bot profiles new and online are set to false
     expected_bot_profiles = {
       "Bot-1": BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False, False, False),
       "Bot-2": BotProfile("Bot-2", "", "", DATE_2022_04_01, DATE_2025_04_01, False, False, False, False),

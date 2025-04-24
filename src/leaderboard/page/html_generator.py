@@ -37,13 +37,13 @@ class LeaderboardDelta:
   html_class: str
 
   @classmethod
-  def for_delta_rank(cls, delta: int, is_new: bool) -> "LeaderboardDelta":
+  def for_delta_rank(cls, delta: int, new: bool) -> "LeaderboardDelta":
     """Return ↑n, ↓n, "new", or blank."""
     if delta > 0:
       return LeaderboardDelta(f"↑{abs(delta)}", "delta-pos")
     if delta < 0:
       return LeaderboardDelta(f"↓{abs(delta)}", "delta-neg")
-    if is_new:
+    if new:
       return LeaderboardDelta("🆕", "")
     return LeaderboardDelta("", "")
 
@@ -92,7 +92,7 @@ class HtmlLeaderboardRow:
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
       row.rank_info.rank,
-      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.is_new),
+      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.new),
       OnlineStatus.create_from(profile.online, profile.patron),
       profile.name,
       profile.flag,

@@ -28,7 +28,7 @@ class TestBotProfile(unittest.TestCase):
       "last_seen": DATE_2025_04_01,
       "patron": True,
       "tos_violation": True,
-      "is_new": True,
+      "new": True,
       "online": True,
     }
     expected_bot_profile = BotProfile("Bot1", "flair", "FR", DATE_2024_01_01, DATE_2025_04_01, True, True, False, False)
@@ -36,7 +36,7 @@ class TestBotProfile(unittest.TestCase):
 
   def test_create_updated_copy_for_for_merge(self) -> None:
     updated_copy = BotProfile("", "", "", 0, 0, False, False, True, True).create_updated_copy_for_for_merge()
-    self.assertFalse(updated_copy.is_new)
+    self.assertFalse(updated_copy.new)
     self.assertTrue(updated_copy.online)
 
   def test_is_eligible_last_seen(self) -> None:

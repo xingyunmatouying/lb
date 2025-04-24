@@ -30,7 +30,7 @@ class BotProfile:
   # If the bot has violated the terms of service
   tos_violation: bool
   # Whether or not this is the bot's first time on the leaderboard
-  is_new: bool
+  new: bool
   # Whether or not the bot was online when the leaderboard was generated
   online: bool
 
@@ -85,7 +85,7 @@ class BotProfile:
   def create_updated_copy_for_for_merge(self) -> "BotProfile":
     """Create an updated copy of the profile.
 
-    The updated copy has is_new set to False and online set to True.
+    The updated copy has new set to False and online set to True.
     """
     return BotProfile(
       self.name,
