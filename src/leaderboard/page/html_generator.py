@@ -132,15 +132,13 @@ class HtmlGenerator:
     last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)
     html_by_name: dict[str, str] = {}
     # Create index html
-    index_template = self.jinja_environment.get_template("index.html.jinja")
-    index_html = index_template.render(
+    index_html = self.jinja_environment.get_template("index.html.jinja").render(
       main_frame=MainFrame("Lichess Bot Leaderboards", last_updated_date, create_nav_links(None))
     )
     html_by_name["index"] = index_html
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
-      leaderboard_template = self.jinja_environment.get_template("leaderboard.html.jinja")
-      leaderboard_html = leaderboard_template.render(
+      leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
         leaderboard_rows=[
           HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
