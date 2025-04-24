@@ -10,8 +10,8 @@ class LeaderboardUpdate(abc.ABC):
   """The information required to update a row in the leaderboard."""
 
   @abc.abstractmethod
-  def get_username(self) -> str:
-    """Return the bot's username."""
+  def get_name(self) -> str:
+    """Return the bot's name."""
     ...
 
   @abc.abstractmethod
@@ -59,9 +59,9 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
 
   row: LeaderboardRow
 
-  def get_username(self) -> str:
-    """Return the bot's username."""
-    return self.row.username
+  def get_name(self) -> str:
+    """Return the bot's name."""
+    return self.row.name
 
   def get_rating(self) -> int:
     """Return the bot's rating."""
@@ -78,7 +78,7 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     peak_rank = min(self.row.rank_info.rank, rank)
     peak_rating = self.row.rank_info.peak_rating
     rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
-    return LeaderboardRow(self.row.username, self.row.perf, rank_info)
+    return LeaderboardRow(self.row.name, self.row.perf, rank_info)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -90,9 +90,9 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
 
   bot_perf: BotPerf
 
-  def get_username(self) -> str:
-    """Return the bot's username."""
-    return self.bot_perf.username
+  def get_name(self) -> str:
+    """Return the bot's name."""
+    return self.bot_perf.name
 
   def get_rating(self) -> int:
     """Return the bot's rating."""
@@ -109,7 +109,7 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
     peak_rank = rank
     peak_rating = self.bot_perf.perf.rating
     rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
-    return LeaderboardRow(self.bot_perf.username, self.bot_perf.perf, rank_info)
+    return LeaderboardRow(self.bot_perf.name, self.bot_perf.perf, rank_info)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -119,9 +119,9 @@ class FullUpdate(LeaderboardUpdate):
   previous_row: LeaderboardRow
   current_bot_perf: BotPerf
 
-  def get_username(self) -> str:
-    """Return the bot's username."""
-    return self.current_bot_perf.username
+  def get_name(self) -> str:
+    """Return the bot's name."""
+    return self.current_bot_perf.name
 
   def get_rating(self) -> int:
     """Return the bot's rating."""
@@ -141,4 +141,4 @@ class FullUpdate(LeaderboardUpdate):
     peak_rank = min(self.previous_row.rank_info.rank, rank)
     peak_rating = max(self.previous_row.perf.rating, self.current_bot_perf.perf.rating)
     rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
-    return LeaderboardRow(self.current_bot_perf.username, self.current_bot_perf.perf, rank_info)
+    return LeaderboardRow(self.current_bot_perf.name, self.current_bot_perf.perf, rank_info)

@@ -17,7 +17,7 @@ def load_bot_profiles(file_system: FileSystem) -> dict[str, BotProfile]:
   """Load the known bot profiles."""
   ndjson = file_system.load_file_lines(file_paths.bot_profiles_path())
   bot_profiles = [BotProfile.from_json(json_line) for json_line in ndjson]
-  return {bot_profile.username: bot_profile for bot_profile in bot_profiles}
+  return {bot_profile.name: bot_profile for bot_profile in bot_profiles}
 
 
 def load_leaderboard_rows(file_system: FileSystem) -> dict[PerfType, list[LeaderboardRow]]:
@@ -71,8 +71,8 @@ def merge_bot_profiles(
 
 def create_updates(previous_rows: list[LeaderboardRow], current_bot_perfs: list[BotPerf]) -> list[LeaderboardUpdate]:
   """Group previous rows and current bot info by bot name and create updates."""
-  previous_row_by_name: dict[str, LeaderboardRow] = {row.username: row for row in previous_rows}
-  current_bot_perfs_by_name: dict[str, BotPerf] = {bot_perf.username: bot_perf for bot_perf in current_bot_perfs}
+  previous_row_by_name: dict[str, LeaderboardRow] = {row.name: row for row in previous_rows}
+  current_bot_perfs_by_name: dict[str, BotPerf] = {bot_perf.name: bot_perf for bot_perf in current_bot_perfs}
   updates: list[LeaderboardUpdate] = []
   for name in previous_row_by_name.keys() | current_bot_perfs_by_name.keys():
     current_bot_perf = current_bot_perfs_by_name.get(name)
@@ -87,7 +87,7 @@ def create_ranked_rows(
   new_rows: list[LeaderboardRow] = []
   # Primary sort: by rating descending, Secondary sort: created time ascending
   sorted_update_list = sorted(
-    updates, key=lambda update: (-update.get_rating(), bot_profiles_by_name[update.get_username()].created_time)
+    updates, key=lambda update: (-update.get_rating(), bot_profiles_by_name[update.get_name()].created_time)
   )
   # The first in the list will be ranked #1
   rank = 0
@@ -97,7 +97,7 @@ def create_ranked_rows(
   for update in sorted_update_list:
     # Rank equals zero signals that the bot should not be included on the leaderboard
     rank_to_set = 0
-    bot_profile_eligible = bot_profiles_by_name[update.get_username()].is_eligible(current_time)
+    bot_profile_eligible = bot_profiles_by_name[update.get_name()].is_eligible(current_time)
     if bot_profile_eligible and update.is_eligible():
       if update.get_rating() == previous_rating:
         same_rank_count += 1
@@ -138,7 +138,7 @@ class LeaderboardDataResult:
     """Return the ranked rows by perf type with the ranked rows sorted by name."""
     sorted_ranked_rows: dict[PerfType, list[LeaderboardRow]] = {}
     for perf_type, ranked_rows in self.ranked_rows_by_perf_type.items():
-      sorted_ranked_rows[perf_type] = sorted(ranked_rows, key=lambda row: row.username.lower())
+      sorted_ranked_rows[perf_type] = sorted(ranked_rows, key=lambda row: row.name.lower())
     return sorted_ranked_rows
 
 

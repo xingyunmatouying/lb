@@ -21,7 +21,7 @@ class TestBotProfile(unittest.TestCase):
 
   def test_from_json_dict(self) -> None:
     json_dict = {
-      "username": "Bot1",
+      "name": "Bot1",
       "flair": "flair",
       "flag": "FR",
       "created_time": DATE_2024_01_01,
@@ -73,7 +73,7 @@ class TestLeaderboardRow(unittest.TestCase):
   def test_from_json(self) -> None:
     leaderboard_row_json = """
       {
-        "username": "Bot1",
+        "name": "Bot1",
         "perf": {
           "rating": 1500
         },

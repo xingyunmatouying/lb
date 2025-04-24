@@ -79,7 +79,7 @@ class HtmlLeaderboardRow:
   rank: int
   delta_rank: LeaderboardDelta
   online_status: OnlineStatus
-  username: str
+  name: str
   flag: str
   rating: int
   delta_rating: LeaderboardDelta
@@ -94,7 +94,7 @@ class HtmlLeaderboardRow:
       row.rank_info.rank,
       LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.is_new),
       OnlineStatus.create_from(profile.is_online, profile.patron),
-      profile.username,
+      profile.name,
       profile.flag,
       row.perf.rating,
       LeaderboardDelta.for_delta_rating(row.rank_info.delta_rating),
@@ -143,7 +143,7 @@ class HtmlGenerator:
       leaderboard_html = leaderboard_template.render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
         leaderboard_rows=[
-          HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.username], current_time)
+          HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
           for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
           # The rank is set to zero when the bot is not eligible for the leaderboard
           if row.rank_info.rank

@@ -15,8 +15,8 @@ class BotProfile:
   This is information that either never changes or does not change very often.
   """
 
-  # The bot's username
-  username: str
+  # The bot's name
+  name: str
   # The bot's flair
   flair: str
   # The bot's country flag
@@ -69,7 +69,7 @@ class BotProfile:
     The bot will be assumed not to be new and to be offline.
     """
     return BotProfile(
-      json_dict.get("username", ""),
+      json_dict.get("name", ""),
       json_dict.get("flair", ""),
       json_dict.get("flag", ""),
       json_dict.get("created_time", 0),
@@ -88,7 +88,7 @@ class BotProfile:
     The updated copy has is_new set to False and is_online set to True.
     """
     return BotProfile(
-      self.username,
+      self.name,
       self.flair,
       self.flag,
       self.created_time,
@@ -149,9 +149,9 @@ class LeaderboardPerf:
 
 @dataclasses.dataclass(frozen=True)
 class BotPerf:
-  """A pair of bot username and LeaderboardPerf."""
+  """A pair of bot name and LeaderboardPerf."""
 
-  username: str
+  name: str
   perf: LeaderboardPerf
 
 
@@ -187,8 +187,8 @@ class RankInfo:
 class LeaderboardRow:
   """Data that is specific to a row on a particular leaderboard."""
 
-  # The bot's username
-  username: str
+  # The bot's name
+  name: str
   # Information related to a bot's performance for a particular PerfType.
   perf: LeaderboardPerf
   # Information related to the bot's rank in the leaderboard row
@@ -199,7 +199,7 @@ class LeaderboardRow:
     """Create a LeaderboardRow from json."""
     json_dict = json.loads(json_str)
     return LeaderboardRow(
-      json_dict.get("username", ""),
+      json_dict.get("name", ""),
       LeaderboardPerf.from_json_dict(json_dict.get("perf", {})),
       RankInfo.from_json_dict(json_dict.get("rank_info", {})),
     )
