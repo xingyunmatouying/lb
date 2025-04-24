@@ -36,17 +36,17 @@ class TestBotProfile(unittest.TestCase):
 
   def test_create_updated_copy_for_for_merge(self) -> None:
     updated_copy = BotProfile("", "", "", 0, 0, False, False, True, True).create_updated_copy_for_for_merge()
-    self.assertEqual(updated_copy.is_new, False)
-    self.assertEqual(updated_copy.is_online, True)
+    self.assertFalse(updated_copy.is_new)
+    self.assertTrue(updated_copy.is_online)
 
   def test_is_eligible_last_seen(self) -> None:
     bot_profile = BotProfile("", "", "", 0, epoch_seconds.from_date(2025, 4, 1), False, False, True, True)
-    self.assertEqual(bot_profile.is_eligible(epoch_seconds.from_date(2025, 4, 15)), True)
-    self.assertEqual(bot_profile.is_eligible(epoch_seconds.from_date(2025, 4, 15) + 1), False)
+    self.assertTrue(bot_profile.is_eligible(epoch_seconds.from_date(2025, 4, 15)))
+    self.assertFalse(bot_profile.is_eligible(epoch_seconds.from_date(2025, 4, 15) + 1))
 
   def test_is_eligible_tos_violation(self) -> None:
     bot_profile = BotProfile("", "", "", 0, DATE_2025_04_01, False, True, True, True)
-    self.assertEqual(bot_profile.is_eligible(DATE_2025_04_01), False)
+    self.assertFalse(bot_profile.is_eligible(DATE_2025_04_01))
 
   def test_from_json_dict_default(self) -> None:
     self.assertEqual(BotProfile.from_json_dict({}), BotProfile("", "", "", 0, 0, False, False, False, False))
