@@ -4,9 +4,20 @@ import unittest
 
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
-from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
 from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta, OnlineStatus
+
+
+DEFAULT_BOT_PROFILES_BY_NAME = {
+  "Bot-1": BotProfile.from_json('{"username": "Bot-1"}'),
+  "Bot-2": BotProfile.from_json('{"username": "Bot-2"}'),
+}
+
+
+def create_leaderboard_row(username: str, rank: int = 1, delta_rank: int = 0, delta_rating: int = 0) -> LeaderboardRow:
+  """Create a LeaderboardRow with several default values set."""
+  return LeaderboardRow(username, LeaderboardPerf(0, 0, 0, 0, False), RankInfo(rank, delta_rank, delta_rating, 0, 0))
 
 
 class TestLeaderboardDelta(unittest.TestCase):
@@ -48,16 +59,10 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("2025-04-01 05:00:00 UTC", index_html)
 
   def test_generate_bullet(self) -> None:
-    bot_profiles_by_name = {
-      "Bot-1": BotProfile.from_json('{"username": "Bot-1"}'),
-      "Bot-2": BotProfile.from_json('{"username": "Bot-2"}'),
-    }
-    ranked_rows_by_perf_type = {
-      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1"}'), LeaderboardRow.from_json('{"username": "Bot-2"}')]
-    }
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1"), create_leaderboard_row("Bot-2")]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("<h1>Bullet</h1>", bullet_html)
     self.assertIn("Bot-1", bullet_html)
@@ -67,7 +72,7 @@ class TestHtmlGenerator(unittest.TestCase):
 
   def test_generate_new_bot(self) -> None:
     bot_profiles_by_name = {"Bot-1": BotProfile("Bot-1", "", "", 0, 0, False, False, True, True)}
-    ranked_rows_by_perf_type = {PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1"}')]}
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1")]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
       LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
@@ -75,49 +80,37 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("🆕", bullet_html)
 
   def test_generate_positive_delta_rank(self) -> None:
-    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
-    ranked_rows_by_perf_type = {
-      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": 3}}')]
-    }
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", delta_rank=3)]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("↑3", bullet_html)
     self.assertIn('class="col-delta-rank delta-pos"', bullet_html)
 
   def test_generate_negative_delta_rank(self) -> None:
-    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
-    ranked_rows_by_perf_type = {
-      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rank": -3}}')]
-    }
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", delta_rank=-3)]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("↓3", bullet_html)
     self.assertIn('class="col-delta-rank delta-neg"', bullet_html)
 
   def test_generate_positive_delta_rating(self) -> None:
-    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
-    ranked_rows_by_perf_type = {
-      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": 3}}')]
-    }
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", delta_rating=3)]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("(+3)", bullet_html)
     self.assertIn('class="col-delta-rating delta-pos"', bullet_html)
 
   def test_generate_negative_delta_rating(self) -> None:
-    bot_profiles_by_name = {"Bot-1": BotProfile.from_json('{"username": "Bot-1"}')}
-    ranked_rows_by_perf_type = {
-      PerfType.BULLET: [LeaderboardRow.from_json('{"username": "Bot-1", "rank_info": {"delta_rating": -3}}')]
-    }
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", delta_rating=-3)]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
     bullet_html = html_generator.generate_leaderboard_html(
-      LeaderboardDataResult.create_result(bot_profiles_by_name, ranked_rows_by_perf_type)
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("(-3)", bullet_html)
     self.assertIn('class="col-delta-rating delta-neg"', bullet_html)
