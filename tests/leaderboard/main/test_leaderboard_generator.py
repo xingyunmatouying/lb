@@ -4,7 +4,7 @@ import unittest
 
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.fs import file_paths
-from src.leaderboard.li.bot_user import PerfType
+from src.leaderboard.li.pert_type import PerfType
 from src.leaderboard.main.leaderboard_generator import LeaderboardGenerator
 from tests.leaderboard.fs.in_memory_file_system import InMemoryFileSystem
 from tests.leaderboard.li.fake_lichess_client import FakeLichessClient

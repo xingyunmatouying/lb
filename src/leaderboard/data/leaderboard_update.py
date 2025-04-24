@@ -3,11 +3,16 @@
 import abc
 import dataclasses
 
-from src.leaderboard.data.leaderboard_row import BotInfo, LeaderboardRow
+from src.leaderboard.data.leaderboard_row import BotPerf, LeaderboardRow, RankInfo
 
 
 class LeaderboardUpdate(abc.ABC):
   """The information required to update a row in the leaderboard."""
+
+  @abc.abstractmethod
+  def get_name(self) -> str:
+    """Return the bot's name."""
+    ...
 
   @abc.abstractmethod
   def get_rating(self) -> int:
@@ -15,8 +20,8 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @abc.abstractmethod
-  def get_created_time(self) -> int:
-    """Return the time the bot was created."""
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
     ...
 
   @abc.abstractmethod
@@ -25,19 +30,24 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @classmethod
-  def create_update(cls, previous_row: LeaderboardRow | None, current_bot_info: BotInfo | None) -> "LeaderboardUpdate":
-    """Return the specific type of update based on the presence of previous_row and current_bot_info.
+  def create_update(cls, previous_row: LeaderboardRow | None, current_bot_perf: BotPerf | None) -> "LeaderboardUpdate":
+    """Return the specific type of update based on the presence of previous_row and current_bot_perf.
 
     If both parameters are None, a ValueError will be raised.
     """
-    if previous_row and not current_bot_info:
+    if previous_row and current_bot_perf:
+      return FullUpdate(previous_row, current_bot_perf)
+    if previous_row and not current_bot_perf:
       return PreviousRowOnlyUpdate(previous_row)
-    if current_bot_info and not previous_row:
-      return CurrentBotInfoOnlyUpdate(current_bot_info)
-    if previous_row and current_bot_info:
-      return FullUpdate(previous_row, current_bot_info)
-    error_msg = "At least one of previous_row or current_bot_info must be set."
+    if current_bot_perf and not previous_row:
+      return CurrentBotPerfOnlyUpdate(current_bot_perf)
+    error_msg = "At least one of previous_row or current_bot_perf must be set."
     raise ValueError(error_msg)
+
+  @classmethod
+  def check_is_eligible(cls, prov: bool) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return not prov
 
 
 @dataclasses.dataclass(frozen=True)
@@ -49,51 +59,57 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
 
   row: LeaderboardRow
 
+  def get_name(self) -> str:
+    """Return the bot's name."""
+    return self.row.name
+
   def get_rating(self) -> int:
     """Return the bot's rating."""
-    return self.row.bot_info.perf.rating
+    return self.row.perf.rating
 
-  def get_created_time(self) -> int:
-    """Return the time the bot was created."""
-    return self.row.bot_info.profile.created_time
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return LeaderboardUpdate.check_is_eligible(self.row.perf.prov)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
-    delta_rank = self.row.rank - rank
+    delta_rank = self.row.rank_info.rank - rank
     delta_rating = 0
-    peak_rank = min(self.row.rank, rank)
-    peak_rating = self.row.peak_rating
-    is_new = False
-    is_online = False
-    return LeaderboardRow(self.row.bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    peak_rank = min(self.row.rank_info.rank, rank)
+    peak_rating = self.row.rank_info.peak_rating
+    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
+    return LeaderboardRow(self.row.name, self.row.perf, rank_info)
 
 
 @dataclasses.dataclass(frozen=True)
-class CurrentBotInfoOnlyUpdate(LeaderboardUpdate):
+class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
   """Only the current perf was found.
 
   This happens when the bot is being seen for the first time.
   """
 
-  bot_info: BotInfo
+  bot_perf: BotPerf
+
+  def get_name(self) -> str:
+    """Return the bot's name."""
+    return self.bot_perf.name
 
   def get_rating(self) -> int:
     """Return the bot's rating."""
-    return self.bot_info.perf.rating
+    return self.bot_perf.perf.rating
 
-  def get_created_time(self) -> int:
-    """Return the time the bot was created."""
-    return self.bot_info.profile.created_time
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return LeaderboardUpdate.check_is_eligible(self.bot_perf.perf.prov)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
     delta_rank = 0
     delta_rating = 0
     peak_rank = rank
-    peak_rating = self.bot_info.perf.rating
-    is_new = True
-    is_online = True
-    return LeaderboardRow(self.bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    peak_rating = self.bot_perf.perf.rating
+    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
+    return LeaderboardRow(self.bot_perf.name, self.bot_perf.perf, rank_info)
 
 
 @dataclasses.dataclass(frozen=True)
@@ -101,26 +117,28 @@ class FullUpdate(LeaderboardUpdate):
   """The bot is already on the leaderboard and we have new data."""
 
   previous_row: LeaderboardRow
-  current_bot_info: BotInfo
+  current_bot_perf: BotPerf
+
+  def get_name(self) -> str:
+    """Return the bot's name."""
+    return self.current_bot_perf.name
 
   def get_rating(self) -> int:
     """Return the bot's rating."""
     # Use the current rating
-    return self.current_bot_info.perf.rating
+    return self.current_bot_perf.perf.rating
 
-  def get_created_time(self) -> int:
-    """Return the time the bot was created."""
-    # The old and new created times are expected to be the same
-    return self.current_bot_info.profile.created_time
+  def is_eligible(self) -> bool:
+    """Return whether the bot is eligible for the leaderboard."""
+    return LeaderboardUpdate.check_is_eligible(self.current_bot_perf.perf.prov)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
     # Moving up in the leaderboard should count as a positive delta (3 -> 1 yields +2)
-    delta_rank = self.previous_row.rank - rank
-    delta_rating = self.current_bot_info.perf.rating - self.previous_row.bot_info.perf.rating
+    delta_rank = self.previous_row.rank_info.rank - rank
+    delta_rating = self.current_bot_perf.perf.rating - self.previous_row.perf.rating
     # Higher ranking, lower rank number
-    peak_rank = min(self.previous_row.rank, rank)
-    peak_rating = max(self.previous_row.bot_info.perf.rating, self.current_bot_info.perf.rating)
-    is_new = False
-    is_online = True
-    return LeaderboardRow(self.current_bot_info, rank, delta_rank, delta_rating, peak_rank, peak_rating, is_new, is_online)
+    peak_rank = min(self.previous_row.rank_info.rank, rank)
+    peak_rating = max(self.previous_row.perf.rating, self.current_bot_perf.perf.rating)
+    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
+    return LeaderboardRow(self.current_bot_perf.name, self.current_bot_perf.perf, rank_info)

@@ -31,15 +31,17 @@ class LeaderboardGenerator:
 
     # Generate leaderboard data
     data_generator = DataGenerator(self.file_system, self.lichess_client, self.time_provider)
-    ranked_rows_by_perf_type = data_generator.generate_leaderboard_data()
+    leaderboard_data = data_generator.generate_leaderboard_data()
 
     # Save the leaderboard data
-    for perf_type, rows in ranked_rows_by_perf_type.items():
+    bot_profiles = [profile.to_json() for profile in leaderboard_data.get_bot_profiles_sorted().values()]
+    self.file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles)
+    for perf_type, rows in leaderboard_data.get_ranked_rows_sorted().items():
       self.file_system.save_file_lines(file_paths.data_path(perf_type), [row.to_json() for row in rows])
 
     # Generate leaderboard html
     html_generator = HtmlGenerator(self.time_provider)
-    html_by_name = html_generator.generate_leaderboard_html(ranked_rows_by_perf_type)
+    html_by_name = html_generator.generate_leaderboard_html(leaderboard_data)
 
     # Save the leaderboard html
     for name, html in html_by_name.items():

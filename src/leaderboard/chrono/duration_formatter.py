@@ -19,25 +19,17 @@ def format_age(start_seconds: int, end_seconds: int) -> str:
   end_datetime = get_truncated_datetime(end_seconds)
 
   # Find the age in years and months
-  age_years = end_datetime.year - start_datetime.year
-  age_months = end_datetime.month - start_datetime.month
-
-  if age_months < 0:
-    age_years -= 1
-    age_months += 12
+  age_months = (end_datetime.year - start_datetime.year) * 12 + (end_datetime.month - start_datetime.month)
 
   if end_datetime.day < start_datetime.day:
-    if age_months == 0:
-      age_years -= 1
-      age_months += 11
-    else:
-      age_months -= 1
+    age_months -= 1
 
-  if age_years == 0 and age_months == 0:
-    return "<1mo"
+  age_years, age_months = divmod(age_months, 12)
+
+  if age_years == 0:
+    return "<1mo" if age_months == 0 else f"{age_months}mo"
 
   if age_months == 0 and start_datetime.day == end_datetime.day:
     return f"{age_years}y 🎂"
 
-  age_years_str = f"{age_years}y " if age_years else ""
-  return f"{age_years_str}{age_months}mo"
+  return f"{age_years}y {age_months}mo"

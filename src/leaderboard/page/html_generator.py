@@ -6,8 +6,9 @@ from jinja2 import Environment, FileSystemLoader
 
 from src.leaderboard.chrono import date_formatter, duration_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data.leaderboard_row import LeaderboardRow
-from src.leaderboard.li.bot_user import PerfType
+from src.leaderboard.data.data_generator import LeaderboardDataResult
+from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRow
+from src.leaderboard.li.pert_type import PerfType
 
 
 @dataclasses.dataclass(frozen=True)
@@ -64,9 +65,9 @@ class OnlineStatus:
   html_class: str
 
   @classmethod
-  def create_from(cls, is_online: bool, is_patron: bool) -> "OnlineStatus":
+  def create_from(cls, online: bool, is_patron: bool) -> "OnlineStatus":
     """Create an OnlineStatus based on whether or not the bot is online and a patron."""
-    html_class = "bot-online" if is_online else "bot-offline"
+    html_class = "bot-online" if online else "bot-offline"
     indicator_icon = "★" if is_patron else "●"
     return OnlineStatus(indicator_icon, html_class)
 
@@ -78,7 +79,7 @@ class HtmlLeaderboardRow:
   rank: int
   delta_rank: LeaderboardDelta
   online_status: OnlineStatus
-  username: str
+  name: str
   flag: str
   rating: int
   delta_rating: LeaderboardDelta
@@ -87,19 +88,19 @@ class HtmlLeaderboardRow:
   last_seen_date: str
 
   @classmethod
-  def from_leaderboard_row(cls, row: LeaderboardRow, current_time: int) -> "HtmlLeaderboardRow":
+  def from_leaderboard_row(cls, row: LeaderboardRow, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
-      row.rank,
-      LeaderboardDelta.for_delta_rank(row.delta_rank, row.is_new),
-      OnlineStatus.create_from(row.is_online, row.bot_info.profile.patron),
-      row.bot_info.profile.username,
-      row.bot_info.profile.flag,
-      row.bot_info.perf.rating,
-      LeaderboardDelta.for_delta_rating(row.delta_rating),
-      row.bot_info.perf.games,
-      duration_formatter.format_age(row.bot_info.profile.created_time, current_time),
-      date_formatter.format_yyyy_mm_dd(row.bot_info.last_seen_time),
+      row.rank_info.rank,
+      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.is_new),
+      OnlineStatus.create_from(profile.online, profile.patron),
+      profile.name,
+      profile.flag,
+      row.perf.rating,
+      LeaderboardDelta.for_delta_rating(row.rank_info.delta_rating),
+      row.perf.games,
+      duration_formatter.format_age(profile.created, current_time),
+      date_formatter.format_yyyy_mm_dd(profile.last_seen),
     )
 
 
@@ -125,24 +126,26 @@ class HtmlGenerator:
     self.time_provider = time_provider
     self.jinja_environment = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
 
-  def generate_leaderboard_html(self, ranked_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]]) -> dict[str, str]:
+  def generate_leaderboard_html(self, leaderboard_data: LeaderboardDataResult) -> dict[str, str]:
     """Generate index and leaderboard html."""
     current_time = self.time_provider.get_current_time()
     last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)
     html_by_name: dict[str, str] = {}
     # Create index html
-    index_template = self.jinja_environment.get_template("index.html.jinja")
-    index_html = index_template.render(
+    index_html = self.jinja_environment.get_template("index.html.jinja").render(
       main_frame=MainFrame("Lichess Bot Leaderboards", last_updated_date, create_nav_links(None))
     )
     html_by_name["index"] = index_html
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
-      rows = ranked_rows_by_perf_type.get(perf_type, [])
-      leaderboard_template = self.jinja_environment.get_template("leaderboard.html.jinja")
-      leaderboard_html = leaderboard_template.render(
+      leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
-        leaderboard_rows=[HtmlLeaderboardRow.from_leaderboard_row(row, current_time) for row in rows],
+        leaderboard_rows=[
+          HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
+          for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
+          # The rank is set to zero when the bot is not eligible for the leaderboard
+          if row.rank_info.rank
+        ],
       )
       html_by_name[perf_type.to_string()] = leaderboard_html
     # Return file name to html contents map
