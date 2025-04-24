@@ -29,7 +29,7 @@ class TestBotProfile(unittest.TestCase):
       "patron": True,
       "tos_violation": True,
       "is_new": True,
-      "is_online": True,
+      "online": True,
     }
     expected_bot_profile = BotProfile("Bot1", "flair", "FR", DATE_2024_01_01, DATE_2025_04_01, True, True, False, False)
     self.assertEqual(BotProfile.from_json_dict(json_dict), expected_bot_profile)
@@ -37,7 +37,7 @@ class TestBotProfile(unittest.TestCase):
   def test_create_updated_copy_for_for_merge(self) -> None:
     updated_copy = BotProfile("", "", "", 0, 0, False, False, True, True).create_updated_copy_for_for_merge()
     self.assertFalse(updated_copy.is_new)
-    self.assertTrue(updated_copy.is_online)
+    self.assertTrue(updated_copy.online)
 
   def test_is_eligible_last_seen(self) -> None:
     bot_profile = BotProfile("", "", "", 0, epoch_seconds.from_date(2025, 4, 1), False, False, True, True)

@@ -65,9 +65,9 @@ class OnlineStatus:
   html_class: str
 
   @classmethod
-  def create_from(cls, is_online: bool, is_patron: bool) -> "OnlineStatus":
+  def create_from(cls, online: bool, is_patron: bool) -> "OnlineStatus":
     """Create an OnlineStatus based on whether or not the bot is online and a patron."""
-    html_class = "bot-online" if is_online else "bot-offline"
+    html_class = "bot-online" if online else "bot-offline"
     indicator_icon = "★" if is_patron else "●"
     return OnlineStatus(indicator_icon, html_class)
 
@@ -93,7 +93,7 @@ class HtmlLeaderboardRow:
     return HtmlLeaderboardRow(
       row.rank_info.rank,
       LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.is_new),
-      OnlineStatus.create_from(profile.is_online, profile.patron),
+      OnlineStatus.create_from(profile.online, profile.patron),
       profile.name,
       profile.flag,
       row.perf.rating,
