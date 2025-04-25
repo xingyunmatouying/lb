@@ -118,14 +118,19 @@ tr:nth-child(even) {
 
 /* Rank */
 .col-rank {
-  width: 3%;
+  width: 7%;
   text-align: right;
   padding-right: 4px;
 }
 
+/* Rank medal */
+.col-rank-medal {
+  float: left;
+}
+
 /* Rank delta */
 .col-delta-rank {
-  width: 6%;
+  width: 5%;
   padding-left: 4px;
 }
 
@@ -169,7 +174,7 @@ span.bot-title {
 
 /* Flag */
 .col-flag {
-  width: 10%;
+  width: 9%;
 }
 
 /* Rating */
@@ -181,7 +186,7 @@ span.bot-title {
 
 /* Rating delta */
 .col-delta-rating {
-  width: 11%;
+  width: 9%;
   padding-left: 4px;
 }
 

@@ -80,6 +80,7 @@ class OnlineStatus:
 class HtmlLeaderboardRow:
   """The data required to render a leaderboard row in html."""
 
+  medal: str
   rank: int
   delta_rank: LeaderboardDelta
   online_status: OnlineStatus
@@ -95,6 +96,7 @@ class HtmlLeaderboardRow:
   def from_leaderboard_row(cls, row: LeaderboardRow, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
+      {1: "🥇", 2: "🥈", 3: "🥉"}.get(row.rank_info.rank, ""),
       row.rank_info.rank,
       LeaderboardDelta.for_delta_rank(row.rank_info.rank, row.rank_info.delta_rank, profile.new),
       OnlineStatus.create_from(profile.online, profile.patron),

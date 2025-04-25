@@ -18,7 +18,9 @@
     <tbody>
       {%- for row in leaderboard_rows %}
         <tr>
-          <td class="col-rank">{{ row.rank }}</td>
+          <td class="col-rank">
+            <span class="col-rank-medal">{{ row.medal }}</span>{{ row.rank }}
+          </td>
           <td class="col-delta-rank {{ row.delta_rank.html_class }}">{{ row.delta_rank.formatted_value }}</td>
           <td class="col-name">
             <span class="{{ row.online_status.html_class }}">{{ row.online_status.indicator_icon }}</span>
