@@ -53,7 +53,8 @@ footer a {
 }
 
 /* Name column links */
-.col-name a {
+.col-name a,
+.col-rating a {
   color: black;
 }
 
@@ -65,7 +66,8 @@ nav a:hover {
 
 /* Links which get the underline back on hover */
 footer a:hover,
-.col-name a:hover {
+.col-name a:hover,
+.col-rating a:hover {
   text-decoration: underline;
 }
 

@@ -146,6 +146,7 @@ class HtmlGenerator:
     for perf_type in PerfType.all_except_unknown():
       leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
+        perf_type_link=perf_type.to_string(),
         leaderboard_rows=[
           HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
           for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])

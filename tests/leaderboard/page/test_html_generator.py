@@ -68,8 +68,10 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("<h1>Bullet</h1>", bullet_html)
     self.assertIn("Bot-1", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-1", bullet_html)
+    self.assertIn("https://lichess.org/@/Bot-1/perf/bullet", bullet_html)
     self.assertIn("Bot-2", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-2", bullet_html)
+    self.assertIn("https://lichess.org/@/Bot-2/perf/bullet", bullet_html)
 
   def test_generate_no_ineligible(self) -> None:
     ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", rank=0)]}
