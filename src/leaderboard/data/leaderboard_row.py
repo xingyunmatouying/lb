@@ -30,12 +30,12 @@ class BotProfile:
   # If the bot has violated the terms of service
   tos_violation: bool
   # Whether or not this is the bot's first time on the leaderboard
-  is_new: bool
+  new: bool
   # Whether or not the bot was online when the leaderboard was generated
   online: bool
 
   @classmethod
-  def from_bot_user(cls, bot_user: BotUser, last_seen: int) -> "BotProfile":
+  def from_bot_user(cls, bot_user: BotUser) -> "BotProfile":
     """Create a BotProfile from a BotUser.
 
     The bot will be assumed to be new and to be online.
@@ -45,7 +45,7 @@ class BotProfile:
       bot_user.flair,
       bot_user.flag,
       bot_user.created_at,
-      last_seen,
+      bot_user.seen_at,
       bot_user.patron,
       bot_user.tos_violation,
       # Assume the bot is new - this simplifies updates
@@ -85,7 +85,7 @@ class BotProfile:
   def create_updated_copy_for_for_merge(self) -> "BotProfile":
     """Create an updated copy of the profile.
 
-    The updated copy has is_new set to False and online set to True.
+    The updated copy has new set to False and online set to True.
     """
     return BotProfile(
       self.name,

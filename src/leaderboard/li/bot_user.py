@@ -60,6 +60,8 @@ class BotUser:
   flag: str
   # The time the bot was created (seconds since epoch)
   created_at: int
+  # The time the bot was last seen (seconds since epoch)
+  seen_at: int
   # If the bot is a patron
   patron: bool
   # If the bot has violated the terms of service
@@ -77,6 +79,7 @@ class BotUser:
     profile_dict = json_dict.get("profile", {})
     flag = profile_dict.get("flag", "")
     created_at = json_dict.get("createdAt", 0) // 1000
+    seen_at = json_dict.get("seenAt", 0) // 1000
     patron = json_dict.get("patron", False)
     tos_violation = json_dict.get("tosViolation", False)
 
@@ -84,4 +87,4 @@ class BotUser:
     for perf_type_key, perf_json in json_dict.get("perfs", []).items():
       perfs.append(Perf.from_json_dict(perf_type_key, perf_json))
 
-    return BotUser(username, flair, flag, created_at, patron, tos_violation, perfs)
+    return BotUser(username, flair, flag, created_at, seen_at, patron, tos_violation, perfs)

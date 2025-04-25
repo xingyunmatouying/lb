@@ -40,13 +40,13 @@ class BotInfoResult:
   bot_perfs_by_perf_type: dict[PerfType, list[BotPerf]]
 
 
-def get_online_bot_info(lichess_client: LichessClient, current_time: int) -> BotInfoResult:
+def get_online_bot_info(lichess_client: LichessClient) -> BotInfoResult:
   """Load all of the current online bots and return the information used to generate the leaderboard."""
   bot_profiles_by_name: dict[str, BotProfile] = {}
   bot_perfs_by_perf_type: dict[PerfType, list[BotPerf]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)
-    bot_profiles_by_name[bot_user.username] = BotProfile.from_bot_user(bot_user, current_time)
+    bot_profiles_by_name[bot_user.username] = BotProfile.from_bot_user(bot_user)
     for perf in bot_user.perfs:
       bot_perfs_by_perf_type[perf.perf_type].append(BotPerf(bot_user.username, LeaderboardPerf.from_perf(perf)))
   return BotInfoResult(bot_profiles_by_name, bot_perfs_by_perf_type)
@@ -160,7 +160,7 @@ class DataGenerator:
     bot_profiles_by_name = load_bot_profiles(self.file_system)
     previous_rows_by_perf_type = load_leaderboard_rows(self.file_system)
     # Get the current online bot info
-    online_bot_info = get_online_bot_info(self.lichess_client, self.time_provider.get_current_time())
+    online_bot_info = get_online_bot_info(self.lichess_client)
     # Update the bot profiles
     updated_bot_profiles = merge_bot_profiles(bot_profiles_by_name, online_bot_info.bot_profiles_by_name)
     # Combine the data and create update objects for all of the leaderboards

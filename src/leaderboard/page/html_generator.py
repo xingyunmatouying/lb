@@ -37,14 +37,18 @@ class LeaderboardDelta:
   html_class: str
 
   @classmethod
-  def for_delta_rank(cls, delta: int, is_new: bool) -> "LeaderboardDelta":
+  def for_delta_rank(cls, rank: int, delta: int, new: bool) -> "LeaderboardDelta":
     """Return ↑n, ↓n, "new", or blank."""
+    if new:
+      return LeaderboardDelta("🆕", "")
+    if rank == -delta:
+      # In this case a bot previously was ineligible (rank zero) and now they are eligible again.
+      # This ends up also triggering for some cases where it is the bot's first time appearing on the leaderboard.
+      return LeaderboardDelta("🔙", "")
     if delta > 0:
       return LeaderboardDelta(f"↑{abs(delta)}", "delta-pos")
     if delta < 0:
       return LeaderboardDelta(f"↓{abs(delta)}", "delta-neg")
-    if is_new:
-      return LeaderboardDelta("🆕", "")
     return LeaderboardDelta("", "")
 
   @classmethod
@@ -76,6 +80,7 @@ class OnlineStatus:
 class HtmlLeaderboardRow:
   """The data required to render a leaderboard row in html."""
 
+  medal: str
   rank: int
   delta_rank: LeaderboardDelta
   online_status: OnlineStatus
@@ -91,8 +96,9 @@ class HtmlLeaderboardRow:
   def from_leaderboard_row(cls, row: LeaderboardRow, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
     """Convert a LeaderboardRow into an HtmlLeaderboardRow."""
     return HtmlLeaderboardRow(
+      {1: "🥇", 2: "🥈", 3: "🥉"}.get(row.rank_info.rank, ""),
       row.rank_info.rank,
-      LeaderboardDelta.for_delta_rank(row.rank_info.delta_rank, profile.is_new),
+      LeaderboardDelta.for_delta_rank(row.rank_info.rank, row.rank_info.delta_rank, profile.new),
       OnlineStatus.create_from(profile.online, profile.patron),
       profile.name,
       profile.flag,
@@ -140,6 +146,7 @@ class HtmlGenerator:
     for perf_type in PerfType.all_except_unknown():
       leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
+        perf_type_link=perf_type.to_string(),
         leaderboard_rows=[
           HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
           for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])

@@ -53,7 +53,8 @@ footer a {
 }
 
 /* Name column links */
-.col-name a {
+.col-name a,
+.col-rating a {
   color: black;
 }
 
@@ -65,7 +66,8 @@ nav a:hover {
 
 /* Links which get the underline back on hover */
 footer a:hover,
-.col-name a:hover {
+.col-name a:hover,
+.col-rating a:hover {
   text-decoration: underline;
 }
 
@@ -79,7 +81,7 @@ main {
   padding-top: 10px;
   border-radius: 5px;
   /* Look slightly 3d */
-  box-shadow: 0 5px 5px rgba(0 0 0 / 10%);
+  box-shadow: 0 5px 5px rgb(0 0 0 / 10%);
 }
 
 h1 {
@@ -118,14 +120,19 @@ tr:nth-child(even) {
 
 /* Rank */
 .col-rank {
-  width: 3%;
+  width: 7%;
   text-align: right;
   padding-right: 4px;
 }
 
+/* Rank medal */
+.col-rank-medal {
+  float: left;
+}
+
 /* Rank delta */
 .col-delta-rank {
-  width: 6%;
+  width: 5%;
   padding-left: 4px;
 }
 
@@ -169,7 +176,7 @@ span.bot-title {
 
 /* Flag */
 .col-flag {
-  width: 10%;
+  width: 9%;
 }
 
 /* Rating */
@@ -181,7 +188,7 @@ span.bot-title {
 
 /* Rating delta */
 .col-delta-rating {
-  width: 11%;
+  width: 9%;
   padding-left: 4px;
 }
 
