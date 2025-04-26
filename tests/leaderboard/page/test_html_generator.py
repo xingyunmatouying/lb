@@ -31,8 +31,8 @@ class TestLeaderboardDelta(unittest.TestCase):
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, 0, False), LeaderboardDelta("", ""))
 
   def for_delta_rating(self) -> None:
-    self.assertEqual(LeaderboardDelta.for_delta_rating(1), LeaderboardDelta("(+1)", "delta-pos"))
-    self.assertEqual(LeaderboardDelta.for_delta_rating(-1), LeaderboardDelta("(-1)", "delta-neg"))
+    self.assertEqual(LeaderboardDelta.for_delta_rating(1), LeaderboardDelta("+1", "delta-pos"))
+    self.assertEqual(LeaderboardDelta.for_delta_rating(-1), LeaderboardDelta("-1", "delta-neg"))
     self.assertEqual(LeaderboardDelta.for_delta_rating(0), LeaderboardDelta("", ""))
 
 
@@ -114,7 +114,7 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
-    self.assertIn("(+3)", bullet_html)
+    self.assertIn("+3", bullet_html)
     self.assertIn('class="col-delta-rating delta-pos"', bullet_html)
 
   def test_generate_negative_delta_rating(self) -> None:
@@ -123,5 +123,5 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
-    self.assertIn("(-3)", bullet_html)
+    self.assertIn("-3", bullet_html)
     self.assertIn('class="col-delta-rating delta-neg"', bullet_html)

@@ -55,9 +55,9 @@ class LeaderboardDelta:
   def for_delta_rating(cls, delta: int) -> "LeaderboardDelta":
     """Return (+n), (-n), or blank."""
     if delta > 0:
-      return LeaderboardDelta(f"(+{abs(delta)})", "delta-pos")
+      return LeaderboardDelta(f"+{abs(delta)}", "delta-pos")
     if delta < 0:
-      return LeaderboardDelta(f"(-{abs(delta)})", "delta-neg")
+      return LeaderboardDelta(f"-{abs(delta)}", "delta-neg")
     return LeaderboardDelta("", "")
 
 
