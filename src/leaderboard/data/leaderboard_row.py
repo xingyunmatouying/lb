@@ -162,9 +162,9 @@ class RankInfo:
   # The bot's rank on the leaderboard
   # If rank is zero the bot should not be included on the leaderboard
   rank: int
-  # How much their rank has changed since the last time the leaderboard was generated
+  # How much the bot's rank has changed since last time
   delta_rank: int
-  # How much their rating has changed since the last time the leaderboard was generated
+  # How much the bot's rating has changed since last time
   delta_rating: int
   # The highest rank the bot has ever achieved on the leaderboard
   peak_rank: int
