@@ -88,6 +88,7 @@ class HtmlLeaderboardRow:
   flag: str
   rating: int
   delta_rating: LeaderboardDelta
+  rd: int
   games: int
   age: str
   last_seen_date: str
@@ -104,6 +105,7 @@ class HtmlLeaderboardRow:
       profile.flag,
       row.perf.rating,
       LeaderboardDelta.for_delta_rating(row.rank_info.delta_rating),
+      row.perf.rd,
       row.perf.games,
       duration_formatter.format_age(profile.created, current_time),
       date_formatter.format_yyyy_mm_dd(profile.last_seen),

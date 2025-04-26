@@ -176,7 +176,7 @@ span.bot-title {
 
 /* Flag */
 .col-flag {
-  width: 9%;
+  width: 6%;
 }
 
 /* Rating */
@@ -188,22 +188,27 @@ span.bot-title {
 
 /* Rating delta */
 .col-delta-rating {
-  width: 9%;
+  width: 7%;
   padding-left: 4px;
+}
+
+/* Rating deviation */
+.col-rd {
+  width: 8%;
 }
 
 /* Games */
 .col-games {
-  width: 11%;
+  width: 10%;
 }
 
 /* Created */
 .col-age {
   text-align: right;
-  width: 10%;
+  width: 9%;
 }
 
 /* Last Seen */
 .col-last-seen {
-  width: 12%;
+  width: 11%;
 }
