@@ -20,6 +20,11 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @abc.abstractmethod
+  def get_rd(self) -> int:
+    """Return the bot's rating deviation."""
+    ...
+
+  @abc.abstractmethod
   def is_eligible(self) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
     ...
@@ -67,6 +72,10 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     """Return the bot's rating."""
     return self.row.perf.rating
 
+  def get_rd(self) -> int:
+    """Return the bot's rating deviation."""
+    return self.row.perf.rd
+
   def is_eligible(self) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
     return LeaderboardUpdate.check_is_eligible(self.row.perf.prov)
@@ -98,6 +107,10 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
     """Return the bot's rating."""
     return self.bot_perf.perf.rating
 
+  def get_rd(self) -> int:
+    """Return the bot's rating deviation."""
+    return self.bot_perf.perf.rd
+
   def is_eligible(self) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
     return LeaderboardUpdate.check_is_eligible(self.bot_perf.perf.prov)
@@ -127,6 +140,10 @@ class FullUpdate(LeaderboardUpdate):
     """Return the bot's rating."""
     # Use the current rating
     return self.current_bot_perf.perf.rating
+
+  def get_rd(self) -> int:
+    """Return the bot's rating deviation."""
+    return self.current_bot_perf.perf.rd
 
   def is_eligible(self) -> bool:
     """Return whether the bot is eligible for the leaderboard."""

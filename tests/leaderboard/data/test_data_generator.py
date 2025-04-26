@@ -209,6 +209,23 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
+  def test_create_ranked_tie_sorted_by_rd(self) -> None:
+    bot_1_perf = BotPerf("Bot-1", LeaderboardPerf(3000, 45, 0, 1000, False))
+    bot_2_perf = BotPerf("Bot-2", LeaderboardPerf(3000, 60, 0, 1000, False))
+    bot_3_perf = BotPerf("Bot-3", LeaderboardPerf(3000, 90, 0, 1000, False))
+    updates: list[LeaderboardUpdate] = [
+      CurrentBotPerfOnlyUpdate(bot_2_perf),
+      CurrentBotPerfOnlyUpdate(bot_3_perf),
+      CurrentBotPerfOnlyUpdate(bot_1_perf),
+    ]
+    leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
+    expected_leaderboard_rows = [
+      LeaderboardRow("Bot-1", bot_1_perf.perf, RankInfo(1, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-2", bot_2_perf.perf, RankInfo(1, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-3", bot_3_perf.perf, RankInfo(1, 0, 0, 1, 3000)),
+    ]
+    self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
+
   def test_create_ranked_rows_ineligible_update(self) -> None:
     # Don't include provisional
     ineligible_bot_1_perf = BotPerf("Bot-1", LeaderboardPerf(3000, 0, 0, 1000, True))
