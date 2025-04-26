@@ -38,7 +38,7 @@ class LeaderboardDelta:
 
   @classmethod
   def for_delta_rank(cls, rank: int, delta: int, new: bool) -> "LeaderboardDelta":
-    """Return ↑n, ↓n, "new", or blank."""
+    """Return "new", "back", ↑n, ↓n, or blank."""
     if new:
       return LeaderboardDelta("🆕", "")
     if rank == -delta:
@@ -53,7 +53,7 @@ class LeaderboardDelta:
 
   @classmethod
   def for_delta_rating(cls, delta: int) -> "LeaderboardDelta":
-    """Return (+n), (-n), or blank."""
+    """Return +n, -n, or blank."""
     if delta > 0:
       return LeaderboardDelta(f"+{abs(delta)}", "delta-pos")
     if delta < 0:
