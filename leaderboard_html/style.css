@@ -194,12 +194,20 @@ span.bot-title {
 
 /* Rating deviation */
 .col-rd {
-  width: 8%;
+  width: 5%;
 }
 
 /* Games */
 .col-games {
-  width: 10%;
+  width: 8%;
+  text-align: right;
+  padding-right: 4px;
+}
+
+/* Games delta */
+.col-delta-games {
+  width: 5%;
+  padding-left: 4px;
 }
 
 /* Created */

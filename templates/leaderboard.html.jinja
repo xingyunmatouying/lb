@@ -12,6 +12,7 @@
         <th class="col-delta-rating">Δ</th>
         <th class="col-rd">RD</th>
         <th class="col-games">Games</th>
+        <th class="col-delta-games">Δ</th>
         <th class="col-age">Age</th>
         <th class="col-last-seen">Last Seen</th>
       </tr>
@@ -35,6 +36,7 @@
           <td class="col-delta-rating {{ row.delta_rating.html_class }}">{{ row.delta_rating.formatted_value }}</td>
           <td class="col-rd">{{ row.rd }}</td>
           <td class="col-games">{{ row.games }}</td>
+          <td class="col-delta-games">{{ row.delta_games }}</td>
           <td class="col-age">{{ row.age }}</td>
           <td class="col-last-seen">{{ row.last_seen_date }}</td>
         </tr>

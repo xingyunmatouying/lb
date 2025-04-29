@@ -166,6 +166,8 @@ class RankInfo:
   delta_rank: int
   # How much the bot's rating has changed since last time
   delta_rating: int
+  # How much the number of games played has changed since last time
+  delta_games: int
   # The highest rank the bot has ever achieved on the leaderboard
   peak_rank: int
   # The maximum rating observed at any point when generating the leaderboard
@@ -178,6 +180,7 @@ class RankInfo:
       json_dict.get("rank", 0),
       json_dict.get("delta_rank", 0),
       json_dict.get("delta_rating", 0),
+      json_dict.get("delta_games", 0),
       json_dict.get("peak_rank", 0),
       json_dict.get("peak_rating", 0),
     )

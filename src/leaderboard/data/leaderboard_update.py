@@ -84,9 +84,10 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     """Convert the update information into a leaderboard row."""
     delta_rank = self.row.rank_info.rank - rank
     delta_rating = 0
+    delta_games = 0
     peak_rank = min(self.row.rank_info.rank, rank)
     peak_rating = self.row.rank_info.peak_rating
-    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
+    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating)
     return LeaderboardRow(self.row.name, self.row.perf, rank_info)
 
 
@@ -119,9 +120,10 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
     """Convert the update information into a leaderboard row."""
     delta_rank = 0
     delta_rating = 0
+    delta_games = 0
     peak_rank = rank
     peak_rating = self.bot_perf.perf.rating
-    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
+    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating)
     return LeaderboardRow(self.bot_perf.name, self.bot_perf.perf, rank_info)
 
 
@@ -154,8 +156,9 @@ class FullUpdate(LeaderboardUpdate):
     # Moving up in the leaderboard should count as a positive delta (3 -> 1 yields +2)
     delta_rank = self.previous_row.rank_info.rank - rank
     delta_rating = self.current_bot_perf.perf.rating - self.previous_row.perf.rating
+    delta_games = self.current_bot_perf.perf.games - self.previous_row.perf.games
     # Higher ranking, lower rank number
     peak_rank = min(self.previous_row.rank_info.rank, rank)
     peak_rating = max(self.previous_row.perf.rating, self.current_bot_perf.perf.rating)
-    rank_info = RankInfo(rank, delta_rank, delta_rating, peak_rank, peak_rating)
+    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating)
     return LeaderboardRow(self.current_bot_perf.name, self.current_bot_perf.perf, rank_info)

@@ -81,15 +81,16 @@ class TestLeaderboardRow(unittest.TestCase):
           "rank": 4,
           "delta_rank": 1,
           "delta_rating": 50,
+          "delta_games": 10,
           "peak_rank": 3,
           "peak_rating": 1600
         }
       }
       """
     expected_perf = LeaderboardPerf(1500, 0, 0, 0, False)
-    expected_leaderboard_row = LeaderboardRow("Bot1", expected_perf, RankInfo(4, 1, 50, 3, 1600))
+    expected_leaderboard_row = LeaderboardRow("Bot1", expected_perf, RankInfo(4, 1, 50, 10, 3, 1600))
     self.assertEqual(LeaderboardRow.from_json(leaderboard_row_json), expected_leaderboard_row)
 
   def test_to_json_round_trip(self) -> None:
-    leaderboard_row = LeaderboardRow("Bot1", LeaderboardPerf(1500, 12, 34, 100, True), RankInfo(4, 1, 50, 3, 1600))
+    leaderboard_row = LeaderboardRow("Bot1", LeaderboardPerf(1500, 12, 34, 100, True), RankInfo(4, 1, 50, 10, 3, 1600))
     self.assertEqual(LeaderboardRow.from_json(leaderboard_row.to_json()), leaderboard_row)

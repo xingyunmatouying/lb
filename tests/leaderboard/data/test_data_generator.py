@@ -34,12 +34,12 @@ BOT_2_PERF_BULLET = BotPerf("Bot-2", LeaderboardPerf(2900, 0, 0, 900, False))
 BOT_3_PERF_BULLET = BotPerf("Bot-3", LeaderboardPerf(2900, 0, 0, 800, False))
 BOT_4_PERF_BULLET = BotPerf("Bot-4", LeaderboardPerf(2800, 0, 0, 700, False))
 
-BOT_1_ROW_BULLET = LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3001))
-BOT_2_ROW_BULLET = LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 1, -100, 1, 3000))
+BOT_1_ROW_BULLET = LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 0, 1, 3001))
+BOT_2_ROW_BULLET = LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 1, -100, 5, 1, 3000))
 
 # Blitz leaderboard data
-BOT_2_ROW_BLITZ = LeaderboardRow("Bot-1", LeaderboardPerf(2500, 0, 0, 50, False), RankInfo(1, 1, 100, 1, 2600))
-BOT_1_ROW_BLITZ = LeaderboardRow("Bot-2", LeaderboardPerf(2600, 0, 0, 200, False), RankInfo(2, -1, -150, 1, 2650))
+BOT_2_ROW_BLITZ = LeaderboardRow("Bot-1", LeaderboardPerf(2500, 0, 0, 50, False), RankInfo(1, 1, 100, 5, 1, 2600))
+BOT_1_ROW_BLITZ = LeaderboardRow("Bot-2", LeaderboardPerf(2600, 0, 0, 200, False), RankInfo(2, -1, -150, 5, 1, 2650))
 
 # Response for get online bots
 BOT_1_CURRENT_JSON = """
@@ -171,9 +171,9 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
-      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
-      LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 0, 0, 2, 2900)),
-      LeaderboardRow("Bot-4", BOT_4_PERF_BULLET.perf, RankInfo(3, 0, 0, 3, 2800)),
+      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 0, 0, 0, 2, 2900)),
+      LeaderboardRow("Bot-4", BOT_4_PERF_BULLET.perf, RankInfo(3, 0, 0, 0, 3, 2800)),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -186,10 +186,10 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
-      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
-      LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 0, 0, 2, 2900)),
-      LeaderboardRow("Bot-3", BOT_3_PERF_BULLET.perf, RankInfo(2, 0, 0, 2, 2900)),
-      LeaderboardRow("Bot-4", BOT_4_PERF_BULLET.perf, RankInfo(4, 0, 0, 4, 2800)),
+      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-2", BOT_2_PERF_BULLET.perf, RankInfo(2, 0, 0, 0, 2, 2900)),
+      LeaderboardRow("Bot-3", BOT_3_PERF_BULLET.perf, RankInfo(2, 0, 0, 0, 2, 2900)),
+      LeaderboardRow("Bot-4", BOT_4_PERF_BULLET.perf, RankInfo(4, 0, 0, 0, 4, 2800)),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -202,10 +202,10 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
-      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
-      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
-      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 1, 3000)),
-      LeaderboardRow("Bot-4", BOT_4_PERF_BULLET.perf, RankInfo(4, 0, 0, 4, 2800)),
+      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-1", BOT_1_PERF_BULLET.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-4", BOT_4_PERF_BULLET.perf, RankInfo(4, 0, 0, 0, 4, 2800)),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -220,9 +220,9 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
-      LeaderboardRow("Bot-1", bot_1_perf.perf, RankInfo(1, 0, 0, 1, 3000)),
-      LeaderboardRow("Bot-2", bot_2_perf.perf, RankInfo(1, 0, 0, 1, 3000)),
-      LeaderboardRow("Bot-3", bot_3_perf.perf, RankInfo(1, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-1", bot_1_perf.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-2", bot_2_perf.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
+      LeaderboardRow("Bot-3", bot_3_perf.perf, RankInfo(1, 0, 0, 0, 1, 3000)),
     ]
     self.assertListEqual(leaderboard_rows, expected_leaderboard_rows)
 
@@ -264,8 +264,8 @@ class TestDataGenerator(unittest.TestCase):
     leaderboard_data = data_generator.generate_leaderboard_data()
 
     expected_ranked_rows = [
-      LeaderboardRow("Bot-1", BOT_1_CURRENT_PERF_BULLET.perf, RankInfo(2, -1, -50, 1, 3000)),
-      LeaderboardRow("Bot-2", BOT_2_CURRENT_PERF_BULLET.perf, RankInfo(1, 1, 100, 1, 3000)),
+      LeaderboardRow("Bot-1", BOT_1_CURRENT_PERF_BULLET.perf, RankInfo(2, -1, -50, 100, 1, 3000)),
+      LeaderboardRow("Bot-2", BOT_2_CURRENT_PERF_BULLET.perf, RankInfo(1, 1, 100, 100, 1, 3000)),
     ]
     self.assertListEqual(leaderboard_data.get_ranked_rows_sorted()[PerfType.BULLET], expected_ranked_rows)
 

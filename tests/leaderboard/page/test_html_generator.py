@@ -17,7 +17,7 @@ DEFAULT_BOT_PROFILES_BY_NAME = {
 
 def create_leaderboard_row(name: str, rank: int = 1, delta_rank: int = 0, delta_rating: int = 0) -> LeaderboardRow:
   """Create a LeaderboardRow with several default values set."""
-  return LeaderboardRow(name, LeaderboardPerf(0, 0, 0, 0, False), RankInfo(rank, delta_rank, delta_rating, 0, 0))
+  return LeaderboardRow(name, LeaderboardPerf(0, 0, 0, 0, False), RankInfo(rank, delta_rank, delta_rating, 0, 0, 0))
 
 
 class TestLeaderboardDelta(unittest.TestCase):
