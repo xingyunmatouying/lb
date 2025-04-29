@@ -172,6 +172,8 @@ class RankInfo:
   peak_rank: int
   # The maximum rating observed at any point when generating the leaderboard
   peak_rating: int
+  # The time the bot was last detected having played a game
+  last_played: int
 
   @classmethod
   def from_json_dict(cls, json_dict: dict[str, Any]) -> "RankInfo":
@@ -183,6 +185,7 @@ class RankInfo:
       json_dict.get("delta_games", 0),
       json_dict.get("peak_rank", 0),
       json_dict.get("peak_rating", 0),
+      json_dict.get("last_played", 0),
     )
 
 

@@ -35,17 +35,19 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @classmethod
-  def create_update(cls, previous_row: LeaderboardRow | None, current_bot_perf: BotPerf | None) -> "LeaderboardUpdate":
+  def create_update(
+    cls, previous_row: LeaderboardRow | None, current_bot_perf: BotPerf | None, current_time: int
+  ) -> "LeaderboardUpdate":
     """Return the specific type of update based on the presence of previous_row and current_bot_perf.
 
     If both parameters are None, a ValueError will be raised.
     """
     if previous_row and current_bot_perf:
-      return FullUpdate(previous_row, current_bot_perf)
+      return FullUpdate(previous_row, current_bot_perf, current_time)
     if previous_row and not current_bot_perf:
       return PreviousRowOnlyUpdate(previous_row)
     if current_bot_perf and not previous_row:
-      return CurrentBotPerfOnlyUpdate(current_bot_perf)
+      return CurrentBotPerfOnlyUpdate(current_bot_perf, current_time)
     error_msg = "At least one of previous_row or current_bot_perf must be set."
     raise ValueError(error_msg)
 
@@ -87,7 +89,8 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     delta_games = 0
     peak_rank = min(self.row.rank_info.rank, rank)
     peak_rating = self.row.rank_info.peak_rating
-    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating)
+    last_played = self.row.rank_info.last_played
+    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating, last_played)
     return LeaderboardRow(self.row.name, self.row.perf, rank_info)
 
 
@@ -99,6 +102,7 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
   """
 
   bot_perf: BotPerf
+  current_time: int
 
   def get_name(self) -> str:
     """Return the bot's name."""
@@ -123,7 +127,9 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
     delta_games = 0
     peak_rank = rank
     peak_rating = self.bot_perf.perf.rating
-    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating)
+    # We don't actually know when the last played was in this case, so give the bot the benefit of the doubt.
+    last_played = self.current_time
+    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating, last_played)
     return LeaderboardRow(self.bot_perf.name, self.bot_perf.perf, rank_info)
 
 
@@ -133,6 +139,7 @@ class FullUpdate(LeaderboardUpdate):
 
   previous_row: LeaderboardRow
   current_bot_perf: BotPerf
+  current_time: int
 
   def get_name(self) -> str:
     """Return the bot's name."""
@@ -160,5 +167,6 @@ class FullUpdate(LeaderboardUpdate):
     # Higher ranking, lower rank number
     peak_rank = min(self.previous_row.rank_info.rank, rank)
     peak_rating = max(self.previous_row.perf.rating, self.current_bot_perf.perf.rating)
-    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating)
+    last_played = self.current_time if delta_games else self.previous_row.rank_info.last_played
+    rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating, last_played)
     return LeaderboardRow(self.current_bot_perf.name, self.current_bot_perf.perf, rank_info)
