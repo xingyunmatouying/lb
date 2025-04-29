@@ -92,7 +92,7 @@ class HtmlLeaderboardRow:
   games: int
   delta_games: str
   age: str
-  last_seen_date: str
+  last_seen: str
 
   @classmethod
   def from_leaderboard_row(cls, row: LeaderboardRow, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
