@@ -25,7 +25,7 @@ class LeaderboardUpdate(abc.ABC):
     ...
 
   @abc.abstractmethod
-  def is_eligible(self) -> bool:
+  def is_eligible(self, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
     ...
 
@@ -52,9 +52,10 @@ class LeaderboardUpdate(abc.ABC):
     raise ValueError(error_msg)
 
   @classmethod
-  def check_is_eligible(cls, prov: bool) -> bool:
+  def check_is_eligible(cls, prov: bool, last_played: int, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
-    return not prov
+    played_in_last_two_weeks = current_time - last_played <= 60 * 60 * 24 * 14
+    return not prov and played_in_last_two_weeks
 
 
 @dataclasses.dataclass(frozen=True)
@@ -78,9 +79,9 @@ class PreviousRowOnlyUpdate(LeaderboardUpdate):
     """Return the bot's rating deviation."""
     return self.row.perf.rd
 
-  def is_eligible(self) -> bool:
+  def is_eligible(self, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
-    return LeaderboardUpdate.check_is_eligible(self.row.perf.prov)
+    return LeaderboardUpdate.check_is_eligible(self.row.perf.prov, self.row.rank_info.last_played, current_time)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
@@ -116,9 +117,9 @@ class CurrentBotPerfOnlyUpdate(LeaderboardUpdate):
     """Return the bot's rating deviation."""
     return self.bot_perf.perf.rd
 
-  def is_eligible(self) -> bool:
+  def is_eligible(self, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
-    return LeaderboardUpdate.check_is_eligible(self.bot_perf.perf.prov)
+    return LeaderboardUpdate.check_is_eligible(self.bot_perf.perf.prov, current_time, current_time)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
@@ -154,19 +155,25 @@ class FullUpdate(LeaderboardUpdate):
     """Return the bot's rating deviation."""
     return self.current_bot_perf.perf.rd
 
-  def is_eligible(self) -> bool:
+  def get_delta_games_and_last_played(self, current_time: int) -> tuple[int, int]:
+    """Return a pair of delta games and last played."""
+    delta_games = self.current_bot_perf.perf.games - self.previous_row.perf.games
+    last_played = current_time if delta_games else self.previous_row.rank_info.last_played
+    return delta_games, last_played
+
+  def is_eligible(self, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
-    return LeaderboardUpdate.check_is_eligible(self.current_bot_perf.perf.prov)
+    _, last_played = self.get_delta_games_and_last_played(current_time)
+    return LeaderboardUpdate.check_is_eligible(self.current_bot_perf.perf.prov, last_played, current_time)
 
   def to_leaderboard_row(self, rank: int) -> LeaderboardRow:
     """Convert the update information into a leaderboard row."""
     # Moving up in the leaderboard should count as a positive delta (3 -> 1 yields +2)
     delta_rank = self.previous_row.rank_info.rank - rank
     delta_rating = self.current_bot_perf.perf.rating - self.previous_row.perf.rating
-    delta_games = self.current_bot_perf.perf.games - self.previous_row.perf.games
     # Higher ranking, lower rank number
     peak_rank = min(self.previous_row.rank_info.rank, rank)
     peak_rating = max(self.previous_row.perf.rating, self.current_bot_perf.perf.rating)
-    last_played = self.current_time if delta_games else self.previous_row.rank_info.last_played
+    delta_games, last_played = self.get_delta_games_and_last_played(self.current_time)
     rank_info = RankInfo(rank, delta_rank, delta_rating, delta_games, peak_rank, peak_rating, last_played)
     return LeaderboardRow(self.current_bot_perf.name, self.current_bot_perf.perf, rank_info)

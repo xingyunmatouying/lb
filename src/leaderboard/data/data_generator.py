@@ -99,7 +99,7 @@ def create_ranked_rows(
     # Rank equals zero signals that the bot should not be included on the leaderboard
     rank_to_set = 0
     bot_profile_eligible = bot_profiles_by_name[update.get_name()].is_eligible(current_time)
-    if bot_profile_eligible and update.is_eligible():
+    if bot_profile_eligible and update.is_eligible(current_time):
       if update.get_rating() == previous_rating:
         same_rank_count += 1
       else:

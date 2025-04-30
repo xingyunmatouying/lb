@@ -21,8 +21,10 @@ class TestLeaderboardUpdate(unittest.TestCase):
   """Tests for LeaderboardUpdate and subclasses."""
 
   def test_check_is_eligible(self) -> None:
-    self.assertTrue(LeaderboardUpdate.check_is_eligible(False))
-    self.assertFalse(LeaderboardUpdate.check_is_eligible(True))
+    self.assertTrue(LeaderboardUpdate.check_is_eligible(False, DATE_2025_04_01, DATE_2025_04_01))
+    self.assertFalse(LeaderboardUpdate.check_is_eligible(True, DATE_2025_04_01, DATE_2025_04_01))
+    self.assertFalse(LeaderboardUpdate.check_is_eligible(False, DATE_2024_04_01, DATE_2025_04_01))
+    self.assertFalse(LeaderboardUpdate.check_is_eligible(True, DATE_2024_04_01, DATE_2025_04_01))
 
   def test_from_previous_row_and_current_bot_perf(self) -> None:
     bot_perf = create_bot_perf("Bot 1", 1800, 400, 45)
@@ -39,7 +41,7 @@ class TestLeaderboardUpdate(unittest.TestCase):
     self.assertEqual(update.get_name(), "Bot 1")
     self.assertEqual(update.get_rating(), 1500)
     self.assertEqual(update.get_rd(), 45)
-    self.assertTrue(update.is_eligible())
+    self.assertTrue(update.is_eligible(DATE_2025_04_01))
     expected_row = LeaderboardRow("Bot 1", previous_bot_perf.perf, RankInfo(2, 3, 0, 0, 2, 1500, DATE_2025_04_01))
     self.assertEqual(update.to_leaderboard_row(2), expected_row)
 
@@ -49,7 +51,7 @@ class TestLeaderboardUpdate(unittest.TestCase):
     self.assertEqual(update.get_name(), "Bot 1")
     self.assertEqual(update.get_rating(), 1500)
     self.assertEqual(update.get_rd(), 45)
-    self.assertTrue(update.is_eligible())
+    self.assertTrue(update.is_eligible(DATE_2025_04_01))
     expected_row = LeaderboardRow("Bot 1", previous_bot_perf.perf, RankInfo(2, 0, 0, 0, 2, 1500, DATE_2025_04_01))
     self.assertEqual(update.to_leaderboard_row(2), expected_row)
 
@@ -61,7 +63,7 @@ class TestLeaderboardUpdate(unittest.TestCase):
     self.assertEqual(update.get_name(), "Bot 1")
     self.assertEqual(update.get_rating(), 1600)
     self.assertEqual(update.get_rd(), 60)
-    self.assertTrue(update.is_eligible())
+    self.assertTrue(update.is_eligible(DATE_2025_04_01))
     expected_row = LeaderboardRow("Bot 1", current_bot_perf.perf, RankInfo(1, 4, 100, 20, 1, 1600, DATE_2025_04_01))
     self.assertEqual(update.to_leaderboard_row(1), expected_row)
 
