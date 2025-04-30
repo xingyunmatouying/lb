@@ -69,14 +69,12 @@ def merge_bot_profiles(
   return merged_profiles_by_name
 
 
-def create_updates(
-  previous_rows: list[LeaderboardRow], current_bot_perfs: list[BotPerf], current_time: int
-) -> list[LeaderboardUpdate]:
+def create_updates(previous_rows: list[LeaderboardRow], current_bot_perfs: list[BotPerf]) -> list[LeaderboardUpdate]:
   """Group previous rows and current bot info by bot name and create updates."""
   previous_row_by_name: dict[str, LeaderboardRow] = {row.name: row for row in previous_rows}
   current_bot_perfs_by_name: dict[str, BotPerf] = {bot_perf.name: bot_perf for bot_perf in current_bot_perfs}
   return [
-    LeaderboardUpdate.create_update(previous_row_by_name.get(name), current_bot_perfs_by_name.get(name), current_time)
+    LeaderboardUpdate.create_update(previous_row_by_name.get(name), current_bot_perfs_by_name.get(name))
     for name in previous_row_by_name.keys() | current_bot_perfs_by_name.keys()
   ]
 
@@ -107,7 +105,7 @@ def create_ranked_rows(
         rank += 1
         same_rank_count = 0
       rank_to_set = rank
-    new_rows.append(update.to_leaderboard_row(rank_to_set))
+    new_rows.append(update.to_leaderboard_row(rank_to_set, current_time))
     previous_rating = update.get_rating()
   return new_rows
 
@@ -167,9 +165,7 @@ class DataGenerator:
     # Combine the data and create update objects for all of the leaderboards
     updates_by_perf_type = {
       perf_type: create_updates(
-        previous_rows_by_perf_type.get(perf_type, []),
-        online_bot_info.bot_perfs_by_perf_type.get(perf_type, []),
-        self.time_provider.get_current_time(),
+        previous_rows_by_perf_type.get(perf_type, []), online_bot_info.bot_perfs_by_perf_type.get(perf_type, [])
       )
       for perf_type in PerfType.all_except_unknown()
     }

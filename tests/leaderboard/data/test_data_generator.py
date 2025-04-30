@@ -160,20 +160,18 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     self.assertDictEqual(data_generator_functions.merge_bot_profiles({}, current_profiles_by_name), current_profiles_by_name)
 
   def test_create_updates(self) -> None:
-    updates = data_generator_functions.create_updates(
-      [], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET], DATE_2025_04_01
-    )
+    updates = data_generator_functions.create_updates([], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET])
     expected_updates = [
-      CurrentBotPerfOnlyUpdate(BOT_1_CURRENT_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_2_CURRENT_PERF_BULLET, DATE_2025_04_01),
+      CurrentBotPerfOnlyUpdate(BOT_1_CURRENT_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_2_CURRENT_PERF_BULLET),
     ]
     self.assertCountEqual(updates, expected_updates)
 
   def test_create_ranked_rows(self) -> None:
     updates: list[LeaderboardUpdate] = [
-      CurrentBotPerfOnlyUpdate(BOT_2_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET, DATE_2025_04_01),
+      CurrentBotPerfOnlyUpdate(BOT_2_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET),
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
@@ -185,10 +183,10 @@ class TestDataGeneratorFunctions(unittest.TestCase):
 
   def test_create_ranked_rows_tied_ratings(self) -> None:
     updates: list[LeaderboardUpdate] = [
-      CurrentBotPerfOnlyUpdate(BOT_2_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_3_PERF_BULLET, DATE_2025_04_01),
+      CurrentBotPerfOnlyUpdate(BOT_2_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_3_PERF_BULLET),
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
@@ -201,10 +199,10 @@ class TestDataGeneratorFunctions(unittest.TestCase):
 
   def test_create_ranked_rows_three_way_tie(self) -> None:
     updates: list[LeaderboardUpdate] = [
-      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET, DATE_2025_04_01),
+      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_4_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
+      CurrentBotPerfOnlyUpdate(BOT_1_PERF_BULLET),
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
@@ -220,9 +218,9 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     bot_2_perf = BotPerf("Bot-2", LeaderboardPerf(3000, 60, 0, 1000, False))
     bot_3_perf = BotPerf("Bot-3", LeaderboardPerf(3000, 90, 0, 1000, False))
     updates: list[LeaderboardUpdate] = [
-      CurrentBotPerfOnlyUpdate(bot_2_perf, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(bot_3_perf, DATE_2025_04_01),
-      CurrentBotPerfOnlyUpdate(bot_1_perf, DATE_2025_04_01),
+      CurrentBotPerfOnlyUpdate(bot_2_perf),
+      CurrentBotPerfOnlyUpdate(bot_3_perf),
+      CurrentBotPerfOnlyUpdate(bot_1_perf),
     ]
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, BOT_PROFILES_BY_NAME, DATE_2025_04_01)
     expected_leaderboard_rows = [
@@ -235,14 +233,14 @@ class TestDataGeneratorFunctions(unittest.TestCase):
   def test_create_ranked_rows_ineligible_update(self) -> None:
     # Don't include provisional
     ineligible_bot_1_perf = BotPerf("Bot-1", LeaderboardPerf(3000, 0, 0, 1000, True))
-    updates: list[LeaderboardUpdate] = [CurrentBotPerfOnlyUpdate(ineligible_bot_1_perf, DATE_2025_04_01)]
+    updates: list[LeaderboardUpdate] = [CurrentBotPerfOnlyUpdate(ineligible_bot_1_perf)]
     bot_profiles_by_name = {"Bot-1": BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2025_04_01, False, False, False, True)}
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, bot_profiles_by_name, DATE_2025_04_01)
     self.assertEqual(leaderboard_rows[0].rank_info.rank, 0)
 
   def test_create_ranked_rows_no_ineligible(self) -> None:
     ineligible_bot_1_perf = BotPerf("Bot-1", LeaderboardPerf(3000, 0, 0, 1000, False))
-    updates: list[LeaderboardUpdate] = [CurrentBotPerfOnlyUpdate(ineligible_bot_1_perf, DATE_2025_04_01)]
+    updates: list[LeaderboardUpdate] = [CurrentBotPerfOnlyUpdate(ineligible_bot_1_perf)]
     # Don't include last seen greater than two weeks
     bot_profiles_by_name = {"Bot-1": BotProfile("Bot-1", "", "", DATE_2021_04_01, DATE_2021_04_01, False, False, False, True)}
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, bot_profiles_by_name, DATE_2025_04_01)
