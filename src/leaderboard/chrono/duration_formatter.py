@@ -2,6 +2,8 @@
 
 import datetime
 
+from src.leaderboard.chrono.durations import ONE_HOUR
+
 
 def get_truncated_datetime(seconds: int) -> datetime.datetime:
   """Convert epoch seconds to a datetime truncated to the day."""
@@ -33,3 +35,26 @@ def format_age(start_seconds: int, end_seconds: int) -> str:
     return f"{age_years}y 🎂"
 
   return f"{age_years}y {age_months}mo"
+
+
+def format_last_seen(start_seconds: int, end_seconds: int) -> str:
+  """Format the last seen time.
+
+  - "" if delta < 1hr
+  - "##h ago" if delta < 1d
+  - "##d ago" otherwise
+  """
+  # Be permissive of start and end being switched
+  if start_seconds > end_seconds:
+    start_seconds, end_seconds = end_seconds, start_seconds
+
+  start_datetime = datetime.datetime.fromtimestamp(start_seconds, tz=datetime.UTC)
+  end_datetime = datetime.datetime.fromtimestamp(end_seconds, tz=datetime.UTC)
+
+  delta = end_datetime - start_datetime
+
+  if delta.days == 0:
+    if delta.seconds < ONE_HOUR:
+      return ""
+    return f"{delta.seconds // ONE_HOUR}h ago"
+  return f"{delta.days}d ago"

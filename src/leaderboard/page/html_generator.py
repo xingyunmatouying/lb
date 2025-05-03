@@ -110,7 +110,7 @@ class HtmlLeaderboardRow:
       row.perf.games,
       f"+{row.rank_info.delta_games}" if row.rank_info.delta_games else "",
       duration_formatter.format_age(profile.created, current_time),
-      date_formatter.format_yyyy_mm_dd(profile.last_seen),
+      duration_formatter.format_last_seen(profile.last_seen, current_time),
     )
 
 
