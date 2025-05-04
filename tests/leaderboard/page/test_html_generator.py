@@ -6,13 +6,18 @@ from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
-from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta, OnlineStatus
+from src.leaderboard.page.html_generator import HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
+from tests.leaderboard.chrono import epoch_seconds
 
 
 DEFAULT_BOT_PROFILES_BY_NAME = {
   "Bot-1": BotProfile.from_json('{"name": "Bot-1"}'),
   "Bot-2": BotProfile.from_json('{"name": "Bot-2"}'),
 }
+
+DATE_2024_10_31 = epoch_seconds.from_date(2024, 10, 31)
+DATE_2025_03_30 = epoch_seconds.from_date(2025, 3, 30)
+DATE_2025_04_01 = epoch_seconds.from_date(2025, 4, 1)
 
 
 def create_leaderboard_row(name: str, rank: int = 1, delta_rank: int = 0, delta_rating: int = 0) -> LeaderboardRow:
@@ -42,6 +47,32 @@ class TestOnlineStatus(unittest.TestCase):
   def test_create_from(self) -> None:
     self.assertEqual(OnlineStatus.create_from(True, True), OnlineStatus("★", "bot-online"))
     self.assertEqual(OnlineStatus.create_from(False, False), OnlineStatus("●", "bot-offline"))
+
+
+class TestHtmlLeaderboardRow(unittest.TestCase):
+  """Tests for HtmlLeaderboardRow."""
+
+  def test_from_leaderboard_row(self) -> None:
+    bot_profile = BotProfile("Bot-1", "flair", "HM", DATE_2024_10_31, DATE_2025_04_01, True, False, False, True)
+    perf = LeaderboardPerf(3000, 45, 12, 1000, False)
+    rank_info = RankInfo(2, 1, -5, 10, 3100, 1, DATE_2025_03_30)
+    leaderboard_row = LeaderboardRow("Bot-1", perf, rank_info)
+    expected_html_row = HtmlLeaderboardRow(
+      "🥈",
+      2,
+      LeaderboardDelta("↑1", "delta-pos"),
+      OnlineStatus("★", "bot-online"),
+      "Bot-1",
+      "HM",
+      3000,
+      LeaderboardDelta("-5", "delta-neg"),
+      45,
+      1000,
+      "+10",
+      "5mo",
+      "",
+    )
+    self.assertEqual(HtmlLeaderboardRow.from_leaderboard_row(leaderboard_row, bot_profile, DATE_2025_04_01), expected_html_row)
 
 
 class TestHtmlGenerator(unittest.TestCase):
