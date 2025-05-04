@@ -73,11 +73,10 @@ def create_updates(previous_rows: list[LeaderboardRow], current_bot_perfs: list[
   """Group previous rows and current bot info by bot name and create updates."""
   previous_row_by_name: dict[str, LeaderboardRow] = {row.name: row for row in previous_rows}
   current_bot_perfs_by_name: dict[str, BotPerf] = {bot_perf.name: bot_perf for bot_perf in current_bot_perfs}
-  updates: list[LeaderboardUpdate] = []
-  for name in previous_row_by_name.keys() | current_bot_perfs_by_name.keys():
-    current_bot_perf = current_bot_perfs_by_name.get(name)
-    updates.append(LeaderboardUpdate.create_update(previous_row_by_name.get(name), current_bot_perf))
-  return updates
+  return [
+    LeaderboardUpdate.create_update(previous_row_by_name.get(name), current_bot_perfs_by_name.get(name))
+    for name in previous_row_by_name.keys() | current_bot_perfs_by_name.keys()
+  ]
 
 
 def create_ranked_rows(
@@ -85,9 +84,9 @@ def create_ranked_rows(
 ) -> list[LeaderboardRow]:
   """Create the leaderboard rows for each perf type based on a list of updates."""
   new_rows: list[LeaderboardRow] = []
-  # Primary sort: by rating descending, Secondary sort: created time ascending
+  # Primary sort: rating descending, Secondary sort: rd ascending, Tertiary sort: created time ascending
   sorted_update_list = sorted(
-    updates, key=lambda update: (-update.get_rating(), bot_profiles_by_name[update.get_name()].created)
+    updates, key=lambda update: (-update.get_rating(), update.get_rd(), bot_profiles_by_name[update.get_name()].created)
   )
   # The first in the list will be ranked #1
   rank = 0
@@ -97,8 +96,13 @@ def create_ranked_rows(
   for update in sorted_update_list:
     # Rank equals zero signals that the bot should not be included on the leaderboard
     rank_to_set = 0
+    # Eligibility works slightly differently than for lichess' official leaderboards (https://lichess.org/faq#leaderboards)
+    # 1. The bot must have not violated the TOS
+    # 2. The bot must have appeared online in the last 2 weeks
+    # 3. The bot must not have a provisional rating (https://lichess.org/faq#provisional)
+    # 4. The bot must have played a game for that perf type in the last 2 weeks
     bot_profile_eligible = bot_profiles_by_name[update.get_name()].is_eligible(current_time)
-    if bot_profile_eligible and update.is_eligible():
+    if bot_profile_eligible and update.is_eligible(current_time):
       if update.get_rating() == previous_rating:
         same_rank_count += 1
       else:
@@ -106,7 +110,7 @@ def create_ranked_rows(
         rank += 1
         same_rank_count = 0
       rank_to_set = rank
-    new_rows.append(update.to_leaderboard_row(rank_to_set))
+    new_rows.append(update.to_leaderboard_row(rank_to_set, current_time))
     previous_rating = update.get_rating()
   return new_rows
 

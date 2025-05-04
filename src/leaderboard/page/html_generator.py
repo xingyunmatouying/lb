@@ -33,12 +33,24 @@ class MainFrame:
 class LeaderboardDelta:
   """Convenience class for styling delta columns."""
 
+  DELTA_POS_CLASS = "delta-pos"
+  DELTA_NEG_CLASS = "delta-neg"
+
   formatted_value: str
   html_class: str
 
   @classmethod
+  def for_delta(cls, delta: int) -> "LeaderboardDelta":
+    """Return +n, -n, or blank."""
+    if delta > 0:
+      return LeaderboardDelta(f"+{abs(delta)}", LeaderboardDelta.DELTA_POS_CLASS)
+    if delta < 0:
+      return LeaderboardDelta(f"-{abs(delta)}", LeaderboardDelta.DELTA_NEG_CLASS)
+    return LeaderboardDelta("", "")
+
+  @classmethod
   def for_delta_rank(cls, rank: int, delta: int, new: bool) -> "LeaderboardDelta":
-    """Return ↑n, ↓n, "new", or blank."""
+    """Return "new", "back", ↑n, ↓n, or blank."""
     if new:
       return LeaderboardDelta("🆕", "")
     if rank == -delta:
@@ -46,18 +58,9 @@ class LeaderboardDelta:
       # This ends up also triggering for some cases where it is the bot's first time appearing on the leaderboard.
       return LeaderboardDelta("🔙", "")
     if delta > 0:
-      return LeaderboardDelta(f"↑{abs(delta)}", "delta-pos")
+      return LeaderboardDelta(f"↑{abs(delta)}", LeaderboardDelta.DELTA_POS_CLASS)
     if delta < 0:
-      return LeaderboardDelta(f"↓{abs(delta)}", "delta-neg")
-    return LeaderboardDelta("", "")
-
-  @classmethod
-  def for_delta_rating(cls, delta: int) -> "LeaderboardDelta":
-    """Return (+n), (-n), or blank."""
-    if delta > 0:
-      return LeaderboardDelta(f"(+{abs(delta)})", "delta-pos")
-    if delta < 0:
-      return LeaderboardDelta(f"(-{abs(delta)})", "delta-neg")
+      return LeaderboardDelta(f"↓{abs(delta)}", LeaderboardDelta.DELTA_NEG_CLASS)
     return LeaderboardDelta("", "")
 
 
@@ -65,14 +68,19 @@ class LeaderboardDelta:
 class OnlineStatus:
   """Convenience class displaying whether the bot is online and if they are a patron."""
 
+  BOT_ONLINE_CLASS = "bot-online"
+  BOT_OFFLINE_CLASS = "bot-offline"
+  DEFAULT_INDICATOR = "●"
+  PATRON_INDICATOR = "★"
+
   indicator_icon: str
   html_class: str
 
   @classmethod
   def create_from(cls, online: bool, is_patron: bool) -> "OnlineStatus":
     """Create an OnlineStatus based on whether or not the bot is online and a patron."""
-    html_class = "bot-online" if online else "bot-offline"
-    indicator_icon = "★" if is_patron else "●"
+    html_class = OnlineStatus.BOT_ONLINE_CLASS if online else OnlineStatus.BOT_OFFLINE_CLASS
+    indicator_icon = OnlineStatus.PATRON_INDICATOR if is_patron else OnlineStatus.DEFAULT_INDICATOR
     return OnlineStatus(indicator_icon, html_class)
 
 
@@ -88,9 +96,11 @@ class HtmlLeaderboardRow:
   flag: str
   rating: int
   delta_rating: LeaderboardDelta
+  rd: int
   games: int
+  delta_games: LeaderboardDelta
   age: str
-  last_seen_date: str
+  last_seen: str
 
   @classmethod
   def from_leaderboard_row(cls, row: LeaderboardRow, profile: BotProfile, current_time: int) -> "HtmlLeaderboardRow":
@@ -103,10 +113,12 @@ class HtmlLeaderboardRow:
       profile.name,
       profile.flag,
       row.perf.rating,
-      LeaderboardDelta.for_delta_rating(row.rank_info.delta_rating),
+      LeaderboardDelta.for_delta(row.rank_info.delta_rating),
+      row.perf.rd,
       row.perf.games,
+      LeaderboardDelta.for_delta(row.rank_info.delta_games),
       duration_formatter.format_age(profile.created, current_time),
-      date_formatter.format_yyyy_mm_dd(profile.last_seen),
+      duration_formatter.format_last_seen(profile.last_seen, current_time),
     )
 
 

@@ -6,7 +6,8 @@ from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
-from src.leaderboard.page.html_generator import HtmlGenerator, LeaderboardDelta, OnlineStatus
+from src.leaderboard.page.html_generator import HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
+from tests.leaderboard.chrono import epoch_seconds
 
 
 DEFAULT_BOT_PROFILES_BY_NAME = {
@@ -14,34 +15,66 @@ DEFAULT_BOT_PROFILES_BY_NAME = {
   "Bot-2": BotProfile.from_json('{"name": "Bot-2"}'),
 }
 
+DATE_2024_10_31 = epoch_seconds.from_date(2024, 10, 31)
+DATE_2025_03_30 = epoch_seconds.from_date(2025, 3, 30)
+DATE_2025_04_01 = epoch_seconds.from_date(2025, 4, 1)
+
 
 def create_leaderboard_row(name: str, rank: int = 1, delta_rank: int = 0, delta_rating: int = 0) -> LeaderboardRow:
   """Create a LeaderboardRow with several default values set."""
-  return LeaderboardRow(name, LeaderboardPerf(0, 0, 0, 0, False), RankInfo(rank, delta_rank, delta_rating, 0, 0))
+  return LeaderboardRow(name, LeaderboardPerf(0, 0, 0, 0, False), RankInfo(rank, delta_rank, delta_rating, 0, 0, 0, 0))
 
 
 class TestLeaderboardDelta(unittest.TestCase):
   """Tests for LeaderboardDelta."""
 
+  def for_delta(self) -> None:
+    self.assertEqual(LeaderboardDelta.for_delta(1), LeaderboardDelta("+1", LeaderboardDelta.DELTA_POS_CLASS))
+    self.assertEqual(LeaderboardDelta.for_delta(-1), LeaderboardDelta("-1", LeaderboardDelta.DELTA_NEG_CLASS))
+    self.assertEqual(LeaderboardDelta.for_delta(0), LeaderboardDelta("", ""))
+
   def test_for_delta_rank(self) -> None:
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, -2, True), LeaderboardDelta("🆕", ""))
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, -2, False), LeaderboardDelta("🔙", ""))
-    self.assertEqual(LeaderboardDelta.for_delta_rank(2, 1, False), LeaderboardDelta("↑1", "delta-pos"))
-    self.assertEqual(LeaderboardDelta.for_delta_rank(2, -1, False), LeaderboardDelta("↓1", "delta-neg"))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(2, 1, False), LeaderboardDelta("↑1", LeaderboardDelta.DELTA_POS_CLASS))
+    self.assertEqual(LeaderboardDelta.for_delta_rank(2, -1, False), LeaderboardDelta("↓1", LeaderboardDelta.DELTA_NEG_CLASS))
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, 0, False), LeaderboardDelta("", ""))
-
-  def for_delta_rating(self) -> None:
-    self.assertEqual(LeaderboardDelta.for_delta_rating(1), LeaderboardDelta("(+1)", "delta-pos"))
-    self.assertEqual(LeaderboardDelta.for_delta_rating(-1), LeaderboardDelta("(-1)", "delta-neg"))
-    self.assertEqual(LeaderboardDelta.for_delta_rating(0), LeaderboardDelta("", ""))
 
 
 class TestOnlineStatus(unittest.TestCase):
   """Tests for OnlineStatus."""
 
   def test_create_from(self) -> None:
-    self.assertEqual(OnlineStatus.create_from(True, True), OnlineStatus("★", "bot-online"))
-    self.assertEqual(OnlineStatus.create_from(False, False), OnlineStatus("●", "bot-offline"))
+    expected_online_patron_status = OnlineStatus(OnlineStatus.PATRON_INDICATOR, OnlineStatus.BOT_ONLINE_CLASS)
+    self.assertEqual(OnlineStatus.create_from(True, True), expected_online_patron_status)
+    expected_offline_default_status = OnlineStatus(OnlineStatus.DEFAULT_INDICATOR, OnlineStatus.BOT_OFFLINE_CLASS)
+    self.assertEqual(OnlineStatus.create_from(False, False), expected_offline_default_status)
+
+
+class TestHtmlLeaderboardRow(unittest.TestCase):
+  """Tests for HtmlLeaderboardRow."""
+
+  def test_from_leaderboard_row(self) -> None:
+    bot_profile = BotProfile("Bot-1", "flair", "HM", DATE_2024_10_31, DATE_2025_04_01, True, False, False, True)
+    perf = LeaderboardPerf(3000, 45, 12, 1000, False)
+    rank_info = RankInfo(2, 1, -5, 10, 3100, 1, DATE_2025_03_30)
+    leaderboard_row = LeaderboardRow("Bot-1", perf, rank_info)
+    expected_html_row = HtmlLeaderboardRow(
+      "🥈",
+      2,
+      LeaderboardDelta("↑1", LeaderboardDelta.DELTA_POS_CLASS),
+      OnlineStatus(OnlineStatus.PATRON_INDICATOR, OnlineStatus.BOT_ONLINE_CLASS),
+      "Bot-1",
+      "HM",
+      3000,
+      LeaderboardDelta("-5", LeaderboardDelta.DELTA_NEG_CLASS),
+      45,
+      1000,
+      LeaderboardDelta("+10", LeaderboardDelta.DELTA_POS_CLASS),
+      "5mo",
+      "",
+    )
+    self.assertEqual(HtmlLeaderboardRow.from_leaderboard_row(leaderboard_row, bot_profile, DATE_2025_04_01), expected_html_row)
 
 
 class TestHtmlGenerator(unittest.TestCase):
@@ -97,7 +130,7 @@ class TestHtmlGenerator(unittest.TestCase):
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("↑3", bullet_html)
-    self.assertIn('class="col-delta-rank delta-pos"', bullet_html)
+    self.assertIn(f'class="col-delta-rank {LeaderboardDelta.DELTA_POS_CLASS}"', bullet_html)
 
   def test_generate_negative_delta_rank(self) -> None:
     ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", delta_rank=-3)]}
@@ -106,7 +139,7 @@ class TestHtmlGenerator(unittest.TestCase):
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
     self.assertIn("↓3", bullet_html)
-    self.assertIn('class="col-delta-rank delta-neg"', bullet_html)
+    self.assertIn(f'class="col-delta-rank {LeaderboardDelta.DELTA_NEG_CLASS}"', bullet_html)
 
   def test_generate_positive_delta_rating(self) -> None:
     ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", delta_rating=3)]}
@@ -114,8 +147,8 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
-    self.assertIn("(+3)", bullet_html)
-    self.assertIn('class="col-delta-rating delta-pos"', bullet_html)
+    self.assertIn("+3", bullet_html)
+    self.assertIn(f'class="col-delta-rating {LeaderboardDelta.DELTA_POS_CLASS}"', bullet_html)
 
   def test_generate_negative_delta_rating(self) -> None:
     ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1", delta_rating=-3)]}
@@ -123,5 +156,5 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
-    self.assertIn("(-3)", bullet_html)
-    self.assertIn('class="col-delta-rating delta-neg"', bullet_html)
+    self.assertIn("-3", bullet_html)
+    self.assertIn(f'class="col-delta-rating {LeaderboardDelta.DELTA_NEG_CLASS}"', bullet_html)
