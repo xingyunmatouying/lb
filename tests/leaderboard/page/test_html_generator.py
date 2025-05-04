@@ -28,17 +28,17 @@ def create_leaderboard_row(name: str, rank: int = 1, delta_rank: int = 0, delta_
 class TestLeaderboardDelta(unittest.TestCase):
   """Tests for LeaderboardDelta."""
 
+  def for_delta(self) -> None:
+    self.assertEqual(LeaderboardDelta.for_delta(1), LeaderboardDelta("+1", LeaderboardDelta.DELTA_POS_CLASS))
+    self.assertEqual(LeaderboardDelta.for_delta(-1), LeaderboardDelta("-1", LeaderboardDelta.DELTA_NEG_CLASS))
+    self.assertEqual(LeaderboardDelta.for_delta(0), LeaderboardDelta("", ""))
+
   def test_for_delta_rank(self) -> None:
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, -2, True), LeaderboardDelta("🆕", ""))
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, -2, False), LeaderboardDelta("🔙", ""))
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, 1, False), LeaderboardDelta("↑1", LeaderboardDelta.DELTA_POS_CLASS))
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, -1, False), LeaderboardDelta("↓1", LeaderboardDelta.DELTA_NEG_CLASS))
     self.assertEqual(LeaderboardDelta.for_delta_rank(2, 0, False), LeaderboardDelta("", ""))
-
-  def for_delta_rating(self) -> None:
-    self.assertEqual(LeaderboardDelta.for_delta_rating(1), LeaderboardDelta("+1", LeaderboardDelta.DELTA_POS_CLASS))
-    self.assertEqual(LeaderboardDelta.for_delta_rating(-1), LeaderboardDelta("-1", LeaderboardDelta.DELTA_NEG_CLASS))
-    self.assertEqual(LeaderboardDelta.for_delta_rating(0), LeaderboardDelta("", ""))
 
 
 class TestOnlineStatus(unittest.TestCase):
@@ -70,7 +70,7 @@ class TestHtmlLeaderboardRow(unittest.TestCase):
       LeaderboardDelta("-5", LeaderboardDelta.DELTA_NEG_CLASS),
       45,
       1000,
-      "+10",
+      LeaderboardDelta("+10", LeaderboardDelta.DELTA_POS_CLASS),
       "5mo",
       "",
     )

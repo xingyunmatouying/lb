@@ -40,6 +40,15 @@ class LeaderboardDelta:
   html_class: str
 
   @classmethod
+  def for_delta(cls, delta: int) -> "LeaderboardDelta":
+    """Return +n, -n, or blank."""
+    if delta > 0:
+      return LeaderboardDelta(f"+{abs(delta)}", LeaderboardDelta.DELTA_POS_CLASS)
+    if delta < 0:
+      return LeaderboardDelta(f"-{abs(delta)}", LeaderboardDelta.DELTA_NEG_CLASS)
+    return LeaderboardDelta("", "")
+
+  @classmethod
   def for_delta_rank(cls, rank: int, delta: int, new: bool) -> "LeaderboardDelta":
     """Return "new", "back", ↑n, ↓n, or blank."""
     if new:
@@ -52,15 +61,6 @@ class LeaderboardDelta:
       return LeaderboardDelta(f"↑{abs(delta)}", LeaderboardDelta.DELTA_POS_CLASS)
     if delta < 0:
       return LeaderboardDelta(f"↓{abs(delta)}", LeaderboardDelta.DELTA_NEG_CLASS)
-    return LeaderboardDelta("", "")
-
-  @classmethod
-  def for_delta_rating(cls, delta: int) -> "LeaderboardDelta":
-    """Return +n, -n, or blank."""
-    if delta > 0:
-      return LeaderboardDelta(f"+{abs(delta)}", LeaderboardDelta.DELTA_POS_CLASS)
-    if delta < 0:
-      return LeaderboardDelta(f"-{abs(delta)}", LeaderboardDelta.DELTA_NEG_CLASS)
     return LeaderboardDelta("", "")
 
 
@@ -98,7 +98,7 @@ class HtmlLeaderboardRow:
   delta_rating: LeaderboardDelta
   rd: int
   games: int
-  delta_games: str
+  delta_games: LeaderboardDelta
   age: str
   last_seen: str
 
@@ -113,10 +113,10 @@ class HtmlLeaderboardRow:
       profile.name,
       profile.flag,
       row.perf.rating,
-      LeaderboardDelta.for_delta_rating(row.rank_info.delta_rating),
+      LeaderboardDelta.for_delta(row.rank_info.delta_rating),
       row.perf.rd,
       row.perf.games,
-      f"+{row.rank_info.delta_games}" if row.rank_info.delta_games else "",
+      LeaderboardDelta.for_delta(row.rank_info.delta_games),
       duration_formatter.format_age(profile.created, current_time),
       duration_formatter.format_last_seen(profile.last_seen, current_time),
     )
