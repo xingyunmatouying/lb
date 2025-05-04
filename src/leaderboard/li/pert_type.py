@@ -30,18 +30,18 @@ class PerfType(Enum):
   CORRESPONDENCE = 5
 
   # Variants...
-  # https://en.wikipedia.org/wiki/Crazyhouse
-  CRAZYHOUSE = 6  # https://lichess.org/variant/crazyhouse
   # https://en.wikipedia.org/wiki/Chess960
-  CHESS960 = 7  # https://lichess.org/variant/chess960
-  # https://en.wikipedia.org/wiki/List_of_chess_variants#King_of_the_Hill
-  KING_OF_THE_HILL = 8  # https://lichess.org/variant/kingOfTheHill
-  # https://en.wikipedia.org/wiki/Three-check_chess
-  THREE_CHECK = 9  # https://lichess.org/variant/threeCheck
+  CHESS960 = 6  # https://lichess.org/variant/chess960
   # https://en.wikipedia.org/wiki/Losing_chess
-  ANTICHESS = 10  # https://lichess.org/variant/antichess
+  ANTICHESS = 7  # https://lichess.org/variant/antichess
+  # https://en.wikipedia.org/wiki/Three-check_chess
+  THREE_CHECK = 8  # https://lichess.org/variant/threeCheck
   # https://en.wikipedia.org/wiki/Atomic_chess
-  ATOMIC = 11  # https://lichess.org/variant/atomic
+  ATOMIC = 9  # https://lichess.org/variant/atomic
+  # https://en.wikipedia.org/wiki/List_of_chess_variants#King_of_the_Hill
+  KING_OF_THE_HILL = 10  # https://lichess.org/variant/kingOfTheHill
+  # https://en.wikipedia.org/wiki/Crazyhouse
+  CRAZYHOUSE = 11  # https://lichess.org/variant/crazyhouse
   # https://en.wikipedia.org/wiki/Dunsany%27s_chess#Horde_chess
   HORDE = 12  # https://lichess.org/variant/horde
   # https://en.wikipedia.org/wiki/V._R._Parton#Racing_Kings
@@ -63,12 +63,12 @@ class PerfType(Enum):
       "rapid": PerfType.RAPID,
       "classical": PerfType.CLASSICAL,
       "correspondence": PerfType.CORRESPONDENCE,
-      "crazyhouse": PerfType.CRAZYHOUSE,
       "chess960": PerfType.CHESS960,
-      "kingOfTheHill": PerfType.KING_OF_THE_HILL,
-      "threeCheck": PerfType.THREE_CHECK,
       "antichess": PerfType.ANTICHESS,
+      "threeCheck": PerfType.THREE_CHECK,
       "atomic": PerfType.ATOMIC,
+      "kingOfTheHill": PerfType.KING_OF_THE_HILL,
+      "crazyhouse": PerfType.CRAZYHOUSE,
       "horde": PerfType.HORDE,
       "racingKings": PerfType.RACING_KINGS,
     }
@@ -82,12 +82,12 @@ class PerfType(Enum):
       PerfType.RAPID: "rapid",
       PerfType.CLASSICAL: "classical",
       PerfType.CORRESPONDENCE: "correspondence",
-      PerfType.CRAZYHOUSE: "crazyhouse",
       PerfType.CHESS960: "chess960",
-      PerfType.KING_OF_THE_HILL: "kingOfTheHill",
-      PerfType.THREE_CHECK: "threeCheck",
       PerfType.ANTICHESS: "antichess",
+      PerfType.THREE_CHECK: "threeCheck",
       PerfType.ATOMIC: "atomic",
+      PerfType.KING_OF_THE_HILL: "kingOfTheHill",
+      PerfType.CRAZYHOUSE: "crazyhouse",
       PerfType.HORDE: "horde",
       PerfType.RACING_KINGS: "racingKings",
     }
@@ -101,12 +101,12 @@ class PerfType(Enum):
       PerfType.RAPID: "Rapid",
       PerfType.CLASSICAL: "Classical",
       PerfType.CORRESPONDENCE: "Correspondence",
-      PerfType.CRAZYHOUSE: "Crazyhouse",
       PerfType.CHESS960: "Chess960",
-      PerfType.KING_OF_THE_HILL: "King of the Hill",
-      PerfType.THREE_CHECK: "Three Check",
       PerfType.ANTICHESS: "Antichess",
+      PerfType.THREE_CHECK: "Three Check",
       PerfType.ATOMIC: "Atomic",
+      PerfType.KING_OF_THE_HILL: "King of the Hill",
+      PerfType.CRAZYHOUSE: "Crazyhouse",
       PerfType.HORDE: "Horde",
       PerfType.RACING_KINGS: "Racing Kings",
     }
