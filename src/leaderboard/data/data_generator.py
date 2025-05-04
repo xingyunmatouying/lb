@@ -4,7 +4,7 @@ import dataclasses
 from collections import defaultdict
 
 from src.leaderboard.chrono.time_provider import TimeProvider
-from src.leaderboard.data.leaderboard_row import BotPerf, BotProfile, LeaderboardPerf, LeaderboardRow
+from src.leaderboard.data.leaderboard_objects import BotPerf, BotProfile, LeaderboardPerf, LeaderboardRow
 from src.leaderboard.data.leaderboard_update import LeaderboardUpdate
 from src.leaderboard.fs import file_paths
 from src.leaderboard.fs.file_system import FileSystem

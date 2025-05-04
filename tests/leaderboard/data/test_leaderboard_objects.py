@@ -1,8 +1,8 @@
-"""Tests for leaderboard_row.py."""
+"""Tests for leaderboard_objects.py."""
 
 import unittest
 
-from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
+from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.bot_user import BotUser, Perf
 from src.leaderboard.li.pert_type import PerfType
 from tests.leaderboard.chrono import epoch_seconds

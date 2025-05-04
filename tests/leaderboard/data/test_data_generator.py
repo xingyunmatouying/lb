@@ -5,7 +5,7 @@ import unittest
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data import data_generator as data_generator_functions
 from src.leaderboard.data.data_generator import DataGenerator
-from src.leaderboard.data.leaderboard_row import BotPerf, BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
+from src.leaderboard.data.leaderboard_objects import BotPerf, BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.data.leaderboard_update import CurrentBotPerfOnlyUpdate, LeaderboardUpdate
 from src.leaderboard.fs import file_paths
 from src.leaderboard.li.pert_type import PerfType

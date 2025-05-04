@@ -4,7 +4,7 @@ import unittest
 
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
-from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
+from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
 from src.leaderboard.page.html_generator import HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
 from tests.leaderboard.chrono import epoch_seconds

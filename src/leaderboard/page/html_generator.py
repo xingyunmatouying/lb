@@ -7,7 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 from src.leaderboard.chrono import date_formatter, duration_formatter
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
-from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardRow
+from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
 
 

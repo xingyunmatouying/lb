@@ -4,7 +4,7 @@ import abc
 import dataclasses
 
 from src.leaderboard.chrono.durations import TWO_WEEKS
-from src.leaderboard.data.leaderboard_row import BotPerf, LeaderboardRow, RankInfo
+from src.leaderboard.data.leaderboard_objects import BotPerf, LeaderboardRow, RankInfo
 
 
 class LeaderboardUpdate(abc.ABC):
