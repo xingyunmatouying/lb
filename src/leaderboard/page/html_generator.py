@@ -33,6 +33,9 @@ class MainFrame:
 class LeaderboardDelta:
   """Convenience class for styling delta columns."""
 
+  DELTA_POS_CLASS = "delta-pos"
+  DELTA_NEG_CLASS = "delta-neg"
+
   formatted_value: str
   html_class: str
 
@@ -46,18 +49,18 @@ class LeaderboardDelta:
       # This ends up also triggering for some cases where it is the bot's first time appearing on the leaderboard.
       return LeaderboardDelta("🔙", "")
     if delta > 0:
-      return LeaderboardDelta(f"↑{abs(delta)}", "delta-pos")
+      return LeaderboardDelta(f"↑{abs(delta)}", LeaderboardDelta.DELTA_POS_CLASS)
     if delta < 0:
-      return LeaderboardDelta(f"↓{abs(delta)}", "delta-neg")
+      return LeaderboardDelta(f"↓{abs(delta)}", LeaderboardDelta.DELTA_NEG_CLASS)
     return LeaderboardDelta("", "")
 
   @classmethod
   def for_delta_rating(cls, delta: int) -> "LeaderboardDelta":
     """Return +n, -n, or blank."""
     if delta > 0:
-      return LeaderboardDelta(f"+{abs(delta)}", "delta-pos")
+      return LeaderboardDelta(f"+{abs(delta)}", LeaderboardDelta.DELTA_POS_CLASS)
     if delta < 0:
-      return LeaderboardDelta(f"-{abs(delta)}", "delta-neg")
+      return LeaderboardDelta(f"-{abs(delta)}", LeaderboardDelta.DELTA_NEG_CLASS)
     return LeaderboardDelta("", "")
 
 
@@ -65,14 +68,19 @@ class LeaderboardDelta:
 class OnlineStatus:
   """Convenience class displaying whether the bot is online and if they are a patron."""
 
+  BOT_ONLINE_CLASS = "bot-online"
+  BOT_OFFLINE_CLASS = "bot-offline"
+  DEFAULT_INDICATOR = "●"
+  PATRON_INDICATOR = "★"
+
   indicator_icon: str
   html_class: str
 
   @classmethod
   def create_from(cls, online: bool, is_patron: bool) -> "OnlineStatus":
     """Create an OnlineStatus based on whether or not the bot is online and a patron."""
-    html_class = "bot-online" if online else "bot-offline"
-    indicator_icon = "★" if is_patron else "●"
+    html_class = OnlineStatus.BOT_ONLINE_CLASS if online else OnlineStatus.BOT_OFFLINE_CLASS
+    indicator_icon = OnlineStatus.PATRON_INDICATOR if is_patron else OnlineStatus.DEFAULT_INDICATOR
     return OnlineStatus(indicator_icon, html_class)
 
 
