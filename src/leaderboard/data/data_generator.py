@@ -96,6 +96,11 @@ def create_ranked_rows(
   for update in sorted_update_list:
     # Rank equals zero signals that the bot should not be included on the leaderboard
     rank_to_set = 0
+    # Eligibility works slightly differently than for lichess' official leaderboards (https://lichess.org/faq#leaderboards)
+    # 1. The bot must have not violated the TOS
+    # 2. The bot must have appeared online in the last 2 weeks
+    # 3. The bot must not have a provisional rating (https://lichess.org/faq#provisional)
+    # 4. The bot must have played a game for that perf type in the last 2 weeks
     bot_profile_eligible = bot_profiles_by_name[update.get_name()].is_eligible(current_time)
     if bot_profile_eligible and update.is_eligible(current_time):
       if update.get_rating() == previous_rating:
