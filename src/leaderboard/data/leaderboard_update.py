@@ -3,6 +3,7 @@
 import abc
 import dataclasses
 
+from src.leaderboard.chrono.durations import TWO_WEEKS
 from src.leaderboard.data.leaderboard_row import BotPerf, LeaderboardRow, RankInfo
 
 
@@ -52,7 +53,7 @@ class LeaderboardUpdate(abc.ABC):
   @classmethod
   def check_is_eligible(cls, prov: bool, last_played: int, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
-    played_in_last_two_weeks = current_time - last_played <= 60 * 60 * 24 * 14
+    played_in_last_two_weeks = current_time - last_played <= TWO_WEEKS
     return not prov and played_in_last_two_weeks
 
 

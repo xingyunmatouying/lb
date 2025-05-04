@@ -4,6 +4,7 @@ import dataclasses
 import json
 from typing import Any
 
+from src.leaderboard.chrono.durations import TWO_WEEKS
 from src.leaderboard.data import default_remover
 from src.leaderboard.li.bot_user import BotUser, Perf
 
@@ -101,7 +102,7 @@ class BotProfile:
 
   def is_eligible(self, current_time: int) -> bool:
     """Return whether the bot is eligible for the leaderboard."""
-    seen_in_last_two_weeks = current_time - self.last_seen <= 60 * 60 * 24 * 14
+    seen_in_last_two_weeks = current_time - self.last_seen <= TWO_WEEKS
     return not self.tos_violation and seen_in_last_two_weeks
 
   def to_json(self) -> str:
