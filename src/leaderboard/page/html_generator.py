@@ -9,6 +9,7 @@ from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
+from src.leaderboard.page import flag_emoji
 
 
 @dataclasses.dataclass(frozen=True)
@@ -111,7 +112,7 @@ class HtmlLeaderboardRow:
       LeaderboardDelta.for_delta_rank(row.rank_info.rank, row.rank_info.delta_rank, profile.new),
       OnlineStatus.create_from(profile.online, profile.patron),
       profile.name,
-      profile.flag,
+      flag_emoji.from_string(profile.flag),
       row.perf.rating,
       LeaderboardDelta.for_delta(row.rank_info.delta_rating),
       row.perf.rd,

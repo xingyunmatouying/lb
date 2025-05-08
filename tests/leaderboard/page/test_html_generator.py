@@ -65,7 +65,7 @@ class TestHtmlLeaderboardRow(unittest.TestCase):
       LeaderboardDelta("↑1", LeaderboardDelta.DELTA_POS_CLASS),
       OnlineStatus(OnlineStatus.PATRON_INDICATOR, OnlineStatus.BOT_ONLINE_CLASS),
       "Bot-1",
-      "HM",
+      "🇭🇲",
       3000,
       LeaderboardDelta("-5", LeaderboardDelta.DELTA_NEG_CLASS),
       45,
