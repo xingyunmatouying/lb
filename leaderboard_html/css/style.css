@@ -199,14 +199,14 @@ td.col-flag {
 
 /* Rating */
 .col-rating {
-  width: 8%;
+  width: 9%;
   text-align: right;
   padding-right: 4px;
 }
 
 /* Rating delta */
 .col-delta-rating {
-  width: 7%;
+  width: 5%;
   padding-left: 4px;
 }
 
@@ -218,7 +218,7 @@ td.col-flag {
 
 /* Games */
 .col-games {
-  width: 8%;
+  width: 9%;
   text-align: right;
   padding-right: 4px;
 }
