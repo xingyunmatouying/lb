@@ -75,6 +75,7 @@ footer a:hover,
 main {
   background-color: white;
   width: 80%;
+  min-width: 1000px;
   /* large top and bottom margin to be clear of the header and footer */
   margin: 60px auto;
   padding: 20px;
