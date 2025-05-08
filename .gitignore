@@ -14,3 +14,6 @@ node_modules/
 .coverage
 coverage.xml
 htmlcov/
+
+# Generated leaderboard html
+leaderboard_html/*.html
