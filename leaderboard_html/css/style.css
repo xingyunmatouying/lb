@@ -199,7 +199,7 @@ td.col-flag {
 
 /* Rating */
 .col-rating {
-  width: 7%;
+  width: 8%;
   text-align: right;
   padding-right: 4px;
 }
@@ -212,7 +212,7 @@ td.col-flag {
 
 /* Rating deviation */
 .col-rd {
-  width: 5%;
+  width: 4%;
 }
 
 /* Games */
