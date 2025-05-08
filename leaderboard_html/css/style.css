@@ -213,6 +213,7 @@ td.col-flag {
 /* Rating deviation */
 .col-rd {
   width: 4%;
+  text-align: center;
 }
 
 /* Games */
