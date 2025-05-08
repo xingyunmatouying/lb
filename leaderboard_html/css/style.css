@@ -148,7 +148,7 @@ td.delta-neg {
 
 /* Name */
 .col-name {
-  width: 32%;
+  width: 34%;
 }
 
 /* Shared attributes for online status */
@@ -176,7 +176,7 @@ span.bot-title {
 
 /* Flag */
 .col-flag {
-  width: 6%;
+  width: 4%;
   text-align: center;
 }
 
