@@ -1,2 +1,0 @@
-# Jinja linting and formatting
-djlint~=1.36
