@@ -1,6 +1,8 @@
 {
-  "MD013": {
-    // The GitHub editor is 127 chars wide.
-    "line_length": 127
+  "config": {
+    "MD013": {
+      // The GitHub editor is 127 chars wide.
+      "line_length": 127
+    }
   }
 }
