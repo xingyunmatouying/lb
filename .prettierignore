@@ -11,3 +11,6 @@
 !*.yaml
 # ... but make sure to check subdirectories (otherwise this doesn't work).
 !*/
+# ...
+# Ignore machine-generated lock files
+package-lock.json
