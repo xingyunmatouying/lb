@@ -187,7 +187,9 @@ span.bot-title {
   /* License: https://www.babelstone.co.uk/Fonts/BabelStoneOFL.txt */
   font-family: "BabelStone Flags";
   /* No harm supporting older browsers with woff, but is this still necessary? */
-  src: url("../fonts/BabelStoneFlags.woff2") format("woff2"), url("../fonts/BabelStoneFlags.woff") format("woff");
+  src:
+    url("../fonts/BabelStoneFlags.woff2") format("woff2"),
+    url("../fonts/BabelStoneFlags.woff") format("woff");
 }
 
 /* Use the flag emoji font defined above for flags */
