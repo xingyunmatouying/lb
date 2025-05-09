@@ -69,6 +69,7 @@ jobs:
         with:
           pathspec: |-
             '**/*.md' \
+            '.gitignore' \
             '.markdownlint-cli2.jsonc' \
             'package-lock.json' \
             'package.json' \
