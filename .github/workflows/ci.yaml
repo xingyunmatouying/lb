@@ -70,6 +70,8 @@ jobs:
           pathspec: |-
             '**/*.md' \
             '.markdownlint-cli2.jsonc' \
+            'package-lock.json' \
+            'package.json' \
       # linting and formatting (python)
       - name: 🤵 Determine check-style-python
         id: check-style-python
@@ -206,11 +208,17 @@ jobs:
       # Setup
       - name: 🛒 Checkout repo
         uses: actions/checkout@v4
+      - name: 🐸 Set up node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+      - name: 📦 Install dependencies (node.js)
+        run: |
+          npm ci
       # Lint
       - name: ✨ Check lint (markdownlint)
-        uses: DavidAnson/markdownlint-cli2-action@v19
-        with:
-          globs: "**/*.md"
+        run: |
+          npx markdownlint-cli2 "**/*.md"
 
   # Check linting and formatting (python)
   check-style-python:
