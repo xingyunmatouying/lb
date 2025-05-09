@@ -241,11 +241,11 @@ jobs:
       # Format
       - name: 🧹 Check format (ruff)
         run: |
-          ruff format --check
+          ruff format --check --verbose
       # Lint
       - name: ✨ Check lint (ruff)
         run: |
-          ruff check
+          ruff check --verbose
 
   # Check linting and formatting (toml)
   check-style-toml:
