@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.leaderboard.data.leaderboard_row import BotPerf, LeaderboardPerf, LeaderboardRow, RankInfo
+from src.leaderboard.data.leaderboard_objects import BotPerf, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.data.leaderboard_update import (
   CurrentBotPerfOnlyUpdate,
   FullUpdate,

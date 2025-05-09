@@ -4,7 +4,7 @@ import unittest
 
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
-from src.leaderboard.data.leaderboard_row import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
+from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
 from src.leaderboard.page.html_generator import HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
 from tests.leaderboard.chrono import epoch_seconds
@@ -65,7 +65,7 @@ class TestHtmlLeaderboardRow(unittest.TestCase):
       LeaderboardDelta("↑1", LeaderboardDelta.DELTA_POS_CLASS),
       OnlineStatus(OnlineStatus.PATRON_INDICATOR, OnlineStatus.BOT_ONLINE_CLASS),
       "Bot-1",
-      "HM",
+      "🇭🇲",
       3000,
       LeaderboardDelta("-5", LeaderboardDelta.DELTA_NEG_CLASS),
       45,

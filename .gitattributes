@@ -1,1 +1,6 @@
+# Use lf for line endings
 * text=auto eol=lf
+
+# Explicitly define font files as binary
+*.woff binary
+*.woff2 binary

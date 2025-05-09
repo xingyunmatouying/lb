@@ -43,7 +43,7 @@ nav a {
   /* Fade in and out */
   transition: background-color 0.3s;
   margin: 0 5px;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 5px;
 }
 
@@ -75,6 +75,7 @@ footer a:hover,
 main {
   background-color: white;
   width: 80%;
+  min-width: 1000px;
   /* large top and bottom margin to be clear of the header and footer */
   margin: 60px auto;
   padding: 20px;
@@ -148,7 +149,7 @@ td.delta-neg {
 
 /* Name */
 .col-name {
-  width: 32%;
+  width: 34%;
 }
 
 /* Shared attributes for online status */
@@ -176,30 +177,51 @@ span.bot-title {
 
 /* Flag */
 .col-flag {
-  width: 6%;
+  width: 4%;
+  text-align: center;
+}
+
+/* The BabelStone Flags font is used for rendering flag emojis */
+@font-face {
+  /* Website: https://www.babelstone.co.uk/Fonts/Flags.html */
+  /* License: https://www.babelstone.co.uk/Fonts/BabelStoneOFL.txt */
+  font-family: "BabelStone Flags";
+  /* No harm supporting older browsers with woff, but is this still necessary? */
+  src:
+    url("../fonts/BabelStoneFlags.woff2") format("woff2"),
+    url("../fonts/BabelStoneFlags.woff") format("woff");
+}
+
+/* Use the flag emoji font defined above for flags */
+td.col-flag {
+  font-family: "BabelStone Flags", sans-serif;
+  font-size: 18px;
+  text-shadow: 1px 1px 6px rgb(0 0 0 / 33%);
+  padding: 2px;
 }
 
 /* Rating */
 .col-rating {
-  width: 7%;
+  width: 9%;
   text-align: right;
   padding-right: 4px;
 }
 
 /* Rating delta */
 .col-delta-rating {
-  width: 7%;
+  width: 5%;
   padding-left: 4px;
 }
 
 /* Rating deviation */
 .col-rd {
-  width: 5%;
+  width: 4%;
+  text-align: center;
 }
 
 /* Games */
 .col-games {
-  width: 8%;
+  width: 9%;
   text-align: right;
   padding-right: 4px;
 }
