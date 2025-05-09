@@ -1,6 +1,6 @@
 # Development requirements
 
-# code coverage
+# Code coverage
 coverage~=7.6
 -r style-jinja.txt
 -r style-python.txt
