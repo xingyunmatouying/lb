@@ -60,7 +60,7 @@ jobs:
         with:
           pathspec: |-
             '**/*.jinja' \
-            'requirements/style-jijna.txt' \
+            'requirements/dev.txt' \
             'djlint.toml' \
       # linting (markdown)
       - name: 👩‍💼 Determine check-style-markdown
@@ -79,7 +79,7 @@ jobs:
         with:
           pathspec: |-
             '**/*.py' \
-            'requirements/style-python.txt' \
+            'requirements/dev.txt' \
             'ruff.toml' \
       # linting and formatting (toml)
       - name: 👷 Determine check-style-toml

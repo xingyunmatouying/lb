@@ -2,5 +2,7 @@
 
 # Code coverage
 coverage~=7.6
--r style-jinja.txt
--r style-python.txt
+# Jinja linting and formatting
+djlint~=1.36
+# Python linting and formatting
+ruff~=0.9
