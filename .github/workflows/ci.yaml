@@ -42,7 +42,6 @@ jobs:
             '**/*.md' \
             '**/*.yaml' \
             '.prettierignore' \
-            '.prettierrc.json' \
       # linting (css)
       - name: 👨‍🎨 Determine check-style-css
         id: check-style-css
@@ -52,6 +51,8 @@ jobs:
             '**/*.css' \
             '.gitignore' \
             '.stylelintrc.json' \
+            'package-lock.json' \
+            'package.json' \
       # linting and formatting (jinja)
       - name: 🐱‍👤 Determine check-style-jinja
         id: check-style-jinja
@@ -94,6 +95,8 @@ jobs:
             '**/*.py' \
             'requirements/leaderboard.txt' \
             'pyrightconfig.json' \
+            'package-lock.json' \
+            'package.json' \
       # tests
       - name: 🧪 Determine run-tests
         id: run-tests
@@ -130,11 +133,11 @@ jobs:
           node-version: latest
       - name: 📦 Install dependencies (node.js)
         run: |
-          npm install -g prettier
+          npm ci
       # Format
       - name: 🧹 Check format (prettier)
         run: |
-          prettier . --check --log-level debug
+          npx prettier . --check --log-level debug
 
   # Check linting (css)
   check-style-css:
@@ -156,11 +159,11 @@ jobs:
           node-version: latest
       - name: 📦 Install dependencies (node.js)
         run: |
-          npm -g install stylelint stylelint-config-standard
+          npm ci
       # Lint
       - name: ✨ Check lint (stylelint)
         run: |
-          stylelint **/*.css --ignore-path .gitignore --formatter verbose
+          npx stylelint **/*.css --ignore-path .gitignore --formatter verbose
 
   # Check linting and formatting (jinja)
   check-style-jinja:
@@ -281,11 +284,11 @@ jobs:
           node-version: latest
       - name: 📦 Install dependencies (node.js)
         run: |
-          npm install -g pyright
+          npm ci
       # Static type checking
       - name: 🗿 Perform static type checking (pyright)
         run: |
-          pyright --verbose
+          npx pyright --verbose
 
   # Run tests on mac, windows, and ubuntu
   run-tests:
