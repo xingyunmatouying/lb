@@ -35,9 +35,9 @@ class LeaderboardGenerator:
 
     # Save the leaderboard data
     bot_profiles = [profile.to_json() for profile in leaderboard_data.get_bot_profiles_sorted().values()]
-    self.file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles)
+    self.file_system.write_file(file_paths.bot_profiles_path(), "\n".join(bot_profiles))
     for perf_type, rows in leaderboard_data.get_ranked_rows_sorted().items():
-      self.file_system.save_file_lines(file_paths.data_path(perf_type), [row.to_json() for row in rows])
+      self.file_system.write_file(file_paths.data_path(perf_type), "\n".join([row.to_json() for row in rows]))
 
     # Generate leaderboard html
     html_generator = HtmlGenerator(self.time_provider)
@@ -45,7 +45,7 @@ class LeaderboardGenerator:
 
     # Save the leaderboard html
     for name, html in html_by_name.items():
-      self.file_system.save_file_lines(file_paths.html_path(name), [html])
+      self.file_system.write_file(file_paths.html_path(name), html)
 
     # Print time elapsed
     time_elapsed = time.time() - start_time

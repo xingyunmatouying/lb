@@ -15,8 +15,8 @@ from src.leaderboard.li.pert_type import PerfType
 
 def load_bot_profiles(file_system: FileSystem) -> dict[str, BotProfile]:
   """Load the known bot profiles."""
-  ndjson = file_system.load_file_lines(file_paths.bot_profiles_path())
-  bot_profiles = [BotProfile.from_json(json_line) for json_line in ndjson]
+  ndjson = file_system.read_file(file_paths.bot_profiles_path())
+  bot_profiles = [BotProfile.from_json(json_line) for json_line in ndjson.split("\n")] if ndjson else []
   return {bot_profile.name: bot_profile for bot_profile in bot_profiles}
 
 
@@ -24,8 +24,10 @@ def load_leaderboard_rows(file_system: FileSystem) -> dict[PerfType, list[Leader
   """Load the previous leaderboard rows and return lists of leaderboard rows grouped by perf type."""
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
-    ndjson = file_system.load_file_lines(file_paths.data_path(perf_type))
-    previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_json(json_line) for json_line in ndjson]
+    ndjson = file_system.read_file(file_paths.data_path(perf_type))
+    previous_rows_by_perf_type[perf_type] = (
+      [LeaderboardRow.from_json(json_line) for json_line in ndjson.split("\n")] if ndjson else []
+    )
   return previous_rows_by_perf_type
 
 

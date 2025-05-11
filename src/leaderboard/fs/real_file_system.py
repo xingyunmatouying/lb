@@ -8,17 +8,17 @@ from src.leaderboard.fs.file_system import FileSystem
 class RealFileSystem(FileSystem):
   """Read and write files from disk."""
 
-  def load_file_lines(self, file_name: str) -> list[str]:
-    """Load and return all of the lines in a file."""
+  def read_file(self, file_name: str) -> str | None:
+    """Load and return all of the contents of a file."""
     path = Path(file_name)
     if not path.exists():
-      return []
+      return None
     with path.open() as file:
-      return [line.strip("\n") for line in file.readlines()]
+      return file.read()
 
-  def save_file_lines(self, file_name: str, file_lines: list[str]) -> None:
-    """Save all of the lines to a file."""
+  def write_file(self, file_name: str, file_contents: str) -> None:
+    """Save the contents to a file."""
     path = Path(file_name)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8") as file:
-      file.writelines([f"{line}\n" for line in file_lines])
+      file.write(file_contents)

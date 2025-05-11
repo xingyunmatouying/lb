@@ -113,7 +113,7 @@ class TestDataGeneratorFunctions(unittest.TestCase):
   def test_load_bot_profiles(self) -> None:
     file_system = InMemoryFileSystem()
     bot_profiles = [BOT_1_CURRENT_PROFILE.to_json(), BOT_2_CURRENT_PROFILE.to_json()]
-    file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles)
+    file_system.write_file(file_paths.bot_profiles_path(), "\n".join(bot_profiles))
     # When loading the bot profiles new and online are set to false
     expected_bot_profiles = {
       "Bot-1": BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False, False, False),
@@ -131,8 +131,8 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     file_system = InMemoryFileSystem()
     bullet_leaderboard = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
     blitz_leaderboard = [BOT_2_ROW_BLITZ.to_json(), BOT_1_ROW_BLITZ.to_json()]
-    file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_leaderboard)
-    file_system.save_file_lines(file_paths.data_path(PerfType.BLITZ), blitz_leaderboard)
+    file_system.write_file(file_paths.data_path(PerfType.BULLET), "\n".join(bullet_leaderboard))
+    file_system.write_file(file_paths.data_path(PerfType.BLITZ), "\n".join(blitz_leaderboard))
     previous_rows_by_perf_type = data_generator_functions.load_leaderboard_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
@@ -254,10 +254,10 @@ class TestDataGenerator(unittest.TestCase):
     file_system = InMemoryFileSystem()
 
     bullet_ndjson = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
-    file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_ndjson)
+    file_system.write_file(file_paths.data_path(PerfType.BULLET), "\n".join(bullet_ndjson))
 
     bot_profiles_json = [BOT_1_PROFILE.to_json(), BOT_2_PROFILE.to_json()]
-    file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles_json)
+    file_system.write_file(file_paths.bot_profiles_path(), "\n".join(bot_profiles_json))
 
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))

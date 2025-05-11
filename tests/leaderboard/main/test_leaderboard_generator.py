@@ -25,8 +25,12 @@ class TestLeaderboardGenerator(unittest.TestCase):
     leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, time_provider, log_writer)
     leaderboard_generator.generate_leaderboards()
 
-    bullet_data = file_system.load_file_lines(file_paths.data_path(PerfType.BULLET))
-    self.assertIn("Bot-1", bullet_data[0])
+    bullet_data = file_system.read_file(file_paths.data_path(PerfType.BULLET))
+    if not bullet_data:
+      self.fail(f"Missing bullet_data: {bullet_data}")
+    self.assertIn("Bot-1", bullet_data)
 
-    bullet_html = file_system.load_file_lines(file_paths.html_path(PerfType.BULLET.to_string()))
-    self.assertIn("Bot-1", bullet_html[0])
+    bullet_html = file_system.read_file(file_paths.html_path(PerfType.BULLET.to_string()))
+    if not bullet_html:
+      self.fail(f"Missing bullet_html: {bullet_html}")
+    self.assertIn("Bot-1", bullet_html)
