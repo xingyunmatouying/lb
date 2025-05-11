@@ -14,3 +14,5 @@
 # ...
 # generated lock files
 package-lock.json
+# generated leaderboard data
+leaderboard_data/*
