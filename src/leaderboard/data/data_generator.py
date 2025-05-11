@@ -1,7 +1,9 @@
 """The main logic for generating the leaderboard data."""
 
 import dataclasses
+import json
 from collections import defaultdict
+from typing import Any
 
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.leaderboard_objects import BotPerf, BotProfile, LeaderboardPerf, LeaderboardRow
@@ -13,10 +15,16 @@ from src.leaderboard.li.lichess_client import LichessClient
 from src.leaderboard.li.pert_type import PerfType
 
 
+def load_json_list(file_system: FileSystem, file_name: str) -> list[dict[str, Any]]:
+  """Return the contents of a file which contains a json list."""
+  file_str = file_system.read_file(file_name)
+  return json.loads(file_str) if file_str else []
+
+
 def load_bot_profiles(file_system: FileSystem) -> dict[str, BotProfile]:
   """Load the known bot profiles."""
-  ndjson = file_system.read_file(file_paths.bot_profiles_path())
-  bot_profiles = [BotProfile.from_json(json_line) for json_line in ndjson.split("\n")] if ndjson else []
+  bot_profile_json_list = load_json_list(file_system, file_paths.bot_profiles_path())
+  bot_profiles = [BotProfile.from_dict(bot_profile_dict) for bot_profile_dict in bot_profile_json_list]
   return {bot_profile.name: bot_profile for bot_profile in bot_profiles}
 
 
@@ -24,10 +32,8 @@ def load_leaderboard_rows(file_system: FileSystem) -> dict[PerfType, list[Leader
   """Load the previous leaderboard rows and return lists of leaderboard rows grouped by perf type."""
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
-    ndjson = file_system.read_file(file_paths.data_path(perf_type))
-    previous_rows_by_perf_type[perf_type] = (
-      [LeaderboardRow.from_json(json_line) for json_line in ndjson.split("\n")] if ndjson else []
-    )
+    row_json_list = load_json_list(file_system, file_paths.data_path(perf_type))
+    previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_dict(row_dict) for row_dict in row_json_list]
   return previous_rows_by_perf_type
 
 
@@ -136,9 +142,9 @@ class LeaderboardDataResult:
     """Create a data result with the data provided."""
     return LeaderboardDataResult(bot_profiles_by_name, ranked_rows_by_perf_type)
 
-  def get_bot_profiles_sorted(self) -> dict[str, BotProfile]:
+  def get_bot_profiles_sorted(self) -> list[BotProfile]:
     """Return the bot profiles dict sorted by name."""
-    return dict(sorted(self.bot_profiles_by_name.items(), key=lambda item: item[0].lower()))
+    return list(sorted(self.bot_profiles_by_name.values(), key=lambda profile: profile.name.lower()))
 
   def get_ranked_rows_sorted(self) -> dict[PerfType, list[LeaderboardRow]]:
     """Return the ranked rows by perf type with the ranked rows sorted by name."""

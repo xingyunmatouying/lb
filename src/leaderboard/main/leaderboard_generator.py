@@ -1,5 +1,6 @@
 """Leaderboard generator."""
 
+import json
 import time
 
 from src.leaderboard.chrono.time_provider import TimeProvider
@@ -34,10 +35,11 @@ class LeaderboardGenerator:
     leaderboard_data = data_generator.generate_leaderboard_data()
 
     # Save the leaderboard data
-    bot_profiles = [profile.to_json() for profile in leaderboard_data.get_bot_profiles_sorted().values()]
-    self.file_system.write_file(file_paths.bot_profiles_path(), "\n".join(bot_profiles))
+    bot_profile_dicts = [bot_profile.as_dict() for bot_profile in leaderboard_data.get_bot_profiles_sorted()]
+    self.file_system.write_file(file_paths.bot_profiles_path(), json.dumps(bot_profile_dicts, indent=2))
     for perf_type, rows in leaderboard_data.get_ranked_rows_sorted().items():
-      self.file_system.write_file(file_paths.data_path(perf_type), "\n".join([row.to_json() for row in rows]))
+      row_dicts = [row.as_dict() for row in rows]
+      self.file_system.write_file(file_paths.data_path(perf_type), json.dumps(row_dicts, indent=2))
 
     # Generate leaderboard html
     html_generator = HtmlGenerator(self.time_provider)

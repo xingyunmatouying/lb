@@ -4,13 +4,13 @@ from src.leaderboard.li.pert_type import PerfType
 
 
 def bot_profiles_path() -> str:
-  """Return "leaderboard_data/bot_profiles.ndjson"."""
-  return "leaderboard_data/bot_profiles.ndjson"
+  """Return "leaderboard_data/bot_profiles.json"."""
+  return "leaderboard_data/bot_profiles.json"
 
 
 def data_path(perf_type: PerfType) -> str:
-  """Return "leaderboard_data/{perf_type.to_string()}.ndjson"."""
-  return f"leaderboard_data/{perf_type.to_string()}.ndjson"
+  """Return "leaderboard_data/{perf_type.to_string()}.json"."""
+  return f"leaderboard_data/{perf_type.to_string()}.json"
 
 
 def html_path(name: str) -> str:
