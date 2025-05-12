@@ -59,14 +59,14 @@ BOT_1_CURRENT_JSON = """
   "patron": true,
   "perfs": {
     "bullet": {
-        "games": 1100,
-        "rating": 2950,
-        "rd": 42,
-        "prog": -50
+      "games": 1100,
+      "rating": 2950,
+      "rd": 42,
+      "prog": -50
     },
     "blitz": {
-        "games": 100,
-        "rating": 2550
+      "games": 100,
+      "rating": 2550
     }
   }
 }
@@ -78,12 +78,12 @@ BOT_2_CURRENT_JSON = """
   "seenAt": 1743500000000,
   "perfs": {
     "bullet": {
-        "games": 1000,
-        "rating": 3000
+      "games": 1000,
+      "rating": 3000
     },
     "blitz": {
-        "games": 300,
-        "rating": 2500
+      "games": 300,
+      "rating": 2500
     }
   }
 }
