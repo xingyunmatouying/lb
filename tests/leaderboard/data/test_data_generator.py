@@ -263,6 +263,11 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     leaderboard_rows = data_generator_functions.create_ranked_rows(updates, bot_profiles_by_name, DATE_2025_04_01)
     self.assertEqual(leaderboard_rows[0].rank_info.rank, 0)
 
+  def test_create_sort_key(self) -> None:
+    bot_names = ["BOT-4", "Bot-2", "Bot-5", "bot-3", "bot-1", "Bot-4", "Bot-1"]
+    sorted_bot_names = sorted(bot_names, key=lambda name: data_generator_functions.name_sort_key(name))
+    self.assertListEqual(sorted_bot_names, ["Bot-1", "bot-1", "Bot-2", "bot-3", "BOT-4", "Bot-4", "Bot-5"])
+
 
 class TestDataGenerator(unittest.TestCase):
   """Tests for DataGenerator."""

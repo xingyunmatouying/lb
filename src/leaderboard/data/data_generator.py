@@ -128,6 +128,14 @@ def create_ranked_rows(
   return new_rows
 
 
+def name_sort_key(name: str) -> tuple[str, str]:
+  """Return a key for sorting by name: (name.lower(), name).
+
+  The secondary sort is incase two bots can have the same name but with different capitalization.
+  """
+  return (name.lower(), name)
+
+
 @dataclasses.dataclass(frozen=True)
 class LeaderboardDataResult:
   """The result of generating the leaderboard data.
@@ -149,13 +157,13 @@ class LeaderboardDataResult:
 
   def get_bot_profiles_sorted(self) -> list[BotProfile]:
     """Return the bot profiles dict sorted by name."""
-    return list(sorted(self.bot_profiles_by_name.values(), key=lambda profile: profile.name.lower()))
+    return list(sorted(self.bot_profiles_by_name.values(), key=lambda profile: name_sort_key(profile.name)))
 
   def get_ranked_rows_sorted(self) -> dict[PerfType, list[LeaderboardRow]]:
     """Return the ranked rows by perf type with the ranked rows sorted by name."""
     sorted_ranked_rows: dict[PerfType, list[LeaderboardRow]] = {}
     for perf_type, ranked_rows in self.ranked_rows_by_perf_type.items():
-      sorted_ranked_rows[perf_type] = sorted(ranked_rows, key=lambda row: row.name.lower())
+      sorted_ranked_rows[perf_type] = sorted(ranked_rows, key=lambda row: name_sort_key(row.name))
     return sorted_ranked_rows
 
 
