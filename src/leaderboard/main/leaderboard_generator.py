@@ -12,6 +12,13 @@ from src.leaderboard.log.log_writer import LogWriter
 from src.leaderboard.page.html_generator import HtmlGenerator
 
 
+def increment_generation_number(file_system: FileSystem) -> None:
+  """Increments the value generation number number file."""
+  value_str = file_system.read_file(file_paths.generation_number_path())
+  value = int(value_str) if value_str else 0
+  file_system.write_file(file_paths.generation_number_path(), str(value + 1))
+
+
 class LeaderboardGenerator:
   """Generator of leaderboards."""
 
@@ -48,6 +55,9 @@ class LeaderboardGenerator:
     # Save the leaderboard html
     for name, html in html_by_name.items():
       self.file_system.write_file(file_paths.html_path(name), html)
+
+    # Make note of how many times we have generated the leaderboards
+    increment_generation_number(self.file_system)
 
     # Print time elapsed
     time_elapsed = time.time() - start_time

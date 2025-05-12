@@ -16,6 +16,11 @@ def data_path(perf_type: PerfType) -> str:
   return f"{LEADERBOARD_DATA_DIR}/{perf_type.to_string()}.json"
 
 
+def generation_number_path() -> str:
+  """Return "leaderboard_data/generation_number.txt"."""
+  return f"{LEADERBOARD_DATA_DIR}/generation_number.txt"
+
+
 def html_path(name: str) -> str:
   """Return "leaderboard_html/{name}.html"."""
   return f"leaderboard_html/{name}.html"
