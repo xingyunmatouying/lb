@@ -33,17 +33,17 @@ footer {
   font-size: 0.8em;
 }
 
-/* No underline for any links by default */
-a {
-  text-decoration: none;
-}
-
 /* Nav links wrap when the page is narrow */
 nav {
   display: flex;
   flex-flow: wrap;
   row-gap: 4px;
   justify-content: center;
+}
+
+/* No underline for any links by default */
+a {
+  text-decoration: none;
 }
 
 /* Header nav links look like buttons */
