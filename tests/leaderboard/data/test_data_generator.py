@@ -144,11 +144,11 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     bot_info = data_generator_functions.get_online_bot_info(lichess_client)
     self.assertDictEqual(bot_info.bot_profiles_by_name, {"Bot-1": BOT_1_CURRENT_PROFILE, "Bot-2": BOT_2_CURRENT_PROFILE})
-    self.assertEqual(len(bot_info.bot_perfs_by_perf_type), 2)
-    self.assertListEqual(
-      bot_info.bot_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET]
-    )
-    self.assertListEqual(bot_info.bot_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
+    expected_bot_perfs_by_perf_type = {
+      PerfType.BULLET: [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET],
+      PerfType.BLITZ: [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ],
+    }
+    self.assertDictEqual(bot_info.bot_perfs_by_perf_type, expected_bot_perfs_by_perf_type)
 
   def test_get_online_bot_info_only_one_perf_played(self) -> None:
     lichess_client = FakeLichessClient()
