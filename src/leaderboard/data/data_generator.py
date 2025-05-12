@@ -54,9 +54,14 @@ def get_online_bot_info(lichess_client: LichessClient) -> BotInfoResult:
   bot_perfs_by_perf_type: dict[PerfType, list[BotPerf]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)
-    bot_profiles_by_name[bot_user.username] = BotProfile.from_bot_user(bot_user)
+    has_played_games = False
     for perf in bot_user.perfs:
-      bot_perfs_by_perf_type[perf.perf_type].append(BotPerf(bot_user.username, LeaderboardPerf.from_perf(perf)))
+      if perf.games:
+        has_played_games = True
+        bot_perf = BotPerf(bot_user.username, LeaderboardPerf.from_perf(perf))
+        bot_perfs_by_perf_type[perf.perf_type].append(bot_perf)
+    if has_played_games:
+      bot_profiles_by_name[bot_user.username] = BotProfile.from_bot_user(bot_user)
   return BotInfoResult(bot_profiles_by_name, bot_perfs_by_perf_type)
 
 

@@ -150,6 +150,22 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     )
     self.assertListEqual(bot_info.bot_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
 
+  def test_get_online_bot_info_only_one_perf_played(self) -> None:
+    lichess_client = FakeLichessClient()
+    lichess_client.set_online_bots(
+      """{ "username": "Bot-1", "perfs": { "bullet": { "games": 1000 }, "blitz": { "rating": 1500, "prov": true } } }"""
+    )
+    bot_info = data_generator_functions.get_online_bot_info(lichess_client)
+    self.assertListEqual(list(bot_info.bot_profiles_by_name.keys()), ["Bot-1"])
+    self.assertListEqual(list(bot_info.bot_perfs_by_perf_type.keys()), [PerfType.BULLET])
+
+  def test_get_online_bot_info_no_games_played(self) -> None:
+    lichess_client = FakeLichessClient()
+    lichess_client.set_online_bots("""{ "username": "Bot-1", "perfs": { "bullet": { "rating": 1500, "prov": true } } }""")
+    bot_info = data_generator_functions.get_online_bot_info(lichess_client)
+    self.assertDictEqual(bot_info.bot_profiles_by_name, {})
+    self.assertDictEqual(bot_info.bot_perfs_by_perf_type, {})
+
   def test_merge_bot_profiles(self) -> None:
     previous_profiles_by_name = {"Bot-1": BOT_1_PROFILE}
     current_profiles_by_name = {"Bot-1": BOT_1_CURRENT_PROFILE}

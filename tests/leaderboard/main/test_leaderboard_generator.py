@@ -20,7 +20,7 @@ class TestLeaderboardGenerator(unittest.TestCase):
     time_provider = FixedTimeProvider(0)
     log_writer = FakeLogWriter()
 
-    lichess_client.set_online_bots("""{ "username": "Bot-1", "perfs": { "bullet": { "rating": 2345 } } }""")
+    lichess_client.set_online_bots("""{ "username": "Bot-1", "perfs": { "bullet": { "rating": 2345, "games": 678 } } }""")
 
     leaderboard_generator = LeaderboardGenerator(file_system, lichess_client, time_provider, log_writer)
     leaderboard_generator.generate_leaderboards()
