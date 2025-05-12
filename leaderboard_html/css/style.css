@@ -87,8 +87,7 @@ main {
   min-width: 1000px;
   /* large top and bottom margin to be clear of the header and footer */
   margin: 24px auto 60px;
-  padding: 20px;
-  padding-top: 10px;
+  padding: 10px 20px 20px;
   border-radius: 5px;
   /* Look slightly 3d */
   box-shadow: 0 5px 5px rgb(0 0 0 / 10%);
