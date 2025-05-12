@@ -35,7 +35,7 @@ class LeaderboardGenerator:
     """Generate the leaderboards."""
     # Start timer
     start_time = time.time()
-    self.log_writer.info("Generating leaderboard...")
+    self.log_writer.info("Generating leaderboards...")
 
     # Generate leaderboard data
     data_generator = DataGenerator(self.file_system, self.lichess_client, self.time_provider)
