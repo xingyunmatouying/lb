@@ -92,14 +92,29 @@ def create_updates(previous_rows: list[LeaderboardRow], current_bot_perfs: list[
   ]
 
 
+def name_sort_key(name: str) -> tuple[str, str]:
+  """Return a key for sorting by name: (name.lower(), name).
+
+  The secondary sort is used in the event that two bots can have the same name but with different capitalization.
+  """
+  return (name.lower(), name)
+
+
 def create_ranked_rows(
   updates: list[LeaderboardUpdate], bot_profiles_by_name: dict[str, BotProfile], current_time: int
 ) -> list[LeaderboardRow]:
   """Create the leaderboard rows for each perf type based on a list of updates."""
   new_rows: list[LeaderboardRow] = []
   # Primary sort: rating descending, Secondary sort: rd ascending, Tertiary sort: created time ascending
+  # Further sort by name in lowercase (and then by name) for additional tie breaks
   sorted_update_list = sorted(
-    updates, key=lambda update: (-update.get_rating(), update.get_rd(), bot_profiles_by_name[update.get_name()].created)
+    updates,
+    key=lambda update: (
+      -update.get_rating(),
+      update.get_rd(),
+      bot_profiles_by_name[update.get_name()].created,
+      name_sort_key(update.get_name()),
+    ),
   )
   # The first in the list will be ranked #1
   rank = 0
@@ -126,14 +141,6 @@ def create_ranked_rows(
     new_rows.append(update.to_leaderboard_row(rank_to_set, current_time))
     previous_rating = update.get_rating()
   return new_rows
-
-
-def name_sort_key(name: str) -> tuple[str, str]:
-  """Return a key for sorting by name: (name.lower(), name).
-
-  The secondary sort is incase two bots can have the same name but with different capitalization.
-  """
-  return (name.lower(), name)
 
 
 @dataclasses.dataclass(frozen=True)
