@@ -93,6 +93,7 @@ main {
   box-shadow: 0 5px 5px rgb(0 0 0 / 10%);
 }
 
+/* The heading contains the page's title */
 h1 {
   text-align: center;
   padding-bottom: 10px;
