@@ -135,10 +135,20 @@ jobs:
     needs: determine-which-jobs
     if: needs.determine-which-jobs.outputs.ensure-no-leaderboard-data == 'true'
     steps:
-      - name: 🚱 Fail due to leaderboard data
+      # Setup
+      - name: 🛒 Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # Recheck the diff - this is done because this job will run if the ci has changed
+      - name: 🚱 Check no leaderboard data
         run: |
-          echo "Leaderboard data should not be added to this branch"
-          exit 1
+          if git diff --quiet origin/main...HEAD -- 'leaderboard_data/*'; then
+            echo "No leaderboard data found"
+          else
+            echo "Leaderboard data should not be added to this branch"
+            exit 1
+          fi
 
   # Check formatting (css, json, md, yaml)
   check-style-prettier:
