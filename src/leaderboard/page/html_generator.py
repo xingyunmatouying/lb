@@ -157,7 +157,7 @@ class HtmlGenerator:
     html_by_name["index"] = index_html
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
-      leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
+      leaderboard_html = self.jinja_environment.get_template("leaderboard_table.html.jinja").render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
         perf_type_link=perf_type.to_string(),
         leaderboard_rows=[
