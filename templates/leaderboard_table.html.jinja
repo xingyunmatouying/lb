@@ -1,46 +1,45 @@
-{% extends "main_frame.html.jinja" %}
-
-{% block content %}
-  <table>
-    <thead>
+<p>
+  <h1>{{ title }}</h1>
+</p>
+<table>
+  <thead>
+    <tr>
+      <th class="col-rank">#</th>
+      <th class="col-delta-rank">Δ</th>
+      <th class="col-name">Name</th>
+      <th class="col-flag">⚑</th>
+      <th class="col-rating">Rating</th>
+      <th class="col-delta-rating">Δ</th>
+      <th class="col-rd">RD</th>
+      <th class="col-games">Games</th>
+      <th class="col-delta-games">Δ</th>
+      <th class="col-age">Age</th>
+      <th class="col-last-seen">Last Seen</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%- for row in leaderboard_rows %}
       <tr>
-        <th class="col-rank">#</th>
-        <th class="col-delta-rank">Δ</th>
-        <th class="col-name">Name</th>
-        <th class="col-flag">⚑</th>
-        <th class="col-rating">Rating</th>
-        <th class="col-delta-rating">Δ</th>
-        <th class="col-rd">RD</th>
-        <th class="col-games">Games</th>
-        <th class="col-delta-games">Δ</th>
-        <th class="col-age">Age</th>
-        <th class="col-last-seen">Last Seen</th>
+        <td class="col-rank">
+          <span class="col-rank-medal">{{ row.medal }}</span>{{ row.rank }}
+        </td>
+        <td class="col-delta-rank {{ row.delta_rank.html_class }}">{{ row.delta_rank.formatted_value }}</td>
+        <td class="col-name">
+          <span class="{{ row.online_status.html_class }}">{{ row.online_status.indicator_icon }}</span>
+          <span class="bot-title">BOT</span>
+          <a href="https://lichess.org/@/{{ row.name }}" target="_blank" rel="noopener noreferrer">{{ row.name }}</a>
+        </td>
+        <td class="col-flag">{{ row.flag }}</td>
+        <td class="col-rating">
+          <a href="https://lichess.org/@/{{ row.name }}/perf/{{ perf_type_link }}" target="_blank" rel="noopener noreferrer">{{ row.rating }}</a>
+        </td>
+        <td class="col-delta-rating {{ row.delta_rating.html_class }}">{{ row.delta_rating.formatted_value }}</td>
+        <td class="col-rd">{{ row.rd }}</td>
+        <td class="col-games">{{ row.games }}</td>
+        <td class="col-delta-games {{ row.delta_games.html_class }}">{{ row.delta_games.formatted_value }}</td>
+        <td class="col-age">{{ row.age }}</td>
+        <td class="col-last-seen">{{ row.last_seen }}</td>
       </tr>
-    </thead>
-    <tbody>
-      {%- for row in leaderboard_rows %}
-        <tr>
-          <td class="col-rank">
-            <span class="col-rank-medal">{{ row.medal }}</span>{{ row.rank }}
-          </td>
-          <td class="col-delta-rank {{ row.delta_rank.html_class }}">{{ row.delta_rank.formatted_value }}</td>
-          <td class="col-name">
-            <span class="{{ row.online_status.html_class }}">{{ row.online_status.indicator_icon }}</span>
-            <span class="bot-title">BOT</span>
-            <a href="https://lichess.org/@/{{ row.name }}" target="_blank" rel="noopener noreferrer">{{ row.name }}</a>
-          </td>
-          <td class="col-flag">{{ row.flag }}</td>
-          <td class="col-rating">
-            <a href="https://lichess.org/@/{{ row.name }}/perf/{{ perf_type_link }}" target="_blank" rel="noopener noreferrer">{{ row.rating }}</a>
-          </td>
-          <td class="col-delta-rating {{ row.delta_rating.html_class }}">{{ row.delta_rating.formatted_value }}</td>
-          <td class="col-rd">{{ row.rd }}</td>
-          <td class="col-games">{{ row.games }}</td>
-          <td class="col-delta-games {{ row.delta_games.html_class }}">{{ row.delta_games.formatted_value }}</td>
-          <td class="col-age">{{ row.age }}</td>
-          <td class="col-last-seen">{{ row.last_seen }}</td>
-        </tr>
-      {%- endfor %}
-    </tbody>
-  </table>
-{%- endblock content %}
+    {%- endfor %}
+  </tbody>
+</table>
