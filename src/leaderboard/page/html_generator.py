@@ -26,8 +26,8 @@ class MainFrame:
   """The main frame which is shared by the index and all of the leaderboard pages."""
 
   title: str
-  last_updated_date: str
   nav_links: list[NavLink]
+  last_updated_date: str
 
 
 @dataclasses.dataclass(frozen=True)
@@ -177,13 +177,13 @@ class HtmlGenerator:
     html_by_name: dict[str, str] = {}
     # Create index html
     index_html = self.jinja_environment.get_template("index.html.jinja").render(
-      main_frame=MainFrame("Lichess Bot Leaderboards", last_updated_date, create_nav_links(None))
+      main_frame=MainFrame("Lichess Bot Leaderboards", create_nav_links(None), last_updated_date)
     )
     html_by_name["index"] = index_html
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
       leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
-        main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
+        main_frame=MainFrame(perf_type.get_readable_name(), create_nav_links(perf_type), last_updated_date),
         leaderboard=HtmlLeaderboard.from_leaderboard_data(leaderboard_data, perf_type, current_time),
       )
       html_by_name[perf_type.to_string()] = leaderboard_html
