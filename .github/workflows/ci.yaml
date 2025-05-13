@@ -141,7 +141,7 @@ jobs:
         with:
           fetch-depth: 0
       # Recheck the diff - this is done because this job will run if the ci has changed
-      - name: 🚱 Check no leaderboard data
+      - name: 🚱 Ensure no leaderboard data
         run: |
           if git diff --quiet origin/main...HEAD -- 'leaderboard_data/*'; then
             echo "No leaderboard data found"
