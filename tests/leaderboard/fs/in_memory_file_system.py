@@ -8,12 +8,12 @@ class InMemoryFileSystem(FileSystem):
 
   def __init__(self) -> None:
     """Initialize a dict to represent the file system."""
-    self.file_system: dict[str, list[str]] = {}
+    self.file_system: dict[str, str] = {}
 
-  def load_file_lines(self, file_name: str) -> list[str]:
-    """Load and return all of the lines in a file."""
-    return self.file_system.get(file_name, [])
+  def read_file(self, file_name: str) -> str | None:
+    """Load and return all of the contents of a file."""
+    return self.file_system.get(file_name, "")
 
-  def save_file_lines(self, file_name: str, file_lines: list[str]) -> None:
-    """Save all of the lines to a file."""
-    self.file_system[file_name] = file_lines
+  def write_file(self, file_name: str, file_contents: str) -> None:
+    """Save the contents to a file."""
+    self.file_system[file_name] = file_contents

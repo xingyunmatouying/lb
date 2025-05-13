@@ -1,7 +1,6 @@
 """Dataclasses related rows in a leaderboard."""
 
 import dataclasses
-import json
 from typing import Any
 
 from src.leaderboard.chrono.durations import TWO_WEEKS
@@ -56,15 +55,7 @@ class BotProfile:
     )
 
   @classmethod
-  def from_json(cls, json_str: str) -> "BotProfile":
-    """Create a BotProfile from json.
-
-    The bot will be assumed not to be new and to be offline.
-    """
-    return BotProfile.from_json_dict(json.loads(json_str))
-
-  @classmethod
-  def from_json_dict(cls, json_dict: dict[str, Any]) -> "BotProfile":
+  def from_dict(cls, json_dict: dict[str, Any]) -> "BotProfile":
     """Create a BotProfile from a json dict.
 
     The bot will be assumed not to be new and to be offline.
@@ -105,12 +96,12 @@ class BotProfile:
     seen_in_last_two_weeks = current_time - self.last_seen <= TWO_WEEKS
     return not self.tos_violation and seen_in_last_two_weeks
 
-  def to_json(self) -> str:
-    """Convert the BotProfile to json.
+  def as_dict(self) -> dict[str, Any]:
+    """Return the BotProfile represented as a dict.
 
     Values will only be set if they are not equal to their default values.
     """
-    return json.dumps(default_remover.to_dict_without_defaults(dataclasses.asdict(self)))
+    return default_remover.to_dict_without_defaults(dataclasses.asdict(self))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -137,7 +128,7 @@ class LeaderboardPerf:
     return LeaderboardPerf(perf.rating, perf.rd, perf.prog, perf.games, perf.prov)
 
   @classmethod
-  def from_json_dict(cls, json_dict: dict[str, Any]) -> "LeaderboardPerf":
+  def from_dict(cls, json_dict: dict[str, Any]) -> "LeaderboardPerf":
     """Create a LeaderboardPerf from a json dict."""
     return LeaderboardPerf(
       json_dict.get("rating", 0),
@@ -177,7 +168,7 @@ class RankInfo:
   last_played: int
 
   @classmethod
-  def from_json_dict(cls, json_dict: dict[str, Any]) -> "RankInfo":
+  def from_dict(cls, json_dict: dict[str, Any]) -> "RankInfo":
     """Create a RankInfo from a json dict."""
     return RankInfo(
       json_dict.get("rank", 0),
@@ -202,18 +193,17 @@ class LeaderboardRow:
   rank_info: RankInfo
 
   @classmethod
-  def from_json(cls, json_str: str) -> "LeaderboardRow":
-    """Create a LeaderboardRow from json."""
-    json_dict = json.loads(json_str)
+  def from_dict(cls, json_dict: dict[str, Any]) -> "LeaderboardRow":
+    """Create a LeaderboardRow from a json dict."""
     return LeaderboardRow(
       json_dict.get("name", ""),
-      LeaderboardPerf.from_json_dict(json_dict.get("perf", {})),
-      RankInfo.from_json_dict(json_dict.get("rank_info", {})),
+      LeaderboardPerf.from_dict(json_dict.get("perf", {})),
+      RankInfo.from_dict(json_dict.get("rank_info", {})),
     )
 
-  def to_json(self) -> str:
-    """Convert the leaderboard row to json.
+  def as_dict(self) -> dict[str, Any]:
+    """Return the LeaderboardRow represented as a dict.
 
     Values will only be set if they are not equal to their default values.
     """
-    return json.dumps(default_remover.to_dict_without_defaults(dataclasses.asdict(self)))
+    return default_remover.to_dict_without_defaults(dataclasses.asdict(self))

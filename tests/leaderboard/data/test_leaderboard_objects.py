@@ -19,7 +19,7 @@ class TestBotProfile(unittest.TestCase):
       BotProfile("Bot1", "flair", "flag", DATE_2024_01_01, DATE_2025_04_01, True, True, True, True),
     )
 
-  def test_from_json_dict(self) -> None:
+  def test_from_dict(self) -> None:
     json_dict = {
       "name": "Bot1",
       "flair": "flair",
@@ -32,7 +32,7 @@ class TestBotProfile(unittest.TestCase):
       "online": True,
     }
     expected_bot_profile = BotProfile("Bot1", "flair", "FR", DATE_2024_01_01, DATE_2025_04_01, True, True, False, False)
-    self.assertEqual(BotProfile.from_json_dict(json_dict), expected_bot_profile)
+    self.assertEqual(BotProfile.from_dict(json_dict), expected_bot_profile)
 
   def test_create_updated_copy_for_for_merge(self) -> None:
     updated_copy = BotProfile("", "", "", 0, 0, False, False, True, True).create_updated_copy_for_for_merge()
@@ -48,8 +48,8 @@ class TestBotProfile(unittest.TestCase):
     bot_profile = BotProfile("", "", "", 0, DATE_2025_04_01, False, True, True, True)
     self.assertFalse(bot_profile.is_eligible(DATE_2025_04_01))
 
-  def test_from_json_dict_default(self) -> None:
-    self.assertEqual(BotProfile.from_json_dict({}), BotProfile("", "", "", 0, 0, False, False, False, False))
+  def test_from_dict_default(self) -> None:
+    self.assertEqual(BotProfile.from_dict({}), BotProfile("", "", "", 0, 0, False, False, False, False))
 
 
 class TestLeaderboardPerf(unittest.TestCase):
@@ -59,45 +59,37 @@ class TestLeaderboardPerf(unittest.TestCase):
     perf = Perf(PerfType.BULLET, 100, 1450, 25, -10, True)
     self.assertEqual(LeaderboardPerf.from_perf(perf), LeaderboardPerf(1450, 25, -10, 100, True))
 
-  def test_from_json_dict(self) -> None:
+  def test_from_dict(self) -> None:
     json_dict = {"rating": 1450, "rd": 25, "prog": -10, "games": 100, "prov": True}
-    self.assertEqual(LeaderboardPerf.from_json_dict(json_dict), LeaderboardPerf(1450, 25, -10, 100, True))
+    self.assertEqual(LeaderboardPerf.from_dict(json_dict), LeaderboardPerf(1450, 25, -10, 100, True))
 
-  def test_from_json_dict_default(self) -> None:
-    self.assertEqual(LeaderboardPerf.from_json_dict({}), LeaderboardPerf(0, 0, 0, 0, False))
+  def test_from_dict_default(self) -> None:
+    self.assertEqual(LeaderboardPerf.from_dict({}), LeaderboardPerf(0, 0, 0, 0, False))
 
 
 class TestLeaderboardRow(unittest.TestCase):
   """Tests for LeaderboardRow."""
 
-  def test_from_json(self) -> None:
-    leaderboard_row_json = """
-      {
-        "name": "Bot1",
-        "perf": {
-          "rating": 1700,
-          "rd": 115,
-          "prog": 15,
-          "games": 200,
-          "prov": true
-        },
-        "rank_info": {
-          "rank": 4,
-          "delta_rank": 1,
-          "delta_rating": 50,
-          "delta_games": 10,
-          "peak_rank": 3,
-          "peak_rating": 1700,
-          "last_played": 1743500000
-        }
-      }
-      """
+  def test_from_dict(self) -> None:
+    leaderboard_row_json_dict = {
+      "name": "Bot1",
+      "perf": {"rating": 1700, "rd": 115, "prog": 15, "games": 200, "prov": True},
+      "rank_info": {
+        "rank": 4,
+        "delta_rank": 1,
+        "delta_rating": 50,
+        "delta_games": 10,
+        "peak_rank": 3,
+        "peak_rating": 1700,
+        "last_played": 1743500000,
+      },
+    }
     expected_perf = LeaderboardPerf(1700, 115, 15, 200, True)
     expected_leaderboard_row = LeaderboardRow("Bot1", expected_perf, RankInfo(4, 1, 50, 10, 3, 1700, DATE_2025_04_01))
-    self.assertEqual(LeaderboardRow.from_json(leaderboard_row_json), expected_leaderboard_row)
+    self.assertEqual(LeaderboardRow.from_dict(leaderboard_row_json_dict), expected_leaderboard_row)
 
-  def test_to_json_round_trip(self) -> None:
+  def test_as_dict_round_trip(self) -> None:
     leaderboard_row = LeaderboardRow(
       "Bot1", LeaderboardPerf(1500, 12, 34, 100, True), RankInfo(4, 1, 50, 10, 3, 1600, DATE_2025_04_01)
     )
-    self.assertEqual(LeaderboardRow.from_json(leaderboard_row.to_json()), leaderboard_row)
+    self.assertEqual(LeaderboardRow.from_dict(leaderboard_row.as_dict()), leaderboard_row)

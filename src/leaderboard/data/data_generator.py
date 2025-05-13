@@ -1,7 +1,9 @@
 """The main logic for generating the leaderboard data."""
 
 import dataclasses
+import json
 from collections import defaultdict
+from typing import Any
 
 from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.leaderboard_objects import BotPerf, BotProfile, LeaderboardPerf, LeaderboardRow
@@ -13,10 +15,16 @@ from src.leaderboard.li.lichess_client import LichessClient
 from src.leaderboard.li.pert_type import PerfType
 
 
+def load_json_list(file_system: FileSystem, file_name: str) -> list[dict[str, Any]]:
+  """Return the contents of a file which contains a json list."""
+  file_str = file_system.read_file(file_name)
+  return json.loads(file_str) if file_str else []
+
+
 def load_bot_profiles(file_system: FileSystem) -> dict[str, BotProfile]:
   """Load the known bot profiles."""
-  ndjson = file_system.load_file_lines(file_paths.bot_profiles_path())
-  bot_profiles = [BotProfile.from_json(json_line) for json_line in ndjson]
+  bot_profile_json_list = load_json_list(file_system, file_paths.bot_profiles_path())
+  bot_profiles = [BotProfile.from_dict(bot_profile_dict) for bot_profile_dict in bot_profile_json_list]
   return {bot_profile.name: bot_profile for bot_profile in bot_profiles}
 
 
@@ -24,8 +32,8 @@ def load_leaderboard_rows(file_system: FileSystem) -> dict[PerfType, list[Leader
   """Load the previous leaderboard rows and return lists of leaderboard rows grouped by perf type."""
   previous_rows_by_perf_type: dict[PerfType, list[LeaderboardRow]] = {}
   for perf_type in PerfType.all_except_unknown():
-    ndjson = file_system.load_file_lines(file_paths.data_path(perf_type))
-    previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_json(json_line) for json_line in ndjson]
+    row_json_list = load_json_list(file_system, file_paths.data_path(perf_type))
+    previous_rows_by_perf_type[perf_type] = [LeaderboardRow.from_dict(row_dict) for row_dict in row_json_list]
   return previous_rows_by_perf_type
 
 
@@ -46,9 +54,14 @@ def get_online_bot_info(lichess_client: LichessClient) -> BotInfoResult:
   bot_perfs_by_perf_type: dict[PerfType, list[BotPerf]] = defaultdict(list)
   for bot_json in lichess_client.get_online_bots().splitlines():
     bot_user = BotUser.from_json(bot_json)
-    bot_profiles_by_name[bot_user.username] = BotProfile.from_bot_user(bot_user)
+    has_played_games = False
     for perf in bot_user.perfs:
-      bot_perfs_by_perf_type[perf.perf_type].append(BotPerf(bot_user.username, LeaderboardPerf.from_perf(perf)))
+      if perf.games:
+        has_played_games = True
+        bot_perf = BotPerf(bot_user.username, LeaderboardPerf.from_perf(perf))
+        bot_perfs_by_perf_type[perf.perf_type].append(bot_perf)
+    if has_played_games:
+      bot_profiles_by_name[bot_user.username] = BotProfile.from_bot_user(bot_user)
   return BotInfoResult(bot_profiles_by_name, bot_perfs_by_perf_type)
 
 
@@ -79,14 +92,29 @@ def create_updates(previous_rows: list[LeaderboardRow], current_bot_perfs: list[
   ]
 
 
+def name_sort_key(name: str) -> tuple[str, str]:
+  """Return a key for sorting by name: (name.lower(), name).
+
+  The secondary sort is used in the event that two bots can have the same name but with different capitalization.
+  """
+  return (name.lower(), name)
+
+
 def create_ranked_rows(
   updates: list[LeaderboardUpdate], bot_profiles_by_name: dict[str, BotProfile], current_time: int
 ) -> list[LeaderboardRow]:
   """Create the leaderboard rows for each perf type based on a list of updates."""
   new_rows: list[LeaderboardRow] = []
   # Primary sort: rating descending, Secondary sort: rd ascending, Tertiary sort: created time ascending
+  # Further sort by name in lowercase (and then by name) for additional tie breaks
   sorted_update_list = sorted(
-    updates, key=lambda update: (-update.get_rating(), update.get_rd(), bot_profiles_by_name[update.get_name()].created)
+    updates,
+    key=lambda update: (
+      -update.get_rating(),
+      update.get_rd(),
+      bot_profiles_by_name[update.get_name()].created,
+      name_sort_key(update.get_name()),
+    ),
   )
   # The first in the list will be ranked #1
   rank = 0
@@ -134,15 +162,15 @@ class LeaderboardDataResult:
     """Create a data result with the data provided."""
     return LeaderboardDataResult(bot_profiles_by_name, ranked_rows_by_perf_type)
 
-  def get_bot_profiles_sorted(self) -> dict[str, BotProfile]:
+  def get_bot_profiles_sorted(self) -> list[BotProfile]:
     """Return the bot profiles dict sorted by name."""
-    return dict(sorted(self.bot_profiles_by_name.items(), key=lambda item: item[0].lower()))
+    return sorted(self.bot_profiles_by_name.values(), key=lambda profile: name_sort_key(profile.name))
 
   def get_ranked_rows_sorted(self) -> dict[PerfType, list[LeaderboardRow]]:
     """Return the ranked rows by perf type with the ranked rows sorted by name."""
     sorted_ranked_rows: dict[PerfType, list[LeaderboardRow]] = {}
     for perf_type, ranked_rows in self.ranked_rows_by_perf_type.items():
-      sorted_ranked_rows[perf_type] = sorted(ranked_rows, key=lambda row: row.name.lower())
+      sorted_ranked_rows[perf_type] = sorted(ranked_rows, key=lambda row: name_sort_key(row.name))
     return sorted_ranked_rows
 
 

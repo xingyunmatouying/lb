@@ -1,5 +1,6 @@
 """Tests for data_generator.py."""
 
+import json
 import unittest
 
 from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
@@ -58,14 +59,14 @@ BOT_1_CURRENT_JSON = """
   "patron": true,
   "perfs": {
     "bullet": {
-        "games": 1100,
-        "rating": 2950,
-        "rd": 42,
-        "prog": -50
+      "games": 1100,
+      "rating": 2950,
+      "rd": 42,
+      "prog": -50
     },
     "blitz": {
-        "games": 100,
-        "rating": 2550
+      "games": 100,
+      "rating": 2550
     }
   }
 }
@@ -77,12 +78,12 @@ BOT_2_CURRENT_JSON = """
   "seenAt": 1743500000000,
   "perfs": {
     "bullet": {
-        "games": 1000,
-        "rating": 3000
+      "games": 1000,
+      "rating": 3000
     },
     "blitz": {
-        "games": 300,
-        "rating": 2500
+      "games": 300,
+      "rating": 2500
     }
   }
 }
@@ -112,8 +113,8 @@ class TestDataGeneratorFunctions(unittest.TestCase):
 
   def test_load_bot_profiles(self) -> None:
     file_system = InMemoryFileSystem()
-    bot_profiles = [BOT_1_CURRENT_PROFILE.to_json(), BOT_2_CURRENT_PROFILE.to_json()]
-    file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles)
+    bot_profiles = [BOT_1_CURRENT_PROFILE.as_dict(), BOT_2_CURRENT_PROFILE.as_dict()]
+    file_system.write_file(file_paths.bot_profiles_path(), json.dumps(bot_profiles))
     # When loading the bot profiles new and online are set to false
     expected_bot_profiles = {
       "Bot-1": BotProfile("Bot-1", "flair", "_earth", DATE_2024_04_01, DATE_2025_04_01, True, False, False, False),
@@ -129,10 +130,10 @@ class TestDataGeneratorFunctions(unittest.TestCase):
 
   def test_load_leaderboard_rows(self) -> None:
     file_system = InMemoryFileSystem()
-    bullet_leaderboard = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
-    blitz_leaderboard = [BOT_2_ROW_BLITZ.to_json(), BOT_1_ROW_BLITZ.to_json()]
-    file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_leaderboard)
-    file_system.save_file_lines(file_paths.data_path(PerfType.BLITZ), blitz_leaderboard)
+    bullet_leaderboard = [BOT_1_ROW_BULLET.as_dict(), BOT_2_ROW_BULLET.as_dict()]
+    blitz_leaderboard = [BOT_2_ROW_BLITZ.as_dict(), BOT_1_ROW_BLITZ.as_dict()]
+    file_system.write_file(file_paths.data_path(PerfType.BULLET), json.dumps(bullet_leaderboard))
+    file_system.write_file(file_paths.data_path(PerfType.BLITZ), json.dumps(blitz_leaderboard))
     previous_rows_by_perf_type = data_generator_functions.load_leaderboard_rows(file_system)
     self.assertEqual(len(previous_rows_by_perf_type), 13)
     self.assertListEqual(previous_rows_by_perf_type[PerfType.BULLET], [BOT_1_ROW_BULLET, BOT_2_ROW_BULLET])
@@ -143,11 +144,27 @@ class TestDataGeneratorFunctions(unittest.TestCase):
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
     bot_info = data_generator_functions.get_online_bot_info(lichess_client)
     self.assertDictEqual(bot_info.bot_profiles_by_name, {"Bot-1": BOT_1_CURRENT_PROFILE, "Bot-2": BOT_2_CURRENT_PROFILE})
-    self.assertEqual(len(bot_info.bot_perfs_by_perf_type), 2)
-    self.assertListEqual(
-      bot_info.bot_perfs_by_perf_type[PerfType.BULLET], [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET]
+    expected_bot_perfs_by_perf_type = {
+      PerfType.BULLET: [BOT_1_CURRENT_PERF_BULLET, BOT_2_CURRENT_PERF_BULLET],
+      PerfType.BLITZ: [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ],
+    }
+    self.assertDictEqual(bot_info.bot_perfs_by_perf_type, expected_bot_perfs_by_perf_type)
+
+  def test_get_online_bot_info_only_one_perf_played(self) -> None:
+    lichess_client = FakeLichessClient()
+    lichess_client.set_online_bots(
+      """{ "username": "Bot-1", "perfs": { "bullet": { "games": 1000 }, "blitz": { "rating": 1500, "prov": true } } }"""
     )
-    self.assertListEqual(bot_info.bot_perfs_by_perf_type[PerfType.BLITZ], [BOT_1_CURRENT_PERF_BLITZ, BOT_2_CURRENT_PERF_BLITZ])
+    bot_info = data_generator_functions.get_online_bot_info(lichess_client)
+    self.assertListEqual(list(bot_info.bot_profiles_by_name.keys()), ["Bot-1"])
+    self.assertListEqual(list(bot_info.bot_perfs_by_perf_type.keys()), [PerfType.BULLET])
+
+  def test_get_online_bot_info_no_games_played(self) -> None:
+    lichess_client = FakeLichessClient()
+    lichess_client.set_online_bots("""{ "username": "Bot-1", "perfs": { "bullet": { "rating": 1500, "prov": true } } }""")
+    bot_info = data_generator_functions.get_online_bot_info(lichess_client)
+    self.assertDictEqual(bot_info.bot_profiles_by_name, {})
+    self.assertDictEqual(bot_info.bot_perfs_by_perf_type, {})
 
   def test_merge_bot_profiles(self) -> None:
     previous_profiles_by_name = {"Bot-1": BOT_1_PROFILE}
@@ -166,6 +183,11 @@ class TestDataGeneratorFunctions(unittest.TestCase):
       CurrentBotPerfOnlyUpdate(BOT_2_CURRENT_PERF_BULLET),
     ]
     self.assertCountEqual(updates, expected_updates)
+
+  def test_create_sort_key(self) -> None:
+    bot_names = ["BOT-4", "Bot-2", "Bot-5", "bot-3", "bot-1", "Bot-4", "Bot-1"]
+    sorted_bot_names = sorted(bot_names, key=lambda name: data_generator_functions.name_sort_key(name))
+    self.assertListEqual(sorted_bot_names, ["Bot-1", "bot-1", "Bot-2", "bot-3", "BOT-4", "Bot-4", "Bot-5"])
 
   def test_create_ranked_rows(self) -> None:
     updates: list[LeaderboardUpdate] = [
@@ -253,11 +275,11 @@ class TestDataGenerator(unittest.TestCase):
   def test_create_all_leaderboards(self) -> None:
     file_system = InMemoryFileSystem()
 
-    bullet_ndjson = [BOT_1_ROW_BULLET.to_json(), BOT_2_ROW_BULLET.to_json()]
-    file_system.save_file_lines(file_paths.data_path(PerfType.BULLET), bullet_ndjson)
+    bullet_leaderboard_json = [BOT_1_ROW_BULLET.as_dict(), BOT_2_ROW_BULLET.as_dict()]
+    file_system.write_file(file_paths.data_path(PerfType.BULLET), json.dumps(bullet_leaderboard_json))
 
-    bot_profiles_json = [BOT_1_PROFILE.to_json(), BOT_2_PROFILE.to_json()]
-    file_system.save_file_lines(file_paths.bot_profiles_path(), bot_profiles_json)
+    bot_profiles_json = [BOT_1_PROFILE.as_dict(), BOT_2_PROFILE.as_dict()]
+    file_system.write_file(file_paths.bot_profiles_path(), json.dumps(bot_profiles_json))
 
     lichess_client = FakeLichessClient()
     lichess_client.set_online_bots("\n".join([remove_whitespace(BOT_1_CURRENT_JSON), remove_whitespace(BOT_2_CURRENT_JSON)]))
@@ -273,8 +295,8 @@ class TestDataGenerator(unittest.TestCase):
     ]
     self.assertListEqual(leaderboard_data.get_ranked_rows_sorted()[PerfType.BULLET], expected_ranked_rows)
 
-    expected_bot_profiles = {
-      "Bot-1": BOT_1_CURRENT_PROFILE.create_updated_copy_for_for_merge(),
-      "Bot-2": BOT_2_CURRENT_PROFILE.create_updated_copy_for_for_merge(),
-    }
+    expected_bot_profiles = [
+      BOT_1_CURRENT_PROFILE.create_updated_copy_for_for_merge(),
+      BOT_2_CURRENT_PROFILE.create_updated_copy_for_for_merge(),
+    ]
     self.assertEqual(leaderboard_data.get_bot_profiles_sorted(), expected_bot_profiles)

@@ -20,8 +20,9 @@ footer {
 
 /* The header is fixed to the top */
 header {
-  position: fixed;
+  position: sticky;
   top: 0;
+  min-width: 1040px;
 }
 
 /* The footer is fixed to the bottom */
@@ -30,6 +31,14 @@ footer {
   bottom: 0;
   /* Slightly reduced font size in the footer */
   font-size: 0.8em;
+}
+
+/* Nav links wrap when the page is narrow */
+nav {
+  display: flex;
+  flex-flow: wrap;
+  row-gap: 4px;
+  justify-content: center;
 }
 
 /* No underline for any links by default */
@@ -42,9 +51,10 @@ nav a {
   color: white;
   /* Fade in and out */
   transition: background-color 0.3s;
-  margin: 0 5px;
+  margin: 0 2px;
   padding: 8px 16px;
   border-radius: 5px;
+  box-sizing: border-box;
 }
 
 /* Footer links */
@@ -77,14 +87,14 @@ main {
   width: 80%;
   min-width: 1000px;
   /* large top and bottom margin to be clear of the header and footer */
-  margin: 60px auto;
-  padding: 20px;
-  padding-top: 10px;
+  margin: 24px auto 60px;
+  padding: 10px 20px 20px;
   border-radius: 5px;
   /* Look slightly 3d */
   box-shadow: 0 5px 5px rgb(0 0 0 / 10%);
 }
 
+/* The heading contains the page's title */
 h1 {
   text-align: center;
   padding-bottom: 10px;

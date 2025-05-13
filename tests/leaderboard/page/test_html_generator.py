@@ -11,8 +11,8 @@ from tests.leaderboard.chrono import epoch_seconds
 
 
 DEFAULT_BOT_PROFILES_BY_NAME = {
-  "Bot-1": BotProfile.from_json('{"name": "Bot-1"}'),
-  "Bot-2": BotProfile.from_json('{"name": "Bot-2"}'),
+  "Bot-1": BotProfile.from_dict({"name": "Bot-1"}),
+  "Bot-2": BotProfile.from_dict({"name": "Bot-2"}),
 }
 
 DATE_2024_10_31 = epoch_seconds.from_date(2024, 10, 31)

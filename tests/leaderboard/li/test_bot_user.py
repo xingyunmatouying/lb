@@ -19,17 +19,17 @@ BOT_USER_JSON = """
   "patron": true,
   "perfs": {
     "bullet": {
-        "games": 123,
-        "rating": 1450
+      "games": 123,
+      "rating": 1450
     },
     "blitz": {
-        "games": 456,
-        "rating": 1500
+      "games": 456,
+      "rating": 1500
     },
     "rapid": {
-        "games": 789,
-        "rating": 1550,
-        "prov": true
+      "games": 789,
+      "rating": 1550,
+      "prov": true
     }
   }
 }
