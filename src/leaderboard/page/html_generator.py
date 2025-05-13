@@ -123,6 +123,31 @@ class HtmlLeaderboardRow:
     )
 
 
+@dataclasses.dataclass(frozen=True)
+class HtmlLeaderboard:
+  """The data required to render a leaderboard table in html."""
+
+  title: str
+  perf_type_str: str
+  leaderboard_rows: list[HtmlLeaderboardRow]
+
+  @classmethod
+  def from_leaderboard_data(
+    cls, leaderboard_data: LeaderboardDataResult, perf_type: PerfType, current_time: int
+  ) -> "HtmlLeaderboard":
+    """Create an HtmlLeaderboard from a LeaderboardDataResult."""
+    return HtmlLeaderboard(
+      perf_type.get_readable_name(),
+      perf_type.to_string(),
+      [
+        HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
+        for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
+        # The rank is set to zero when the bot is not eligible for the leaderboard
+        if row.rank_info.rank
+      ],
+    )
+
+
 def create_nav_links(active_perf_type: PerfType | None) -> list[NavLink]:
   """Create the list of nav links shared by all pages.
 
@@ -159,13 +184,7 @@ class HtmlGenerator:
     for perf_type in PerfType.all_except_unknown():
       leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
         main_frame=MainFrame(perf_type.get_readable_name(), last_updated_date, create_nav_links(perf_type)),
-        perf_type_link=perf_type.to_string(),
-        leaderboard_rows=[
-          HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
-          for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
-          # The rank is set to zero when the bot is not eligible for the leaderboard
-          if row.rank_info.rank
-        ],
+        leaderboard=HtmlLeaderboard.from_leaderboard_data(leaderboard_data, perf_type, current_time),
       )
       html_by_name[perf_type.to_string()] = leaderboard_html
     # Return file name to html contents map
