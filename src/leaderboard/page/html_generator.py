@@ -168,7 +168,7 @@ class HtmlGenerator:
   def __init__(self, time_provider: TimeProvider) -> None:
     """Initialize a new generator."""
     self.time_provider = time_provider
-    self.jinja_environment = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
+    self.jinja_env = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
 
   def generate_leaderboard_html(self, leaderboard_data: LeaderboardDataResult) -> dict[str, str]:
     """Generate index and leaderboard html."""
@@ -176,16 +176,14 @@ class HtmlGenerator:
     last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)
     html_by_name: dict[str, str] = {}
     # Create index html
-    index_html = self.jinja_environment.get_template("index.html.jinja").render(
+    html_by_name["index"] = self.jinja_env.get_template("index.html.jinja").render(
       main_frame=MainFrame("Lichess Bot Leaderboards", create_nav_links(None), last_updated_date)
     )
-    html_by_name["index"] = index_html
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
-      leaderboard_html = self.jinja_environment.get_template("leaderboard.html.jinja").render(
+      html_by_name[perf_type.to_string()] = self.jinja_env.get_template("leaderboard.html.jinja").render(
         main_frame=MainFrame(perf_type.get_readable_name(), create_nav_links(perf_type), last_updated_date),
         leaderboard=HtmlLeaderboard.from_leaderboard_data(leaderboard_data, perf_type, current_time),
       )
-      html_by_name[perf_type.to_string()] = leaderboard_html
     # Return file name to html contents map
     return html_by_name
