@@ -164,7 +164,7 @@ class LeaderboardDataResult:
 
   def get_bot_profiles_sorted(self) -> list[BotProfile]:
     """Return the bot profiles dict sorted by name."""
-    return list(sorted(self.bot_profiles_by_name.values(), key=lambda profile: name_sort_key(profile.name)))
+    return sorted(self.bot_profiles_by_name.values(), key=lambda profile: name_sort_key(profile.name))
 
   def get_ranked_rows_sorted(self) -> dict[PerfType, list[LeaderboardRow]]:
     """Return the ranked rows by perf type with the ranked rows sorted by name."""
