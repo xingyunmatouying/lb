@@ -14,6 +14,7 @@ jobs:
     name: 🔮 determine-which-jobs / 🐧 ubuntu
     runs-on: ubuntu-latest
     outputs:
+      ensure-no-leaderboard-data: ${{ steps.ensure-no-leaderboard-data.outputs.changed }}
       check-style-prettier: ${{ steps.check-style-prettier.outputs.changed }}
       check-style-css: ${{ steps.check-style-css.outputs.changed }}
       check-style-jijna: ${{ steps.check-style-jinja.outputs.changed }}
@@ -30,6 +31,13 @@ jobs:
         with:
           fetch-depth: 0
       # Determine which jobs need to be run based on which files have changed
+      # no leaderboard data
+      - name: 🙅 Determine ensure-no-leaderboard-data
+        id: ensure-no-leaderboard-data
+        uses: ./.github/actions/check-dependencies-changed
+        with:
+          pathspec: |-
+            'leaderboard_data/*' \
       # formatting (css, json, md, yaml)
       - name: 🧚 Determine check-style-prettier
         id: check-style-prettier
@@ -119,6 +127,18 @@ jobs:
             '**/*.py' \
             'requirements/leaderboard.txt' \
             '.coveragerc' \
+
+  # Ensure no leaderboard data is added
+  ensure-no-leaderboard-data:
+    name: 🙅 ensure-no-leaderboard-data / 🐧 ubuntu
+    runs-on: ubuntu-latest
+    needs: determine-which-jobs
+    if: needs.determine-which-jobs.outputs.ensure-no-leaderboard-data == 'true'
+    steps:
+      - name: 🚱 Fail due to leaderboard data
+        run: |
+          echo "Leaderboard data should not be added to this branch"
+          exit 1
 
   # Check formatting (css, json, md, yaml)
   check-style-prettier:
