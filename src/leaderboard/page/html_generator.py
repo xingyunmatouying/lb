@@ -188,7 +188,6 @@ class HtmlGenerator:
     # Create index html
     html_by_name["index"] = self.jinja_env.get_template("index.html.jinja").render(
       main_frame=MainFrame("Lichess Bot Leaderboard", create_nav_links(None), last_updated_date),
-      title="Lichess Bot Leaderboard",
       preview_leaderboards=[
         HtmlLeaderboard.from_leaderboard_data(leaderboard_data, perf_type, current_time, True)
         for perf_type in PerfType.all_except_unknown()
