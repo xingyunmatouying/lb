@@ -35,7 +35,7 @@
           <span class="bot-title">BOT</span>
           <a href="https://lichess.org/@/{{ row.name }}" target="_blank" rel="noopener noreferrer">{{ row.name }}</a>
         </td>
-        <td class="col-flag">{{ row.flag }}</td>
+        <td class="col-flag {{ row.flag.html_class }}">{{ row.flag.emoji }}</td>
         <td class="col-rating">
           <a href="https://lichess.org/@/{{ row.name }}/perf/{{ perf_type_str }}" target="_blank" rel="noopener noreferrer">{{ row.rating }}</a>
         </td>

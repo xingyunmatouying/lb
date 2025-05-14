@@ -218,6 +218,34 @@ td.col-flag {
   padding: 2px;
 }
 
+/* Rotating earth emoji animation */
+@keyframes rotating-earth-emoji {
+  0%,
+  100% {
+    /* Globe Showing Europe-Africa */
+    content: "🌍";
+  }
+
+  33% {
+    /* Globe Showing Asia-Australia */
+    content: "🌎";
+  }
+
+  66% {
+    /* Globe Showing Americas */
+    content: "🌏";
+  }
+}
+
+/* Show a "rotating" earth emoji if the bot uses the earth flag */
+.earth-flag::before {
+  content: "🌍";
+  animation-name: rotating-earth-emoji;
+  /* Go pretty slow to avoid being distracting */
+  animation-duration: 27s;
+  animation-iteration-count: infinite;
+}
+
 /* Rating */
 .col-rating {
   width: 9%;

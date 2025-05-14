@@ -6,7 +6,7 @@ from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
-from src.leaderboard.page.html_generator import HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
+from src.leaderboard.page.html_generator import Flag, HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
 from tests.leaderboard.chrono import epoch_seconds
 
 
@@ -51,6 +51,14 @@ class TestOnlineStatus(unittest.TestCase):
     self.assertEqual(OnlineStatus.create_from(False, False), expected_offline_default_status)
 
 
+class TestFlag(unittest.TestCase):
+  """Tests for Flag."""
+
+  def test_from_string(self) -> None:
+    self.assertEqual(Flag.from_string("HM"), Flag("🇭🇲", ""))
+    self.assertEqual(Flag.from_string("_earth"), Flag("", "earth-flag"))
+
+
 class TestHtmlLeaderboardRow(unittest.TestCase):
   """Tests for HtmlLeaderboardRow."""
 
@@ -65,7 +73,7 @@ class TestHtmlLeaderboardRow(unittest.TestCase):
       LeaderboardDelta("↑1", LeaderboardDelta.DELTA_POS_CLASS),
       OnlineStatus(OnlineStatus.PATRON_INDICATOR, OnlineStatus.BOT_ONLINE_CLASS),
       "Bot-1",
-      "🇭🇲",
+      Flag("🇭🇲", ""),
       3000,
       LeaderboardDelta("-5", LeaderboardDelta.DELTA_NEG_CLASS),
       45,

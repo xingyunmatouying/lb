@@ -90,6 +90,26 @@ class OnlineStatus:
 
 
 @dataclasses.dataclass(frozen=True)
+class Flag:
+  """Convenience class for styling flags."""
+
+  # How lichess represents the earth flag option
+  LICHESS_EARTH_FLAG_STR = "_earth"
+
+  EARTH_FLAG = "earth-flag"
+
+  emoji: str
+  html_class: str
+
+  @classmethod
+  def from_string(cls, flag_str: str) -> "Flag":
+    """Create a Flag from a flag string."""
+    if flag_str == Flag.LICHESS_EARTH_FLAG_STR:
+      return Flag("", Flag.EARTH_FLAG)
+    return Flag(flag_emoji.from_string(flag_str), "")
+
+
+@dataclasses.dataclass(frozen=True)
 class HtmlLeaderboardRow:
   """The data required to render a leaderboard row in html."""
 
@@ -98,7 +118,7 @@ class HtmlLeaderboardRow:
   delta_rank: LeaderboardDelta
   online_status: OnlineStatus
   name: str
-  flag: str
+  flag: Flag
   rating: int
   delta_rating: LeaderboardDelta
   rd: int
@@ -116,7 +136,7 @@ class HtmlLeaderboardRow:
       LeaderboardDelta.for_delta_rank(row.rank_info.rank, row.rank_info.delta_rank, profile.new),
       OnlineStatus.create_from(profile.online, profile.patron),
       profile.name,
-      flag_emoji.from_string(profile.flag),
+      Flag.from_string(profile.flag),
       row.perf.rating,
       LeaderboardDelta.for_delta(row.rank_info.delta_rating),
       row.perf.rd,
