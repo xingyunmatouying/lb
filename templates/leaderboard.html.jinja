@@ -4,7 +4,8 @@
   {% with
     title=leaderboard.title,
     perf_type_str=leaderboard.perf_type_str,
-    leaderboard_rows=leaderboard.leaderboard_rows
+    leaderboard_rows=leaderboard.leaderboard_rows,
+    preview=false
     %}
     {% include "leaderboard_table.html.jinja" %}
   {% endwith %}

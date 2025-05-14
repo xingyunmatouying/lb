@@ -1,6 +1,7 @@
 """Convert leaderboard data to html."""
 
 import dataclasses
+import itertools
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -10,6 +11,9 @@ from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
 from src.leaderboard.page import flag_emoji
+
+
+MAX_RANK_FOR_PREVIEW = 10
 
 
 @dataclasses.dataclass(frozen=True)
@@ -133,15 +137,21 @@ class HtmlLeaderboard:
 
   @classmethod
   def from_leaderboard_data(
-    cls, leaderboard_data: LeaderboardDataResult, perf_type: PerfType, current_time: int
+    cls, leaderboard_data: LeaderboardDataResult, perf_type: PerfType, current_time: int, preview: bool = False
   ) -> "HtmlLeaderboard":
-    """Create an HtmlLeaderboard from a LeaderboardDataResult."""
+    """Create an HtmlLeaderboard from a LeaderboardDataResult.
+
+    If preview is true, only return the top n rows. This is used to show previews on the index page.
+    """
+    rows = leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
+    # Only include bots within the top n ranks if creating a preview leaderboard for the index page
+    rows = itertools.takewhile(lambda row: row.rank_info.rank <= MAX_RANK_FOR_PREVIEW, rows) if preview else rows
     return HtmlLeaderboard(
       perf_type.get_readable_name(),
       perf_type.to_string(),
       [
         HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)
-        for row in leaderboard_data.ranked_rows_by_perf_type.get(perf_type, [])
+        for row in rows
         # The rank is set to zero when the bot is not eligible for the leaderboard
         if row.rank_info.rank
       ],
@@ -177,7 +187,12 @@ class HtmlGenerator:
     html_by_name: dict[str, str] = {}
     # Create index html
     html_by_name["index"] = self.jinja_env.get_template("index.html.jinja").render(
-      main_frame=MainFrame("Lichess Bot Leaderboards", create_nav_links(None), last_updated_date)
+      main_frame=MainFrame("Lichess Bot Leaderboard", create_nav_links(None), last_updated_date),
+      title="Lichess Bot Leaderboard",
+      preview_leaderboards=[
+        HtmlLeaderboard.from_leaderboard_data(leaderboard_data, perf_type, current_time, True)
+        for perf_type in PerfType.all_except_unknown()
+      ],
     )
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():

@@ -1,5 +1,11 @@
 <p>
-  <h1>{{ title }}</h1>
+  {%- if preview %}
+    <h2>
+      <a href="{{ perf_type_str }}.html">{{ title }}</a>
+    </h2>
+  {%- else %}
+    <h1>{{ title }}</h1>
+  {%- endif %}
 </p>
 <table>
   <thead>

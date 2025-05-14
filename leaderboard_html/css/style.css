@@ -62,7 +62,8 @@ footer a {
   color: rgb(0 127 255);
 }
 
-/* Name column links */
+/* Links which should have black text */
+h2 a,
 .col-name a,
 .col-rating a {
   color: black;
@@ -75,6 +76,7 @@ nav a:hover {
 }
 
 /* Links which get the underline back on hover */
+h2 a:hover,
 footer a:hover,
 .col-name a:hover,
 .col-rating a:hover {
@@ -98,6 +100,12 @@ main {
 h1 {
   text-align: center;
   padding-bottom: 10px;
+}
+
+/* The subheadings are used on the main page for preview leaderboards */
+h2 {
+  text-align: center;
+  padding: 20px 0;
 }
 
 /* Leaderboard table */
