@@ -81,9 +81,15 @@ class TestHtmlGenerator(unittest.TestCase):
   """Tests for HtmlGenerator."""
 
   def test_generate_index(self) -> None:
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1"), create_leaderboard_row("Bot-2")]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
-    index_html = html_generator.generate_leaderboard_html(LeaderboardDataResult.create_result({}, {}))["index"]
+    index_html = html_generator.generate_leaderboard_html(
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
+    )["index"]
     self.assertIn('<a href="index.html" class="active">Home</a>', index_html)
+    self.assertIn("Bullet", index_html)
+    self.assertIn("Bot-1", index_html)
+    self.assertIn("Bot-2", index_html)
 
   def test_generate_last_updated(self) -> None:
     time_provider = FixedTimeProvider(1743483600)
