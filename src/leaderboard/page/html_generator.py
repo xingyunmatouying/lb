@@ -10,7 +10,7 @@ from src.leaderboard.chrono.time_provider import TimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardRow
 from src.leaderboard.li.pert_type import PerfType
-from src.leaderboard.page import flag_emoji
+from src.leaderboard.page import flag_emoji, meta_tags
 
 
 MAX_RANK_FOR_PREVIEW = 10
@@ -32,6 +32,8 @@ class MainFrame:
   title: str
   nav_links: list[NavLink]
   last_updated_date: str
+  description: str
+  keywords: str
 
   @classmethod
   def from_perf_type(cls, perf_type: PerfType | None, current_time: int) -> "MainFrame":
@@ -43,6 +45,8 @@ class MainFrame:
       perf_type.get_readable_name() if perf_type else "Lichess Bot Leaderboard",
       create_nav_links(perf_type),
       date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time),
+      meta_tags.get_description(perf_type),
+      meta_tags.get_keywords(perf_type),
     )
 
 

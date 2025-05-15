@@ -117,6 +117,8 @@ class TestHtmlGenerator(unittest.TestCase):
     self.assertIn("Bullet", index_html)
     self.assertIn("Bot-1", index_html)
     self.assertIn("Bot-2", index_html)
+    self.assertIn('name="description" content="Automatically updated', index_html)
+    self.assertIn('name="keywords" content="Lichess bot leaderboard,', index_html)
 
   def test_generate_last_updated(self) -> None:
     time_provider = FixedTimeProvider(1743483600)
