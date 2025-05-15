@@ -198,7 +198,7 @@ class HtmlGenerator:
   def __init__(self, time_provider: TimeProvider) -> None:
     """Initialize a new generator."""
     self.time_provider = time_provider
-    self.jinja_env = Environment(loader=FileSystemLoader("templates"), autoescape=True, trim_blocks=False)
+    self.jinja_env = Environment(loader=FileSystemLoader("templates"), autoescape=True)
 
   def generate_leaderboard_html(self, leaderboard_data: LeaderboardDataResult) -> dict[str, str]:
     """Generate index and leaderboard html."""
