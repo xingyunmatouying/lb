@@ -6,7 +6,14 @@ from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
-from src.leaderboard.page.html_generator import Flag, HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
+from src.leaderboard.page.html_generator import (
+  Flag,
+  HtmlGenerator,
+  HtmlLeaderboardRow,
+  LeaderboardDelta,
+  MainFrame,
+  OnlineStatus,
+)
 from tests.leaderboard.chrono import epoch_seconds
 
 
@@ -23,6 +30,18 @@ DATE_2025_04_01 = epoch_seconds.from_date(2025, 4, 1)
 def create_leaderboard_row(name: str, rank: int = 1, delta_rank: int = 0, delta_rating: int = 0) -> LeaderboardRow:
   """Create a LeaderboardRow with several default values set."""
   return LeaderboardRow(name, LeaderboardPerf(0, 0, 0, 0, False), RankInfo(rank, delta_rank, delta_rating, 0, 0, 0, 0))
+
+
+class TestMainFrame(unittest.TestCase):
+  """Tests for MainFrame."""
+
+  def test_from_perf_type_bullet(self) -> None:
+    main_frame = MainFrame.from_perf_type(PerfType.BULLET, DATE_2025_04_01)
+    self.assertEqual(main_frame.title, "Bullet")
+
+  def test_from_perf_type_none(self) -> None:
+    main_frame = MainFrame.from_perf_type(None, DATE_2025_04_01)
+    self.assertEqual(main_frame.title, "Lichess Bot Leaderboard")
 
 
 class TestLeaderboardDelta(unittest.TestCase):

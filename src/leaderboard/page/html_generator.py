@@ -33,6 +33,18 @@ class MainFrame:
   nav_links: list[NavLink]
   last_updated_date: str
 
+  @classmethod
+  def from_perf_type(cls, perf_type: PerfType | None, current_time: int) -> "MainFrame":
+    """Create a MainFrame for a given PerfType.
+
+    If PerfType is None, create a MainFrame for the index page.
+    """
+    return MainFrame(
+      perf_type.get_readable_name() if perf_type else "Lichess Bot Leaderboard",
+      create_nav_links(perf_type),
+      date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time),
+    )
+
 
 @dataclasses.dataclass(frozen=True)
 class LeaderboardDelta:
@@ -203,11 +215,10 @@ class HtmlGenerator:
   def generate_leaderboard_html(self, leaderboard_data: LeaderboardDataResult) -> dict[str, str]:
     """Generate index and leaderboard html."""
     current_time = self.time_provider.get_current_time()
-    last_updated_date = date_formatter.format_yyyy_mm_dd_hh_mm_ss(current_time)
     html_by_name: dict[str, str] = {}
     # Create index html
     html_by_name["index"] = self.jinja_env.get_template("index.html.jinja").render(
-      main_frame=MainFrame("Lichess Bot Leaderboard", create_nav_links(None), last_updated_date),
+      main_frame=MainFrame.from_perf_type(None, current_time),
       preview_leaderboards=[
         HtmlLeaderboard.from_leaderboard_data(leaderboard_data, perf_type, current_time, True)
         for perf_type in PerfType.all_except_unknown()
@@ -216,7 +227,7 @@ class HtmlGenerator:
     # Create leaderboard html
     for perf_type in PerfType.all_except_unknown():
       html_by_name[perf_type.to_string()] = self.jinja_env.get_template("leaderboard.html.jinja").render(
-        main_frame=MainFrame(perf_type.get_readable_name(), create_nav_links(perf_type), last_updated_date),
+        main_frame=MainFrame.from_perf_type(perf_type, current_time),
         leaderboard=HtmlLeaderboard.from_leaderboard_data(leaderboard_data, perf_type, current_time),
       )
     # Return file name to html contents map
