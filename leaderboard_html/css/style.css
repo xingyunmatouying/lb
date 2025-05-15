@@ -265,8 +265,8 @@ td.col-flag {
 .earth-flag::before {
   content: "🌍";
   animation-name: rotating-earth-emoji;
-  /* Go pretty slow to avoid being distracting */
-  animation-duration: 27s;
+  /* Go reasonably slow to avoid being distracting */
+  animation-duration: 24s;
   animation-iteration-count: infinite;
 }
 
