@@ -1,11 +1,12 @@
 {% extends "main_frame.html.jinja" %}
 
 {% block content %}
+
   <p>
     <h1>Lichess Bot Leaderboard</h1>
   </p>
   {%- for leaderboard in preview_leaderboards %}
-    {% with
+    {%- with
       title=leaderboard.title,
       perf_type_str=leaderboard.perf_type_str,
       leaderboard_rows=leaderboard.leaderboard_rows,

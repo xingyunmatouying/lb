@@ -1,7 +1,7 @@
 {% extends "main_frame.html.jinja" %}
 
 {% block content %}
-  {% with
+  {%- with
     title=leaderboard.title,
     perf_type_str=leaderboard.perf_type_str,
     leaderboard_rows=leaderboard.leaderboard_rows,

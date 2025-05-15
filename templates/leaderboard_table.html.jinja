@@ -4,7 +4,7 @@
   {{ caller() }}
   <span class="right-title-emoji{{ title.emoji_html_class_suffix }}">{{ title.emoji }}</span>
   </{{ heading }}>
-{% endmacro %}
+{%- endmacro %}
 
 <p>
   {%- if preview %}
@@ -17,6 +17,7 @@
     {%- endcall %}
   {%- endif %}
 </p>
+
 <table>
   <thead>
     <tr>
