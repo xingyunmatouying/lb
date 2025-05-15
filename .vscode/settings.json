@@ -11,6 +11,9 @@
   // css
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.stylelint": "explicit"
+    },
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
