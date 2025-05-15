@@ -1,10 +1,20 @@
+{% macro title_with_emojis(heading) %}
+  <{{ heading }}>
+  <span class="left-title-emoji{{ title.emoji_html_class_suffix }}">{{ title.emoji }}</span>
+  {{ caller() }}
+  <span class="right-title-emoji{{ title.emoji_html_class_suffix }}">{{ title.emoji }}</span>
+  </{{ heading }}>
+{% endmacro %}
+
 <p>
   {%- if preview %}
-    <h2>
-      <a href="{{ perf_type_str }}.html">{{ title }}</a>
-    </h2>
+    {%- call title_with_emojis(heading="h2") -%}
+      <a href="{{ perf_type_str }}.html">{{ title.title_value }}</a>
+    {%- endcall %}
   {%- else %}
-    <h1>{{ title }}</h1>
+    {%- call title_with_emojis(heading="h1") -%}
+      {{ title.title_value }}
+    {%- endcall %}
   {%- endif %}
 </p>
 <table>

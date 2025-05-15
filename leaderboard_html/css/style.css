@@ -108,6 +108,30 @@ h2 {
   padding: 20px 0;
 }
 
+/* Title emojis have some common properties */
+.left-title-emoji,
+.left-title-emoji-upside-down,
+.right-title-emoji,
+.right-title-emoji-upside-down {
+  display: inline-block;
+  margin: 0 8px;
+}
+
+/* Flip left title emoji horizontally */
+.left-title-emoji {
+  transform: scaleX(-1);
+}
+
+/* Flip left upside down title emoji horizontally and vertically */
+.left-title-emoji-upside-down {
+  transform: scaleX(-1) scaleY(-1);
+}
+
+/* Flip right upside down title emojis vertically */
+.right-title-emoji-upside-down {
+  transform: scaleY(-1);
+}
+
 /* Leaderboard table */
 table {
   table-layout: fixed;

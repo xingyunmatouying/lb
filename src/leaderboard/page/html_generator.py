@@ -51,6 +51,45 @@ class MainFrame:
 
 
 @dataclasses.dataclass(frozen=True)
+class LeaderboardTitle:
+  """Convenience class for styling leaderboard titles."""
+
+  UPSIDE_DOWN_SUFFIX = "-upside-down"
+
+  title_value: str
+  emoji: str
+  emoji_html_class_suffix: str
+
+  @classmethod
+  def get_emoji(cls, perf_type: PerfType) -> str:
+    """Return the emoji that corresponds with the PerfType."""
+    perf_type_to_emoji = {
+      PerfType.BULLET: "🚅",
+      PerfType.BLITZ: "🔥",
+      PerfType.RAPID: "🐇",
+      PerfType.CLASSICAL: "🐢",
+      PerfType.CORRESPONDENCE: "💌",
+      PerfType.CHESS960: "🎲",
+      PerfType.ANTICHESS: "♟️",
+      PerfType.THREE_CHECK: "🔱",
+      PerfType.ATOMIC: "☢️",
+      PerfType.KING_OF_THE_HILL: "🗻",
+      PerfType.CRAZYHOUSE: "🏚️",
+      PerfType.HORDE: "🛡️",
+      PerfType.RACING_KINGS: "🏁",
+    }
+    return perf_type_to_emoji.get(perf_type, "")
+
+  @classmethod
+  def from_perf_type(cls, perf_type: PerfType) -> "LeaderboardTitle":
+    """Create a LeaderboardTitle from a PerfType."""
+    perf_type_emoji_html_class = {PerfType.ANTICHESS: LeaderboardTitle.UPSIDE_DOWN_SUFFIX}
+    return LeaderboardTitle(
+      perf_type.get_readable_name(), LeaderboardTitle.get_emoji(perf_type), perf_type_emoji_html_class.get(perf_type, "")
+    )
+
+
+@dataclasses.dataclass(frozen=True)
 class LeaderboardDelta:
   """Convenience class for styling delta columns."""
 
@@ -167,7 +206,7 @@ class HtmlLeaderboardRow:
 class HtmlLeaderboard:
   """The data required to render a leaderboard table in html."""
 
-  title: str
+  title: LeaderboardTitle
   perf_type_str: str
   leaderboard_rows: list[HtmlLeaderboardRow]
 
@@ -183,7 +222,7 @@ class HtmlLeaderboard:
     # Only include bots within the top n ranks if creating a preview leaderboard for the index page
     rows = itertools.takewhile(lambda row: row.rank_info.rank <= MAX_RANK_FOR_PREVIEW, rows) if preview else rows
     return HtmlLeaderboard(
-      perf_type.get_readable_name(),
+      LeaderboardTitle.from_perf_type(perf_type),
       perf_type.to_string(),
       [
         HtmlLeaderboardRow.from_leaderboard_row(row, leaderboard_data.bot_profiles_by_name[row.name], current_time)

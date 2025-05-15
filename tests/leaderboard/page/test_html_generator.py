@@ -11,6 +11,7 @@ from src.leaderboard.page.html_generator import (
   HtmlGenerator,
   HtmlLeaderboardRow,
   LeaderboardDelta,
+  LeaderboardTitle,
   MainFrame,
   OnlineStatus,
 )
@@ -42,6 +43,23 @@ class TestMainFrame(unittest.TestCase):
   def test_from_perf_type_none(self) -> None:
     main_frame = MainFrame.from_perf_type(None, DATE_2025_04_01)
     self.assertEqual(main_frame.title, "Lichess Bot Leaderboard")
+
+
+class TestLeaderboardTitle(unittest.TestCase):
+  """Tests for LeaderboardTitle."""
+
+  def test_get_emoji(self) -> None:
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.BULLET), "🚅")
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.BLITZ), "🔥")
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.RAPID), "🐇")
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.UNKNOWN), "")
+
+  def test_from_perf_type(self) -> None:
+    self.assertEqual(LeaderboardTitle.from_perf_type(PerfType.CLASSICAL), LeaderboardTitle("Classical", "🐢", ""))
+    self.assertEqual(
+      LeaderboardTitle.from_perf_type(PerfType.ANTICHESS),
+      LeaderboardTitle("Antichess", "♟️", LeaderboardTitle.UPSIDE_DOWN_SUFFIX),
+    )
 
 
 class TestLeaderboardDelta(unittest.TestCase):
@@ -115,6 +133,8 @@ class TestHtmlGenerator(unittest.TestCase):
     )["index"]
     self.assertIn('<a href="index.html" class="active">Home</a>', index_html)
     self.assertIn("Bullet", index_html)
+    self.assertIn('<span class="left-title-emoji">🚅</span>', index_html)
+    self.assertIn('<span class="right-title-emoji">🚅</span>', index_html)
     self.assertIn("Bot-1", index_html)
     self.assertIn("Bot-2", index_html)
     self.assertIn('name="description" content="Automatically updated', index_html)
@@ -133,7 +153,9 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
-    self.assertIn("<h1>Bullet</h1>", bullet_html)
+    self.assertIn("Bullet", bullet_html)
+    self.assertIn('<span class="left-title-emoji">🚅</span>', bullet_html)
+    self.assertIn('<span class="right-title-emoji">🚅</span>', bullet_html)
     self.assertIn("Bot-1", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-1", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-1/perf/bullet", bullet_html)
