@@ -1,21 +1,21 @@
 /* Main container and default properties */
 body {
-  background-color: rgb(232 232 232);
-  font-family: sans-serif;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  background-color: rgb(232 232 232);
 }
 
 /* The header & footer share some styling */
 header,
 footer {
-  background-color: rgb(50 50 50);
-  color: white;
-  text-align: center;
-  width: 100%;
-  padding: 10px 0;
   /* Always appear on top of other components */
   z-index: 100;
+  width: 100%;
+  padding: 10px 0;
+  color: white;
+  text-align: center;
+  background-color: rgb(50 50 50);
 }
 
 /* The header is fixed to the top */
@@ -48,13 +48,13 @@ a {
 
 /* Header nav links look like buttons */
 nav a {
+  box-sizing: border-box;
+  padding: 8px 16px;
+  margin: 0 2px;
   color: white;
+  border-radius: 5px;
   /* Fade in and out */
   transition: background-color 0.3s;
-  margin: 0 2px;
-  padding: 8px 16px;
-  border-radius: 5px;
-  box-sizing: border-box;
 }
 
 /* Footer links */
@@ -85,12 +85,12 @@ footer a:hover,
 
 /* Leaderboard container */
 main {
-  background-color: white;
   width: 80%;
   min-width: 1000px;
+  padding: 10px 20px 20px;
   /* large top and bottom margin to be clear of the header and footer */
   margin: 24px auto 60px;
-  padding: 10px 20px 20px;
+  background-color: white;
   border-radius: 5px;
   /* Look slightly 3d */
   box-shadow: 0 5px 5px rgb(0 0 0 / 10%);
@@ -98,14 +98,14 @@ main {
 
 /* The heading contains the page's title */
 h1 {
-  text-align: center;
   padding-bottom: 10px;
+  text-align: center;
 }
 
 /* The subheadings are used on the main page for preview leaderboards */
 h2 {
-  text-align: center;
   padding: 20px 0;
+  text-align: center;
 }
 
 /* Title emojis have some common properties */
@@ -134,21 +134,21 @@ h2 {
 
 /* Leaderboard table */
 table {
-  table-layout: fixed;
   width: 1000px;
   margin: 20px auto;
+  table-layout: fixed;
+  border-spacing: 0;
   border-collapse: separate;
   border: 1px solid rgb(232 232 232);
   border-radius: 5px;
-  border-spacing: 0;
 }
 
 /* Table header and table data share some styling */
 th,
 td {
-  border: 1px solid rgb(200 200 200 / 10%);
   padding: 8px 10px;
   text-align: left;
+  border: 1px solid rgb(200 200 200 / 10%);
 }
 
 /* Emphasize the table header row with a different background color */
@@ -164,8 +164,8 @@ tr:nth-child(even) {
 /* Rank */
 .col-rank {
   width: 7%;
-  text-align: right;
   padding-right: 4px;
+  text-align: right;
 }
 
 /* Rank medal */
@@ -198,8 +198,8 @@ td.delta-neg {
 span.bot-online,
 span.bot-offline {
   display: inline-block;
-  text-align: right;
   width: 5%;
+  text-align: right;
 }
 
 /* Emphasize the bot's online status */
@@ -236,10 +236,10 @@ span.bot-title {
 
 /* Use the flag emoji font defined above for flags */
 td.col-flag {
+  padding: 2px;
   font-family: "BabelStone Flags", sans-serif;
   font-size: 18px;
   text-shadow: 1px 1px 6px rgb(0 0 0 / 33%);
-  padding: 2px;
 }
 
 /* Rotating earth emoji animation */
@@ -273,8 +273,8 @@ td.col-flag {
 /* Rating */
 .col-rating {
   width: 9%;
-  text-align: right;
   padding-right: 4px;
+  text-align: right;
 }
 
 /* Rating delta */
@@ -292,8 +292,8 @@ td.col-flag {
 /* Games */
 .col-games {
   width: 9%;
-  text-align: right;
   padding-right: 4px;
+  text-align: right;
 }
 
 /* Games delta */
@@ -304,12 +304,12 @@ td.col-flag {
 
 /* Created */
 .col-age {
-  text-align: right;
   width: 10%;
+  text-align: right;
 }
 
 /* Last Seen */
 .col-last-seen {
-  text-align: right;
   width: 10%;
+  text-align: right;
 }
