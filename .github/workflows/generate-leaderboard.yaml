@@ -1,0 +1,79 @@
+name: 🏆 Generate Leaderboard
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */2 * * *"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # Generate the leaderboard, commit the updated data, and deploy the html
+  generate-commit-deploy:
+    name: 🚢 generate-commit-deploy / 🐧 ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      # Setup
+      - name: 🛒 Checkout leaderboard-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: leaderboard-pages
+          # Get the Full history for rebasing
+          fetch-depth: 0
+      # Explanation of username and email:
+      # https://github.com/actions/checkout?tab=readme-ov-file#push-a-commit-using-the-built-in-token
+      - name: 🤖 Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: 🌵 Rebase onto main
+        run: |
+          git fetch origin main
+          git rebase origin/main
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: 🛠️ Install dependencies (python)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/leaderboard.txt
+      # Generate the leaderboard
+      - name: 📠 Generate leaderboard
+        run: |
+          python -m src.leaderboard
+      # The generation number is used for the commit message
+      - name: 🔢 Read generation number
+        id: read-generation-number
+        run: |
+          echo "number=$(cat leaderboard_data/generation_number.txt)" >> $GITHUB_OUTPUT
+      # Commit and push the changes to the leaderboard-pages branch
+      - name: 👌 Commit leaderboard data
+        run: |
+          # Add the generated leaderboard data
+          git add leaderboard_data/*
+
+          # Commit if there are changes and fail if there are none
+          if git diff --staged --quiet; then
+            echo "No changes detected in leaderboard_data/"
+            exit 1
+          else
+            git commit -m "Generation #${{ steps.read-generation-number.outputs.number }}"
+          fi
+      - name: 🥌 Push changes
+        run: |
+          git push -f origin leaderboard-pages
+      # Upload and deploy the pages
+      - name: 🏋️ Upload leaderboard html
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: leaderboard_html/
+      - name: 🎆 Deploy leaderboard pages
+        id: deployment
+        uses: actions/deploy-pages@v4
