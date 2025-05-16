@@ -68,7 +68,7 @@ jobs:
           fi
       - name: 🥌 Push changes
         run: |
-          git push origin leaderboard-pages
+          git push -f origin leaderboard-pages
       # Upload and deploy the pages
       - name: 🏋️ Upload leaderboard html
         uses: actions/upload-pages-artifact@v3
