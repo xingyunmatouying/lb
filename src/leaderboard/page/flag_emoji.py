@@ -31,14 +31,10 @@ OVERRIDES = {
 UNMAPPED = [
   "AM-RA",  # Artsakh
   "_belarus-wrw",  # Belarus White-red-white
+  "_earth",  # Earth
   "_east-turkestan",  # East Turkestan
   "_russia-wbw",  # Russia White-blue-white
 ]
-
-# How lichess represents the earth flag option
-LICHESS_EARTH_FLAG_STR = "_earth"
-# There is not an exact equivalent for the earth flag lichess uses
-EARTH_FLAG_EMOJI = "🗺️"
 
 
 def region_indicator(char: str) -> str:
@@ -67,7 +63,5 @@ def from_string(flag_str: str) -> str:
   if "-" in flag_str:
     subregion_str = "".join(tag_small_latin(char) for char in flag_str)
     return f"{BLACK_FLAG_EMOJI}{subregion_str}{CANCEL_TAG}"
-  if flag_str == LICHESS_EARTH_FLAG_STR:
-    return EARTH_FLAG_EMOJI
   # We tried
   return ""

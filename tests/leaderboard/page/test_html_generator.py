@@ -6,7 +6,15 @@ from src.leaderboard.chrono.fixed_time_provider import FixedTimeProvider
 from src.leaderboard.data.data_generator import LeaderboardDataResult
 from src.leaderboard.data.leaderboard_objects import BotProfile, LeaderboardPerf, LeaderboardRow, RankInfo
 from src.leaderboard.li.pert_type import PerfType
-from src.leaderboard.page.html_generator import HtmlGenerator, HtmlLeaderboardRow, LeaderboardDelta, OnlineStatus
+from src.leaderboard.page.html_generator import (
+  Flag,
+  HtmlGenerator,
+  HtmlLeaderboardRow,
+  LeaderboardDelta,
+  LeaderboardTitle,
+  MainFrame,
+  OnlineStatus,
+)
 from tests.leaderboard.chrono import epoch_seconds
 
 
@@ -23,6 +31,35 @@ DATE_2025_04_01 = epoch_seconds.from_date(2025, 4, 1)
 def create_leaderboard_row(name: str, rank: int = 1, delta_rank: int = 0, delta_rating: int = 0) -> LeaderboardRow:
   """Create a LeaderboardRow with several default values set."""
   return LeaderboardRow(name, LeaderboardPerf(0, 0, 0, 0, False), RankInfo(rank, delta_rank, delta_rating, 0, 0, 0, 0))
+
+
+class TestMainFrame(unittest.TestCase):
+  """Tests for MainFrame."""
+
+  def test_from_perf_type_bullet(self) -> None:
+    main_frame = MainFrame.from_perf_type(PerfType.BULLET, DATE_2025_04_01)
+    self.assertEqual(main_frame.title, "Bullet")
+
+  def test_from_perf_type_none(self) -> None:
+    main_frame = MainFrame.from_perf_type(None, DATE_2025_04_01)
+    self.assertEqual(main_frame.title, "Lichess Bot Leaderboard")
+
+
+class TestLeaderboardTitle(unittest.TestCase):
+  """Tests for LeaderboardTitle."""
+
+  def test_get_emoji(self) -> None:
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.BULLET), "🚅")
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.BLITZ), "🔥")
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.RAPID), "🐇")
+    self.assertEqual(LeaderboardTitle.get_emoji(PerfType.UNKNOWN), "")
+
+  def test_from_perf_type(self) -> None:
+    self.assertEqual(LeaderboardTitle.from_perf_type(PerfType.CLASSICAL), LeaderboardTitle("Classical", "🐢", ""))
+    self.assertEqual(
+      LeaderboardTitle.from_perf_type(PerfType.ANTICHESS),
+      LeaderboardTitle("Antichess", "♟️", LeaderboardTitle.UPSIDE_DOWN_SUFFIX),
+    )
 
 
 class TestLeaderboardDelta(unittest.TestCase):
@@ -51,6 +88,14 @@ class TestOnlineStatus(unittest.TestCase):
     self.assertEqual(OnlineStatus.create_from(False, False), expected_offline_default_status)
 
 
+class TestFlag(unittest.TestCase):
+  """Tests for Flag."""
+
+  def test_from_string(self) -> None:
+    self.assertEqual(Flag.from_string("HM"), Flag("🇭🇲", ""))
+    self.assertEqual(Flag.from_string("_earth"), Flag("", "earth-flag"))
+
+
 class TestHtmlLeaderboardRow(unittest.TestCase):
   """Tests for HtmlLeaderboardRow."""
 
@@ -65,7 +110,7 @@ class TestHtmlLeaderboardRow(unittest.TestCase):
       LeaderboardDelta("↑1", LeaderboardDelta.DELTA_POS_CLASS),
       OnlineStatus(OnlineStatus.PATRON_INDICATOR, OnlineStatus.BOT_ONLINE_CLASS),
       "Bot-1",
-      "🇭🇲",
+      Flag("🇭🇲", ""),
       3000,
       LeaderboardDelta("-5", LeaderboardDelta.DELTA_NEG_CLASS),
       45,
@@ -81,9 +126,19 @@ class TestHtmlGenerator(unittest.TestCase):
   """Tests for HtmlGenerator."""
 
   def test_generate_index(self) -> None:
+    ranked_rows_by_perf_type = {PerfType.BULLET: [create_leaderboard_row("Bot-1"), create_leaderboard_row("Bot-2")]}
     html_generator = HtmlGenerator(FixedTimeProvider(0))
-    index_html = html_generator.generate_leaderboard_html(LeaderboardDataResult.create_result({}, {}))["index"]
+    index_html = html_generator.generate_leaderboard_html(
+      LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
+    )["index"]
     self.assertIn('<a href="index.html" class="active">Home</a>', index_html)
+    self.assertIn("Bullet", index_html)
+    self.assertIn('<span class="left-title-emoji">🚅</span>', index_html)
+    self.assertIn('<span class="right-title-emoji">🚅</span>', index_html)
+    self.assertIn("Bot-1", index_html)
+    self.assertIn("Bot-2", index_html)
+    self.assertIn('name="description" content="Automatically updated', index_html)
+    self.assertIn('name="keywords" content="Lichess bot leaderboard,', index_html)
 
   def test_generate_last_updated(self) -> None:
     time_provider = FixedTimeProvider(1743483600)
@@ -98,7 +153,9 @@ class TestHtmlGenerator(unittest.TestCase):
     bullet_html = html_generator.generate_leaderboard_html(
       LeaderboardDataResult.create_result(DEFAULT_BOT_PROFILES_BY_NAME, ranked_rows_by_perf_type)
     )["bullet"]
-    self.assertIn("<h1>Bullet</h1>", bullet_html)
+    self.assertIn("Bullet", bullet_html)
+    self.assertIn('<span class="left-title-emoji">🚅</span>', bullet_html)
+    self.assertIn('<span class="right-title-emoji">🚅</span>', bullet_html)
     self.assertIn("Bot-1", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-1", bullet_html)
     self.assertIn("https://lichess.org/@/Bot-1/perf/bullet", bullet_html)

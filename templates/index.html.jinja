@@ -1,7 +1,22 @@
 {% extends "main_frame.html.jinja" %}
 
 {% block content %}
+
   <p>
-    <h2>Additional content here</h2>
+    <h1>
+      <span class="left-title-emoji">🏆</span>
+      Lichess Bot Leaderboard
+      <span class="right-title-emoji">🏆</span>
+    </h1>
   </p>
+  {%- for leaderboard in preview_leaderboards %}
+    {%- with
+      title=leaderboard.title,
+      perf_type_str=leaderboard.perf_type_str,
+      leaderboard_rows=leaderboard.leaderboard_rows,
+      preview=true
+      %}
+      {%- include "leaderboard_table.html.jinja" %}
+    {% endwith %}
+  {%- endfor %}
 {%- endblock content %}

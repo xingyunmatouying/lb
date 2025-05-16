@@ -34,11 +34,10 @@ class TestFlagEmoji(unittest.TestCase):
     self.assertEqual(flag_emoji.from_string("_adygea"), "🏴󠁲󠁵󠁡󠁤󠁿")  # Russia - Adygea
     self.assertEqual(flag_emoji.from_string("RU-TAT"), "🏴󠁲󠁵󠁴󠁡󠁿")  # Russia - Tatarstan
     self.assertEqual(flag_emoji.from_string("ES-EU"), "🏴󠁥󠁳󠁰󠁶󠁿")  # Spain - Basque Country
-    # Other
-    self.assertEqual(flag_emoji.from_string("_earth"), "🗺️")  # Earth
     # Unmapped
     self.assertEqual(flag_emoji.from_string("AM-RA"), "")  # Artsakh
     self.assertEqual(flag_emoji.from_string("_belarus-wrw"), "")  # Belarus White-red-white
+    self.assertEqual(flag_emoji.from_string("_earth"), "")  # Earth
     self.assertEqual(flag_emoji.from_string("_east-turkestan"), "")  # East Turkestan
     self.assertEqual(flag_emoji.from_string("_russia-wbw"), "")  # Russia White-blue-white
 
