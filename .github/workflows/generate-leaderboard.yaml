@@ -18,6 +18,9 @@ jobs:
   generate-commit-deploy:
     name: 🚢 generate-commit-deploy / 🐧 ubuntu
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       # Setup
       - name: 🛒 Checkout leaderboard-pages branch
@@ -64,7 +67,7 @@ jobs:
             echo "No changes detected in leaderboard_data/"
             exit 1
           else
-            git commit -m "Generation #${{ steps.read-generation-number.outputs.number }}"
+            git commit -m "Generate leaderboard # ${{ steps.read-generation-number.outputs.number }} #"
           fi
       - name: 🥌 Push changes
         run: |
