@@ -66,6 +66,14 @@
   },
   // yaml
   "[yaml]": {
+    "editor.autoIndent": "advanced",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  // yaml - github actions
+  "[github-actions-workflow]": {
+    "editor.autoIndent": "advanced",
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
     "editor.tabSize": 2
