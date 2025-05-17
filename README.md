@@ -2,10 +2,16 @@
 
 Automatically updating leaderboards for Lichess bots.
 
+[Click here to view the leaderboards](https://eirik0.github.io/lichess-bot-leaderboard/).
+
 ## Overview
 
-This is a python script which queries the Lichess API for online bots. Using the online bot data, combined with data from prior
-runs, it outputs html files which contain leaderboards for all Lichess time controls and variants available to bots.
+This project uses a
+[GitHub Action to generate leaderboards](https://github.com/Eirik0/lichess-bot-leaderboard/blame/main/.github/workflows/generate-leaderboard.yaml)
+once every 2 hours. The action runs a
+[Python script which generates html](https://github.com/Eirik0/lichess-bot-leaderboard/blob/main/src/leaderboard/__main__.py)
+which is then deployed as a GitHub Pages site. The data used to generate the leaderboards is provided by the
+[Lichess get online bot API](https://lichess.org/api#tag/Bot/operation/apiBotOnline).
 
 ## Generating the leaderboards locally
 
