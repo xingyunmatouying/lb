@@ -151,12 +151,12 @@ Here are all of the checks which are run by the CI.
 ```shell
 npx prettier . --check --log-level debug # formatting (css, json, md, yaml)
 
-npx stylelint \*_/_.css --ignore-path .gitignore --formatter verbose # linting (css)
+npx stylelint **/*.css --ignore-path .gitignore --formatter verbose # linting (css)
 
 djlint templates --extension jinja --lint # linting (jinja)
 djlint templates --extension jinja --check # formatting (jinja)
 
-npx markdownlint-cli2 "\*_/_.md" # linting (markdown)
+npx markdownlint-cli2 "**/*.md" # linting (markdown)
 
 ruff format --check --verbose # formatting (python)
 ruff check --verbose # linting (python)
