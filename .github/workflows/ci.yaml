@@ -22,8 +22,8 @@ jobs:
       check-style-python: ${{ steps.check-style-python.outputs.changed }}
       check-style-toml: ${{ steps.check-style-toml.outputs.changed }}
       check-types: ${{ steps.check-types.outputs.changed }}
-      run-tests: ${{ steps.check-types.outputs.changed }}
-      check-coverage: ${{ steps.run-tests.outputs.changed }}
+      run-tests: ${{ steps.run-tests.outputs.changed }}
+      check-coverage: ${{ steps.check-coverage.outputs.changed }}
     steps:
       # Setup
       - name: 🛒 Checkout repo
