@@ -32,6 +32,12 @@ Here are some highlights of what this project does:
 - Has [CSS styling](https://github.com/Eirik0/lichess-bot-leaderboard/blob/main/leaderboard_html/css/style.css) which renders
   nicely on desktop and mobile
 
+## Limitations
+
+The leaderboards are static and the data does not change until the script which generates them runs again. The leaderboards
+will not reflect changes to a bot's rating which occur in-between runs. Additionally, it is possible for bot's data to be
+missed if they are not online at the exact moment when the leaderboards are generated.
+
 ## Generating the leaderboards locally
 
 The leaderboard html will be output to the folder `leaderboard_html`.
