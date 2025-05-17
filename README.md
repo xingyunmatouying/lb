@@ -2,7 +2,7 @@
 
 Automatically updating leaderboards for Lichess bots.
 
-[Click here to view the leaderboards](https://eirik0.github.io/lichess-bot-leaderboard/).
+[Click here to view the leaderboards](https://eirik0.github.io/lichess-bot-leaderboard).
 
 ## Overview
 
@@ -55,7 +55,7 @@ folder `leaderboard_html/`.
 
 ### Steps
 
-This project is primarily written in [Python](https://www.python.org/downloads/) and assumes version 3.11 or greater.
+This project is primarily written in [Python](https://www.python.org/downloads) and assumes version 3.11 or greater.
 
 Create a virtual environment
 
@@ -93,8 +93,8 @@ python -m src.leaderboard
 
 Contributions to this project are welcome!
 
-This project was developed in [VS Code](https://code.visualstudio.com/). This repository includes workspace settings and
-several recommended extensions to aid in development.
+This project was developed in [VS Code](https://code.visualstudio.com). This repository includes workspace settings and several
+recommended extensions to aid in development.
 
 ### **Setup**
 
@@ -171,9 +171,9 @@ taplo check # linting (toml)
 
 This project drew inspiration from the following sources at various times during its development:
 
-- [Lichess](https://github.com/lichess-org/)
+- [Lichess](https://github.com/lichess-org)
 - [lichess-bot](https://github.com/lichess-bot-devs/lichess-bot)
 - [python-chess](https://github.com/niklasf/python-chess)
 - [ruff](https://github.com/astral-sh/ruff)
-- [Live Chess Ratings (2700chess.com)](https://2700chess.com/) (Ad warning)
+- [Live Chess Ratings (2700chess.com)](https://2700chess.com) (Ad warning)
 - [Gemini](https://gemini.google.com)
