@@ -3,7 +3,7 @@ name: 🏆 Generate Leaderboard
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "18 */2 * * *"
 
 permissions:
   contents: write
