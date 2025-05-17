@@ -80,83 +80,78 @@ python -m src.leaderboard
 
 ## Development
 
-This project was developed in VS Code. The repo contains several recommended extensions to aid in development.
+Contributions to this project are welcome!
 
-### CI
+This project was developed in [VS Code](https://code.visualstudio.com/). This repository includes workspace settings and
+several recommended extensions to aid in development.
 
-The CI for this project includes several checks which are configured as GitHub actions. All of these can be performed locally,
-too.
-
-#### **Setup**
+### **Setup**
 
 Begin following the same steps as above.
 
 1. Create a virtual environment
 2. Activate the environment
-3. Install all requirements to generate the leaderboards as well as for linting, formatting, and code coverage
+3. Install the dev requirements
 
 ```shell
 pip install -r requirements\all.txt
 ```
 
-#### **Check linting and formatting**
+### **Testing**
 
-Python
-
-```shell
-ruff format --check  # Check format
-```
+The easiest way to run the tests is by running them with code coverage.
 
 ```shell
-ruff check           # Check lint
+coverage run # Run the tests and generate code coverage
 ```
 
-Jinja
-
-```shell
-djlint templates -e jinja --check  # Check format
-```
-
-```shell
-djlint templates -e jinja --lint   # Check lint
-```
-
-#### **Check types**
-
-Install pyright with npm
-
-```shell
-npm install -g pyright
-```
-
-Run static type checking
-
-```shell
-pyright --verbose
-```
-
-Alternatively this can be done from within VS Code.
-
-#### **Run tests**
-
-The following command runs tests in the `tests` directory which match the pattern `test_*.py`
-
-```shell
-python -m unittest discover -v -s tests -p test_*.py
-```
-
-#### **Run code coverage**
-
-The `coverage run` command is configured to use the same command as above when running tests.
-
-```shell
-coverage run   # Generate the coverage file
-```
+To view the coverage html, also run the following and then check the output in `htmlcov/`
 
 ```shell
 coverage html  # Generate coverage html
 ```
 
+### **CI**
+
+The CI for this project includes several checks which are configured as a
+[GitHub Actions CI workflow](https://github.com/Eirik0/lichess-bot-leaderboard/blob/main/.github/workflows/ci.yaml). Much of
+the linting and formatting is handled automatically when using the recommended VS Code extensions, but it can all be performed
+from the command line, too.
+
+#### **Optional Additional Setup**
+
+To run all of the linting and formatting from the command line, some additional setup is needed. While this is not required,
+some of the VS Code extensions work better if the linter or formatter is also installed locally.
+
+Some of the linting and formatting is handled by [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+packages.
+
 ```shell
-coverage xml   # Generate coverage xml
+npm install # Install dev dependencies
+```
+
+Also install [Taplo](https://taplo.tamasfe.dev/cli/installation/binary.html). Taplo seemed to work best when installed
+precompiled rather than via a package manager.
+
+#### **Check linting and formatting**
+
+Here are all of the checks which are run by the CI.
+
+```shell
+npx prettier . --check --log-level debug # formatting (css, json, md, yaml)
+
+npx stylelint \*_/_.css --ignore-path .gitignore --formatter verbose # linting (css)
+
+djlint templates --extension jinja --lint # linting (jinja)
+djlint templates --extension jinja --check # formatting (jinja)
+
+npx markdownlint-cli2 "\*_/_.md" # linting (markdown)
+
+ruff format --check --verbose # formatting (python)
+ruff check --verbose # linting (python)
+
+npx pyright --verbose # static type checking (python)
+
+taplo fmt --check # formatting (toml)
+taplo check # linting (toml)
 ```
