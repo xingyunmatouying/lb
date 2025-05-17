@@ -18,13 +18,13 @@ jobs:
   generate-commit-deploy:
     name: 🚢 generate-commit-deploy / 🐧 ubuntu
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     concurrency:
       group: ${{ github.workflow }}
       cancel-in-progress: true
     timeout-minutes: 60
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       # Setup
       - name: 🛒 Checkout leaderboard-pages branch
