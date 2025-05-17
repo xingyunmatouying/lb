@@ -180,6 +180,8 @@ jobs:
       - determine-which-jobs
       - check-style-prettier
     if: |
+      always() &&
+      !cancelled() &&
       needs.determine-which-jobs.outputs.check-style-css == 'true' &&
       needs.check-style-prettier.result != 'failure'
     steps:
@@ -233,6 +235,8 @@ jobs:
       - determine-which-jobs
       - check-style-prettier
     if: |
+      always() &&
+      !cancelled() &&
       needs.determine-which-jobs.outputs.check-style-markdown == 'true' &&
       needs.check-style-prettier.result != 'failure'
     steps:
@@ -307,6 +311,8 @@ jobs:
       - determine-which-jobs
       - check-style-python
     if: |
+      always() &&
+      !cancelled() &&
       needs.determine-which-jobs.outputs.check-types == 'true' &&
       needs.check-style-python.result != 'failure'
     steps:
@@ -342,6 +348,8 @@ jobs:
       - check-style-jinja
       - check-types
     if: |
+      always() &&
+      !cancelled() &&
       needs.determine-which-jobs.outputs.run-tests == 'true' &&
       needs.check-style-jinja.result != 'failure' &&
       needs.check-types.result != 'failure'
@@ -377,7 +385,10 @@ jobs:
     name: 🩺 check-test-result / 🐧 ubuntu
     runs-on: ubuntu-latest
     needs: run-tests
-    if: needs.run-tests.result != 'skipped'
+    if: |
+      always() &&
+      !cancelled() &&
+      needs.run-tests.result != 'skipped'
     steps:
       - name: 🙄 Check result
         run: |
@@ -396,6 +407,8 @@ jobs:
       - determine-which-jobs
       - run-tests
     if: |
+      always() &&
+      !cancelled() &&
       needs.determine-which-jobs.outputs.check-coverage == 'true' &&
       needs.run-tests.result != 'failure'
     steps:
