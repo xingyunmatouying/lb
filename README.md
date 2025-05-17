@@ -1,6 +1,6 @@
 # Lichess Bot Leaderboard
 
-Automatically updating leaderboards for Lichess bots.
+Automatically updating leaderboards for [Lichess bots](https://lichess.org/player/bots).
 
 [Click here to view the leaderboards](https://eirik0.github.io/lichess-bot-leaderboard).
 
