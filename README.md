@@ -13,6 +13,25 @@ once every 2 hours. The action runs a
 which is then deployed as a GitHub Pages site. The data used to generate the leaderboards is provided by the
 [Lichess get online bot API](https://lichess.org/api#tag/Bot/operation/apiBotOnline).
 
+## Features
+
+Here are some highlights of what this project does:
+
+- Automatically updates once every two hours
+- Generates leaderboards for all time controls and variants available to bots
+- Uses [1224 ranking](<https://en.wikipedia.org/wiki/Ranking#Standard_competition_ranking_(%221224%22_ranking)>) for handling
+  ties
+- Calculates deltas between prior runs for rank, rating, and games played
+- Shows whether or not a bot was online when the leaderboard was last generated
+- Shows whether or not a bot is a [Lichess Patron](https://lichess.org/patron)
+- Indicates when a bot is new to the leaderboard
+- Indicates when a previously ineligible bot returns to the leaderboard
+- Displays flags using the [BabelStone Flags](https://www.babelstone.co.uk/Fonts/Flags.html) font
+- Maintains a [complete history](https://github.com/Eirik0/lichess-bot-leaderboard/tree/leaderboard-pages/leaderboard_data) of
+  the leaderboard data
+- Has [CSS styling](https://github.com/Eirik0/lichess-bot-leaderboard/blob/main/leaderboard_html/css/style.css) which renders
+  nicely on desktop and mobile
+
 ## Generating the leaderboards locally
 
 The leaderboard html will be output to the folder `leaderboard_html`.
