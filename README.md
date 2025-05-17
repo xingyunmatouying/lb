@@ -50,7 +50,8 @@ Eligibility for these leaderboards differs somewhat from the
 
 ## Generating the leaderboards locally
 
-The leaderboard html will be output to the folder `leaderboard_html/`.
+It is possible to generate the leaderboards locally. After running the script, the leaderboard html will be output to the
+folder `leaderboard_html/`.
 
 ### Steps
 
