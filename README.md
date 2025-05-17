@@ -38,6 +38,16 @@ The leaderboards are static and the data does not change until the script which 
 will not reflect changes to a bot's rating which occur in-between runs. Additionally, it is possible for bot's data to be
 missed if they are not online at the exact moment when the leaderboards are generated.
 
+## Leaderboard Eligibility
+
+Eligibility for these leaderboards differs somewhat from the
+[Lichess human leaderboard requirements](https://lichess.org/faq#leaderboards). For a bot to be eligible, they must:
+
+1. have appeared online in the last 2 weeks
+2. have played a game for the time control or variant in the last 2 weeks
+3. not have a [provisional rating](https://lichess.org/faq#provisional)
+4. not have violated the TOS
+
 ## Generating the leaderboards locally
 
 The leaderboard html will be output to the folder `leaderboard_html/`.
