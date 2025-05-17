@@ -40,9 +40,11 @@ missed if they are not online at the exact moment when the leaderboards are gene
 
 ## Generating the leaderboards locally
 
-The leaderboard html will be output to the folder `leaderboard_html`.
+The leaderboard html will be output to the folder `leaderboard_html/`.
 
-### Installation
+### Steps
+
+This project is primarily written in [Python](https://www.python.org/downloads/) and assumes version 3.11 or greater.
 
 Create a virtual environment
 
@@ -53,15 +55,15 @@ python -m venv .venv
 Activate the environment
 
 ```shell
-.venv\Scripts\activate      # Windows cmd
+.venv\Scripts\activate # Windows cmd
 ```
 
 ```shell
-.venv\Scripts\Activate.ps1  # Windows PowerShell
+.venv\Scripts\Activate.ps1 # Windows PowerShell
 ```
 
 ```shell
-source .venv/bin/activate   # MacOS and Linux
+source .venv/bin/activate # MacOS and Linux
 ```
 
 Install requirements
