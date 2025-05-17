@@ -166,3 +166,14 @@ npx pyright --verbose # static type checking (python)
 taplo fmt --check # formatting (toml)
 taplo check # linting (toml)
 ```
+
+## Acknowledgements
+
+This project drew inspiration from the following sources at various times during its development:
+
+- [Lichess](https://github.com/lichess-org/)
+- [lichess-bot](https://github.com/lichess-bot-devs/lichess-bot)
+- [python-chess](https://github.com/niklasf/python-chess)
+- [ruff](https://github.com/astral-sh/ruff)
+- [Live Chess Ratings (2700chess.com)](https://2700chess.com/) (Ad warning)
+- [Gemini](https://gemini.google.com)
