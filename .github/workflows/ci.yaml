@@ -44,11 +44,11 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.css' \
-            '**/*.json' \
-            '**/*.jsonc' \
-            '**/*.md' \
-            '**/*.yaml' \
+            ':(glob)**/*.css' \
+            ':(glob)**/*.json' \
+            ':(glob)**/*.jsonc' \
+            ':(glob)**/*.md' \
+            ':(glob)**/*.yaml' \
             '.prettierignore' \
       # linting (css)
       - name: 👨‍🎨 Determine check-style-css
@@ -56,7 +56,7 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.css' \
+            ':(glob)**/*.css' \
             '.gitignore' \
             '.stylelintrc.json' \
             'package-lock.json' \
@@ -67,7 +67,7 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.jinja' \
+            ':(glob)**/*.jinja' \
             'requirements/dev.txt' \
             'djlint.toml' \
       # linting (markdown)
@@ -76,7 +76,7 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.md' \
+            ':(glob)**/*.md' \
             '.gitignore' \
             '.markdownlint-cli2.jsonc' \
             'package-lock.json' \
@@ -87,7 +87,7 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.py' \
+            ':(glob)**/*.py' \
             'requirements/dev.txt' \
             'ruff.toml' \
       # linting and formatting (toml)
@@ -96,14 +96,14 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.toml' \
+            ':(glob)**/*.toml' \
       # static type checking
       - name: ⌨️ Determine check-types
         id: check-types
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.py' \
+            ':(glob)**/*.py' \
             'requirements/leaderboard.txt' \
             'pyrightconfig.json' \
             'package-lock.json' \
@@ -114,8 +114,8 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.jinja' \
-            '**/*.py' \
+            ':(glob)**/*.jinja' \
+            ':(glob)**/*.py' \
             'requirements/leaderboard.txt' \
       # coverage
       - name: 🔬 Determine check-coverage
@@ -123,8 +123,8 @@ jobs:
         uses: ./.github/actions/check-dependencies-changed
         with:
           pathspec: |-
-            '**/*.jinja' \
-            '**/*.py' \
+            ':(glob)**/*.jinja' \
+            ':(glob)**/*.py' \
             'requirements/leaderboard.txt' \
             '.coveragerc' \
 
