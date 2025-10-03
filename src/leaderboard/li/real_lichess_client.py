@@ -13,7 +13,7 @@ class RealLichessClient(LichessClient):
 
     Timeout of 10 seconds. No exception handling.
     """
-    url = "https://lichess.org/api/bot/online"
+    url = "https://lichess.org/api/team/lucky_0wls-bots/users"
     headers = {"Accept": "application/x-ndjson"}
     response = requests.get(url, headers=headers, timeout=10, stream=True)
     response.raise_for_status()
