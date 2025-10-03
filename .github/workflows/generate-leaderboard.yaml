@@ -1,8 +1,8 @@
 name: 🏆 Generate Leaderboard
 
 on:
-  schedule:
-    - cron: "18 */2 * * *"
+#schedule:
+ #   - cron: "18 */2 * * *"
   workflow_dispatch:
 
 permissions:
